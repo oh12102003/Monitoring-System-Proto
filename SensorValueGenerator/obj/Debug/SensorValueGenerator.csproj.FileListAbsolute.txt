@@ -1,0 +1,18 @@
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe.config
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.csprojResolveAssemblyReference.cache
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe.config
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\bin\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\CometServer(MiddleServer)\SensorValueGenerator\obj\Debug\SensorValueGenerator.csprojResolveAssemblyReference.cache
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe.config
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator.csprojResolveAssemblyReference.cache

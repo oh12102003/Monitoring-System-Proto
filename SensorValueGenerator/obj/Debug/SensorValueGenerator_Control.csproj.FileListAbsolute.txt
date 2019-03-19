@@ -1,0 +1,11 @@
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe.config
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.exe
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\SensorValueGenerator.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\DataStreamType.dll
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\DataStreamType.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerator\obj\Debug\SensorValueGenerator_Control.csprojResolveAssemblyReference.cache
