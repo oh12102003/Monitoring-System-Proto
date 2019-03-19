@@ -63,8 +63,7 @@ namespace SensorValueGenerator
 
             catch
             {
-                toServer.Disconnect(true);
-                asyncConnect();
+                tryAsyncReconnect();
             }
         }
 
@@ -99,8 +98,7 @@ namespace SensorValueGenerator
 
             catch
             {
-                toServer.Disconnect(true);
-                asyncConnect();
+                tryAsyncReconnect();
             }
         }
     }

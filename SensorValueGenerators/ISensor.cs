@@ -52,10 +52,7 @@ namespace SensorValueGenerator
             }
         }
 
-        protected virtual void setSensorSettings()
-        {
-
-        }
+        protected abstract void setSensorSettings();
 
         protected abstract void getSensorName();
 
@@ -64,6 +61,20 @@ namespace SensorValueGenerator
         protected abstract void changeValue();
 
         protected abstract void printSensorStatus();
+
+        protected void tryAsyncReconnect()
+        {
+            try
+            {
+                toServer.Disconnect(true);
+                asyncConnect();
+            }
+
+            catch
+            {
+
+            }
+        }
 
         protected void asyncConnect()
         {
@@ -107,10 +118,19 @@ namespace SensorValueGenerator
 
         protected void sendCallback(IAsyncResult ar)
         {
-            Sensor sensor = (Sensor)ar.AsyncState;
-            sensor.socket.EndSendTo(ar);
+            try
+            {
+                Sensor sensor = (Sensor)ar.AsyncState;
+                sensor.socket.EndSendTo(ar);
 
-            Console.WriteLine("send data : [" + sensor.getBuffer() + "]");
+                Console.WriteLine("send data : [" + sensor.getBuffer() + "]");
+            }
+
+            catch
+            {
+                toServer.Disconnect(true);
+                asyncConnect();
+            }
         }
     }
 }

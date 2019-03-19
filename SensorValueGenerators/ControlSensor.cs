@@ -33,6 +33,11 @@ namespace SensorValueGenerator
             sensorValue = tempValue.ToString();
         }
 
+        protected override void setSensorSettings()
+        {
+
+        }
+
         protected override void printSensorStatus()
         {
             Console.WriteLine("{0} Sensor : {1}", this.sensorType, inputSensorName);
