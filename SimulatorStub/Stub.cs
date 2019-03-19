@@ -1,6 +1,7 @@
 ﻿using DataStreamType;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,6 +11,42 @@ namespace SimulatorStub
     class Stub
     {
         static void Main(string[] args)
+        {
+            string reading;
+
+            do
+            {
+                Console.WriteLine("Manual : middleServer(s) or sensorGenerator(g) or consoleStub(t)");
+                Console.WriteLine("Console stub means using this console as stub program.");
+                Console.Write("Input : ");
+                reading = Console.ReadLine();
+
+                if (reading.Equals("g", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var process = new Process())
+                    {
+                        process.StartInfo.FileName = @"..\..\..\SensorValueGenerators\bin\Debug\SensorValueGenerator.exe";
+                        process.Start();
+                    }
+                }
+
+                else if (reading.Equals("s", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var process = new Process())
+                    {
+                        process.StartInfo.FileName = @"..\..\..\MiddleServer\bin\Debug\MiddleServer.exe";
+                        process.Start();
+                    }
+                }
+
+                Console.Clear();
+
+            } while (!reading.Equals("t", StringComparison.OrdinalIgnoreCase));
+
+            consoleStub();
+        }
+
+        static void consoleStub()
         {
             createRecipe();
             Console.SetWindowSize(65, 20);

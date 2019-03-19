@@ -7,8 +7,8 @@
     <ProjectGuid>{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SensorValueGenerators</RootNamespace>
-    <AssemblyName>SensorValueGenerators</AssemblyName>
+    <RootNamespace>SensorValueGenerator</RootNamespace>
+    <AssemblyName>SensorValueGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
