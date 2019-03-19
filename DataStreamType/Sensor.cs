@@ -5,13 +5,6 @@ using System.Text;
 
 namespace DataStreamType
 {
-    public class MessageData
-    {
-        public string sensorType;
-        public string sensorName;
-        public string messageType;
-        public string messageValue;
-    }
 
 
     public class Sensor : IDisposable
@@ -21,13 +14,10 @@ namespace DataStreamType
         public Socket socket { get; private set; }
         public EndPoint whereFrom;
 
-        public MessageData message;
-
-        // for message getter setter
-        public string sensorType { get { return message.sensorType; } set { message.sensorType = value; } }
-        public string sensorName { get { return message.sensorName; } set { message.sensorName = value; } }
-        public string messageType { get { return message.messageType; } set { message.messageType = value; } }
-        public string messageValue { get { return message.messageValue; } set { message.messageType = value; } }
+        public string sensorType;
+        public string sensorName;
+        public string messageType;
+        public string messageValue;
 
         public byte[] buffer { get; private set; }
         public int length { get { return buffer.Length; } }

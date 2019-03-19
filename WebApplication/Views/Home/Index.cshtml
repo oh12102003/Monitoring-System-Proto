@@ -20,16 +20,19 @@
             // Reference the auto-generated proxy for the hub.
             var monitoringHub = $.connection.monitoringHub;
 
-            // Create a function that the hub can call back to display messages.
-            monitoringHub.client.printIt = function (text) {
-                // Add the message to the page.
+            // client(in hub) function
+            monitoringHub.client.printInConsole = function (text) {
                 console.log("[" + text + "]");
-                $('#messageLayer').html(text);
             };
+
+            monitoringHub.client.printInPage = function (text) {
+                $("#messageLayer").html(text);
+            };
+
            
             // Start the connection.
             $.connection.hub.start().done(function () {
-                monitoringHub.server.getData();
+                monitoringHub.server.show("Show", "All");
             });
         });
 

@@ -115,6 +115,7 @@ namespace SimulatorStub
 
             List<AmountPerDrinks> chilsung = new List<AmountPerDrinks>();
             List<AmountPerDrinks> pepsi = new List<AmountPerDrinks>();
+            List<AmountPerDrinks> water = new List<AmountPerDrinks>();
 
             chilsung.Add(new AmountPerDrinks("1.5L 칠성사이다 패트병", "1"));
             chilsung.Add(new AmountPerDrinks("탄산 혼합물", "20"));
@@ -124,6 +125,10 @@ namespace SimulatorStub
             pepsi.Add(new AmountPerDrinks("탄산 혼합물", "15"));
             pepsi.Add(new AmountPerDrinks("혼합제제", "50"));
 
+            water.Add(new AmountPerDrinks("패트병", "1"));
+            water.Add(new AmountPerDrinks("물", "20"));
+
+            js.applyInputData("생수", water);
             js.applyInputData("칠성사이다", chilsung);
             js.applyInputData("펩시", pepsi);
         }

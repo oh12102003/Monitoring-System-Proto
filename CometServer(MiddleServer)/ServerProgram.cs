@@ -246,14 +246,21 @@ namespace CometServer_MiddleServer
                     else if (inputSensor.patternMatching(messageType : "show", sensorType : "webClient"))
                     {
                         StringBuilder sb = new StringBuilder();
-
+                        bool hasData = false;
 
                         if (inputSensor.patternMatching(messageValue : "All"))
                         {
-                            sensorList.ForEach(sensor => {
-                                if (sensor.patternMatching(notSensorType : "webClient"))
+                            sensorList.ForEach(sensor =>
+                            {
+                                if (sensor.patternMatching(notSensorType: "webClient"))
                                 {
-                                    sb.AppendLine(string.Format("{ \"sensorName\" : \"{0}\" { } }, ", sensor.sensorName, sensor.messageValue));
+                                    if (hasData)
+                                    {
+                                        sb.Append(", ");
+                                    }
+
+                                    hasData = true;
+                                    sb.Append(string.Format("{0}~{1}", sensor.sensorName, sensor.messageValue));
                                 }
                             });
                         }
@@ -261,7 +268,17 @@ namespace CometServer_MiddleServer
                         else
                         {
                             Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: inputSensor.messageValue));
-                            sb.Append(string.Format("{0}#{1}", targetSensor.sensorName, targetSensor.messageValue));
+
+                            if (targetSensor != null)
+                            {
+                                hasData = true;
+                                sb.AppendLine(string.Format("{0}~{1}", targetSensor.sensorName, targetSensor.messageValue));
+                            }
+                        }
+
+                        if (!hasData)
+                        {
+                            sb.AppendLine("No data");
                         }
 
                         asyncSend(inputSensor, "Respond", sb.ToString());
@@ -356,7 +373,7 @@ namespace CometServer_MiddleServer
             {
                 sensorList.ForEach(sensor =>
                 {
-                    Console.WriteLine(string.Format("[{0} : {1}] : <({2}){3}>", sensor.sensorType, sensor.sensorName, sensor.messageType, sensor.messageValue));
+                    Console.WriteLine(string.Format("{0} [{1} : {2}] : -({3}){4}-", sensor.getIP(), sensor.sensorType, sensor.sensorName, sensor.messageType, sensor.messageValue));
                 });
             }
 

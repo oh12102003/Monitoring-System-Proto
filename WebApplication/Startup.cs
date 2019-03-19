@@ -1,5 +1,6 @@
 ﻿using Owin;
 using Microsoft.Owin;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(SignalRChat.Startup))]
 namespace SignalRChat

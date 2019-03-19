@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CometServer(MiddleServer)", "CometServer(MiddleServer)\CometServer(MiddleServer).csproj", "{2C69752E-0138-4D4F-9FC9-A1CD012AE5EF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorValueGenerator_Control", "SensorValueGenerator\SensorValueGenerator_Control.csproj", "{5D7213EA-7D8B-468D-A29D-3F453D23F1E1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorValueGenerator_Material", "SensorValueGenerator_Material\SensorValueGenerator_Material.csproj", "{182FF163-5CBD-413F-98F1-03CB4CA4CBB2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorValueGenerator_Vessel", "SensorValueGenerator_Vessel\SensorValueGenerator_Vessel.csproj", "{7DE308E3-7237-416B-9214-EA43ECECC830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiddleServer", "CometServer(MiddleServer)\MiddleServer.csproj", "{2C69752E-0138-4D4F-9FC9-A1CD012AE5EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatorStub", "SimulatorStub\SimulatorStub.csproj", "{648F3047-2F62-4EDD-A629-EC2FFACF1219}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{54BDE862-ACEC-49B4-B29B-CBAB81DFF39A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStreamType", "DataStreamType\DataStreamType.csproj", "{D8A98C97-635A-431B-A511-84E533BE622D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorValueGenerator", "SensorValueGenerators\SensorValueGenerator.csproj", "{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,18 +23,6 @@ Global
 		{2C69752E-0138-4D4F-9FC9-A1CD012AE5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C69752E-0138-4D4F-9FC9-A1CD012AE5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C69752E-0138-4D4F-9FC9-A1CD012AE5EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D7213EA-7D8B-468D-A29D-3F453D23F1E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D7213EA-7D8B-468D-A29D-3F453D23F1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D7213EA-7D8B-468D-A29D-3F453D23F1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D7213EA-7D8B-468D-A29D-3F453D23F1E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{182FF163-5CBD-413F-98F1-03CB4CA4CBB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{182FF163-5CBD-413F-98F1-03CB4CA4CBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{182FF163-5CBD-413F-98F1-03CB4CA4CBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{182FF163-5CBD-413F-98F1-03CB4CA4CBB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DE308E3-7237-416B-9214-EA43ECECC830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DE308E3-7237-416B-9214-EA43ECECC830}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DE308E3-7237-416B-9214-EA43ECECC830}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DE308E3-7237-416B-9214-EA43ECECC830}.Release|Any CPU.Build.0 = Release|Any CPU
 		{648F3047-2F62-4EDD-A629-EC2FFACF1219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{648F3047-2F62-4EDD-A629-EC2FFACF1219}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{648F3047-2F62-4EDD-A629-EC2FFACF1219}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +35,10 @@ Global
 		{D8A98C97-635A-431B-A511-84E533BE622D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A98C97-635A-431B-A511-84E533BE622D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8A98C97-635A-431B-A511-84E533BE622D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8F6C0A5-5C14-4447-875E-ED299E0FDD8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
