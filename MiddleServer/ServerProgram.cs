@@ -146,155 +146,23 @@ namespace CometServer_MiddleServer
                 if (dataSize > 0)
                 {
                     Sensor.TryParse(inputSensor.getBuffer(), ref inputSensor);
-                    inputSensor.clear();
 
-                    // material, vessel 센서에 보내는 생산 명령 (무시)
-                    if (inputSensor.patternMatching(messageType: "make")) { }
+                    if (inputSensor.patternMatching(messageType: "make"))
+                    { }
 
-                    // 센서 및 클라이언트 등록에 대한 동작
-                    // [sensorType sensorName "register" "register"]
                     else if (inputSensor.patternMatching(messageType: "register"))
                     {
-                        bool checker = false;
-
-                        foreach (var sensor in sensorList)
-                        {
-                            if (sensor.patternMatching(sensorName: inputSensor.sensorName))
-                            {
-                                checker |= sensor.patternMatching(ipAddr: inputSensor.getIP());
-                            }
-                        }
-
-                        if (checker)
-                        {
-                            Console.WriteLine("Duplicate name. Access denied : " + inputSensor.sensorName);
-                        }
-
-                        else
-                        {
-                            Sensor targetSensor = sensorList.Find(sensor =>
-                            {
-                                return sensor.patternMatching(ipAddr: inputSensor.getIP());
-                            });
-
-                            Sensor.TryParse(inputSensor.getBuffer(), ref targetSensor);
-                            targetSensor.clear();
-
-                            Console.WriteLine("Register sensor : " + targetSensor.sensorName);
-                        }
+                        registerRespond(inputSensor);
                     }
 
-                    // only from client!!!
-                    // [sensorType 음료수명 "product" 생산개수]
-                    // 등록된 웹 클라이언트의 생산 명령에 따른 동작
                     else if (inputSensor.patternMatching(messageType: "product", sensorType: "webClient"))
                     {
-                        string drinkName = inputSensor.sensorName;
-
-                        // 등록된 음료수 인지 확인
-                        if (!drinkIO.isRegisteredDrink(drinkName))
-                        {
-                            Console.WriteLine("There is no drink with name " + drinkName);
-                        }
-
-                        else
-                        {
-                            string productNumber = inputSensor.messageValue;
-
-                            // 재료 재고량 확인
-                            List<AmountPerDrinks> recipeList = drinkIO.getAmountPerDrinks(drinkName);
-                            bool checker = true;
-
-                            foreach (var recipe in recipeList)
-                            {
-                                // 센서의 값 가져오기
-                                Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: recipe.ingredient));
-
-                                if (targetSensor == null)
-                                {
-                                    checker = false;
-                                }
-
-                                else
-                                {
-                                    string value = targetSensor.messageValue;
-                                    checker &= (double.Parse(value) >= double.Parse(recipe.amount) * double.Parse(productNumber));
-                                }
-                            }
-
-                            // 모두 충족시
-                            if (checker)
-                            {
-                                foreach(var recipe in recipeList)
-                                {
-                                    Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: recipe.ingredient));
-                                    asyncSend(targetSensor, "make", drinkName);
-                                }
-                            }
-
-                            else
-                            {
-                                Console.WriteLine("Cannot produce the drink as lack of ingredients.");
-                            }
-                        }
+                        productRespond(inputSensor);
                     }
 
-
-                    // only from client!!!
-                    // [webClient 음료수명 "show" 보여줄 센서]
-                    // 등록된 웹 클라이언트에게 센서 현황을 보냄
-                    else if (inputSensor.patternMatching(messageType : "show", sensorType : "webClient"))
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        bool hasData = false;
-
-                        if (inputSensor.patternMatching(messageValue : "All"))
-                        {
-                            sensorList.ForEach(sensor =>
-                            {
-                                if (sensor.patternMatching(notSensorType: "webClient"))
-                                {
-                                    if (hasData)
-                                    {
-                                        sb.Append(", ");
-                                    }
-
-                                    hasData = true;
-                                    sb.Append(string.Format("{0}~{1}", sensor.sensorName, sensor.messageValue));
-                                }
-                            });
-                        }
-
-                        else
-                        {
-                            Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: inputSensor.messageValue));
-
-                            if (targetSensor != null)
-                            {
-                                hasData = true;
-                                sb.AppendLine(string.Format("{0}~{1}", targetSensor.sensorName, targetSensor.messageValue));
-                            }
-                        }
-
-                        if (!hasData)
-                        {
-                            sb.AppendLine("No data");
-                        }
-
-                        asyncSend(inputSensor, "Respond", sb.ToString());
-                    }
-
-                    // only from sensors!!!
-                    // [sensorType sensorName "notice" 현재상태]
-                    // 각종 센서들이 주기적으로 보내는 현재 상태 값들을 현재 센서 리스트에 반영
                     else if (inputSensor.patternMatching(messageType: "notice", notSensorType : "webClient"))
                     {
-                        Sensor targetSensor
-                            = sensorList.Find(sensor => sensor.patternMatching(sensorName: inputSensor.sensorName));
-
-                        // just apply
-                        targetSensor.clear();
-                        Sensor.TryParse(inputSensor.getBuffer(), ref targetSensor);
+                        noticeRespond(inputSensor);
                     }
 
                     else
@@ -303,9 +171,10 @@ namespace CometServer_MiddleServer
                         Console.WriteLine("Message Type : " + inputSensor.messageType);
                         Console.WriteLine(inputSensor.getBuffer());
                     }
+
+                    inputSensor.clear();
                 }
 
-                inputSensor.clear();
                 inputSensor.socket.BeginReceiveFrom(inputSensor.buffer, 0, inputSensor.length, 0,
                     ref inputSensor.whereFrom, receiveCallback, inputSensor);
             }
@@ -345,10 +214,6 @@ namespace CometServer_MiddleServer
             try
             {
                 sendSensor.socket.EndSendTo(ar);
-                sendSensor.clear();
-                Sensor.TryParse(sendSensor.getBuffer(), ref sendSensor);
-
-                Console.WriteLine("{0} _ send to {1}", sendSensor.getBuffer(), sendSensor.whereFrom);
             }
 
             catch
@@ -375,11 +240,103 @@ namespace CometServer_MiddleServer
             {
                 sensorList.ForEach(sensor =>
                 {
-                    Console.WriteLine(string.Format("{0} [{1} : {2}] : -({3}){4}-", sensor.getIP(), sensor.sensorType, sensor.sensorName, sensor.messageType, sensor.messageValue));
+                    Console.WriteLine(string.Format("{0} [({1}){2}] <{3}> ({4}){5}.",
+                        sensor.getIP(), sensor.sensorType, sensor.sensorName, sensor.messageTarget, sensor.messageType, sensor.messageValue));
                 });
             }
 
             Console.WriteLine("------------------------------------------");
+        }
+
+        void registerRespond(Sensor inputSensor)
+        {
+            bool checker = sensorList.Exists(sensor => sensor.patternMatching(sensorName: inputSensor.sensorName));
+
+            if (checker)
+            {
+                Console.WriteLine("Duplicate name. Access denied : " + inputSensor.sensorName);
+            }
+
+            else
+            {
+                Sensor targetSensor = sensorList.Find(sensor =>
+                {
+                    return sensor.patternMatching(ipAddr: inputSensor.getIP());
+                });
+
+                Sensor.TryParse(inputSensor.getBuffer(), ref targetSensor);
+            }
+        }
+
+        void productRespond(Sensor inputSensor)
+        {
+            JsonUnit drink = JsonUnit.Parse(inputSensor.messageValue);
+            bool checker = false;
+
+            if (drinkIO.isRegisteredDrink(drink.name))
+            {
+                checker = true;
+
+                // 재료 재고량 확인
+                List<AmountPerDrinks> recipeList = drinkIO.getAmountPerDrinks(drink.name);
+
+                foreach (var recipe in recipeList)
+                {
+                    // 센서의 값 가져오기
+                    Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: recipe.ingredient));
+
+                    if (targetSensor == null)
+                    {
+                        // 필요한 재료가 현재 서버에 연결되어 있지 않음
+                        checker = false;
+                        break;
+                    }
+
+                    else
+                    {
+                        string value = targetSensor.messageValue;
+                        checker &= (double.Parse(value) >= double.Parse(recipe.amount) * double.Parse(drink.value));
+                    }
+                }
+
+                // 모두 충족시
+                if (checker)
+                {
+                    foreach (var recipe in recipeList)
+                    {
+                        Sensor targetSensor = sensorList.Find(sensor => sensor.patternMatching(sensorName: recipe.ingredient, notSensorType : "webClient"));
+                        asyncSend(targetSensor, "make", targetSensor.messageTarget, inputSensor.messageValue);
+                    }
+
+                    // 생산시의 control 센서값 변경 요청
+                    foreach (var sensor in sensorList)
+                    {
+                        if (sensor.patternMatching(sensorType : "control"))
+                        {
+                            asyncSend(sensor, "make", sensor.messageTarget, inputSensor.messageValue);
+                        }
+                    }
+                }
+
+                else
+                {
+                    Console.WriteLine("Cannot produce the drink as lack of ingredients.");
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Some ingredients missed.");
+            }
+        }
+
+        void noticeRespond(Sensor inputSensor)
+        {
+            Sensor targetSensor
+                = sensorList.Find(sensor => sensor.patternMatching(sensorName: inputSensor.sensorName));
+
+            // just apply
+            Sensor.TryParse(inputSensor.getBuffer(), ref targetSensor);
         }
     }
 }
