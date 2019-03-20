@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Net.Sockets;
 using DataStreamType;
+using System.Collections.Generic;
 
 namespace SensorValueGenerator
 {
     sealed class VesselSensor : ISensor
     {
+        Queue<int> workQueue = new Queue<int>();
+
         public VesselSensor()
         {
             sensorType = "Vessel";
@@ -33,66 +36,22 @@ namespace SensorValueGenerator
             sensorValue = tempValue.ToString();
         }
 
-        protected override void setSensorSettings()
+        protected override void addWork(string jsonString)
         {
-            asyncReceive();
-        }
+            int number = int.Parse(JsonUnit.Parse(jsonString).value);
 
-        protected override void printSensorStatus()
-        {
-            Console.WriteLine("{0} Sensor : {1}", this.sensorType, inputSensorName);
+            for (int i = 0; i < number; i++)
+            {
+                workQueue.Enqueue(1);
+            }
         }
 
         override protected void changeValue()
         {
-            this.sensorValue = (int.Parse(this.sensorValue) - 1).ToString();
-        }
-
-        void asyncReceive()
-        {
-            try
+            if (workQueue.Count > 0)
             {
-                Sensor sensor = new Sensor(toServer, inputSensorName);
-                sensor.sensorType = this.sensorType;
-
-                sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0,
-                    ref sensor.whereFrom, receiveCallback, sensor);
-            }
-
-            catch
-            {
-                tryAsyncReconnect();
-            }
-        }
-
-        void receiveCallback(IAsyncResult ar)
-        {
-            Sensor receiveSensor = (Sensor)ar.AsyncState;
-
-            try
-            {
-                int recvData = receiveSensor.socket.EndReceiveFrom(ar, ref receiveSensor.whereFrom);
-
-                if (recvData > 0)
-                {
-                    Sensor.TryParse(receiveSensor.getBuffer(), ref receiveSensor);
-                    Console.WriteLine("received data : " + receiveSensor.getBuffer());
-
-                    if (receiveSensor.patternMatching(messageType: "make"))
-                    {
-                        Console.WriteLine("Consume {0} for product {1}", inputSensorName, receiveSensor.messageValue);
-                        changeValue();
-                    }
-                }
-
-                receiveSensor.clear();
-                receiveSensor.socket.BeginReceiveFrom(receiveSensor.buffer, 0, receiveSensor.length, 0,
-                    ref receiveSensor.whereFrom, receiveCallback, receiveSensor);
-            }
-
-            catch
-            {
-                tryAsyncReconnect();
+                int amount = workQueue.Dequeue();
+                this.sensorValue = (int.Parse(this.sensorValue) - amount).ToString();
             }
         }
     }

@@ -87,7 +87,7 @@ namespace SimulatorStub
                     {
                         if (clientCommand.Equals("register", StringComparison.OrdinalIgnoreCase))
                         {
-                            string str = string.Format("webClient#{0}#Register#{0}", drinkName);
+                            string str = string.Format("webClient#{0}#Register#All#{0}", userName);
 
                             Sensor.TryParse(str, ref drinkSensor);
                             isRegistered = true;
@@ -96,13 +96,20 @@ namespace SimulatorStub
 
                         else if (clientCommand.Equals("Product", StringComparison.OrdinalIgnoreCase) && isRegistered)
                         {
-                            drinkSensor.setBuffer("Product", "1");
+                            Console.Write("생산 대상 : ");
+                            string productName = Console.ReadLine();
+
+                            Console.Write("생산 개수 : ");
+                            string productNumber = Console.ReadLine();
+
+                            JsonUnit productUnit = new JsonUnit(productName, productNumber);
+                            drinkSensor.setBuffer("Product", drinkSensor.messageTarget, productUnit.serialize());
                             drinkSensor.socket.SendTo(drinkSensor.buffer, drinkSensor.whereFrom);
                         }
 
                         else if (clientCommand.Equals("Show", StringComparison.OrdinalIgnoreCase) && isRegistered)
                         {
-                            drinkSensor.setBuffer("Show", "All");
+                            drinkSensor.setBuffer(drinkSensor.messageTarget, "Show", "All");
                             drinkSensor.socket.SendTo(drinkSensor.buffer, drinkSensor.whereFrom);
 
                             drinkSensor.clear();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using DataStreamType;
+using System.Collections.Generic;
 
 namespace SensorValueGenerator
 {
@@ -27,11 +28,12 @@ namespace SensorValueGenerator
             using (toServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 asyncConnect();
-                setSensorSettings();
+                asyncReceive();
 
                 while (true)
                 {
-                    printSensorStatus();
+                    changeValue();
+                    Console.WriteLine("{0} Sensor : {1}", this.sensorType, inputSensorName);
 
                     try
                     {
@@ -52,15 +54,13 @@ namespace SensorValueGenerator
             }
         }
 
-        protected abstract void setSensorSettings();
-
         protected abstract void getSensorName();
 
         protected abstract void getInitialValue();
 
         protected abstract void changeValue();
 
-        protected abstract void printSensorStatus();
+        protected abstract void addWork(string numberPerDrink);
 
         protected void tryAsyncReconnect()
         {
@@ -72,7 +72,7 @@ namespace SensorValueGenerator
 
             catch
             {
-
+                // 소켓의 connect 자체가 시작되지 않은 케이스
             }
         }
 
@@ -102,7 +102,8 @@ namespace SensorValueGenerator
             {
                 Sensor sensor = new Sensor(toServer, inputSensorName);
                 sensor.sensorType = this.sensorType;
-                sensor.setBuffer(_type, _value);
+
+                sensor.setBuffer(_type, inputSensorName, _value);
 
                 sensor.socket.BeginSendTo(sensor.buffer, 0, sensor.length, 0,
                     sensor.whereFrom, sendCallback, sensor);
@@ -130,6 +131,53 @@ namespace SensorValueGenerator
             {
                 toServer.Disconnect(true);
                 asyncConnect();
+            }
+        }
+
+        void asyncReceive()
+        {
+            try
+            {
+                Sensor sensor = new Sensor(toServer, inputSensorName);
+                sensor.sensorType = this.sensorType;
+
+                sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0,
+                    ref sensor.whereFrom, receiveCallback, sensor);
+            }
+
+            catch
+            {
+                tryAsyncReconnect();
+            }
+        }
+
+        void receiveCallback(IAsyncResult ar)
+        {
+            Sensor receiveSensor = (Sensor)ar.AsyncState;
+
+            try
+            {
+                int recvData = receiveSensor.socket.EndReceiveFrom(ar, ref receiveSensor.whereFrom);
+
+                if (recvData > 0)
+                {
+                    Sensor.TryParse(receiveSensor.getBuffer(), ref receiveSensor);
+                    Console.WriteLine("received data : " + receiveSensor.getBuffer());
+
+                    if (receiveSensor.patternMatching(messageType: "make"))
+                    {
+                        addWork(receiveSensor.messageValue);
+                    }
+                }
+
+                receiveSensor.clear();
+                receiveSensor.socket.BeginReceiveFrom(receiveSensor.buffer, 0, receiveSensor.length, 0,
+                    ref receiveSensor.whereFrom, receiveCallback, receiveSensor);
+            }
+
+            catch
+            {
+                tryAsyncReconnect();
             }
         }
     }

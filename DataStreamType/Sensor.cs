@@ -17,6 +17,7 @@ namespace DataStreamType
         public string sensorType;
         public string sensorName;
         public string messageType;
+        public string messageTarget;
         public string messageValue;
 
         public byte[] buffer { get; private set; }
@@ -29,6 +30,8 @@ namespace DataStreamType
 
             sensorType = "none";
             sensorName = _sensorName;
+
+            messageTarget = "none";
             messageType = "register";
 
             buffer = new byte[100];
@@ -38,8 +41,12 @@ namespace DataStreamType
         {
             string sType = targetSensor.sensorType;
             string sName = targetSensor.sensorName;
+            
             string mType = targetSensor.messageType;
+            string mTarget = targetSensor.messageTarget;
             string mValue = targetSensor.messageValue;
+
+            targetSensor.clear();
 
             try
             {
@@ -47,7 +54,7 @@ namespace DataStreamType
 
                 targetSensor.sensorType = parseResult[0];
                 targetSensor.sensorName = parseResult[1];
-                targetSensor.setBuffer(parseResult[2], parseResult[3].TrimEnd('\0'));
+                targetSensor.setBuffer(parseResult[2], parseResult[3], parseResult[4].TrimEnd('\0'));
 
                 return true;
             }
@@ -56,21 +63,23 @@ namespace DataStreamType
             {
                 targetSensor.sensorType = sType;
                 targetSensor.sensorName = sName;
-                targetSensor.setBuffer(mType, mValue);
+                targetSensor.setBuffer(mType, mTarget, mValue);
                 
                 return false;
             }
         }
 
-        public void setBuffer(string type, string value)
+        public void setBuffer(string type, string target, string value)
         {
             messageType = type;
+            messageTarget = target;
             messageValue = value;
 
             StringBuilder sb = new StringBuilder();
             sb.Append(sensorType); sb.Append(delimeter);
             sb.Append(sensorName); sb.Append(delimeter);
             sb.Append(messageType); sb.Append(delimeter);
+            sb.Append(messageTarget); sb.Append(delimeter);
             sb.Append(messageValue);
 
             buffer = Encoding.Unicode.GetBytes(sb.ToString());

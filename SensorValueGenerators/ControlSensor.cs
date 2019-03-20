@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Net.Sockets;
 using DataStreamType;
+using System.Collections.Generic;
 
 namespace SensorValueGenerator
 {
     sealed class ControlSensor : ISensor
     {
+        Queue<double> workQueue = new Queue<double>();
+
         public ControlSensor()
         {
             this.sensorType = "Control";
@@ -33,25 +35,36 @@ namespace SensorValueGenerator
             sensorValue = tempValue.ToString();
         }
 
-        protected override void setSensorSettings()
-        {
-
-        }
-
-        protected override void printSensorStatus()
-        {
-            Console.WriteLine("{0} Sensor : {1}", this.sensorType, inputSensorName);
-            changeValue();
-        }
-
         override protected void changeValue()
         {
-            Random rand = new Random();
             double tempNum = double.Parse(this.sensorValue);
-            double randNum = rand.NextDouble();
+            double variance;
 
-            tempNum += (randNum > 0.5) ? (randNum - 0.5) : -randNum;
+            if (workQueue.Count > 0)
+            {
+                variance = workQueue.Dequeue();
+                tempNum += variance;
+            }
+
+            else
+            {
+                Random rand = new Random();
+                variance = rand.NextDouble();
+                tempNum += (variance > 0.5) ? (variance - 0.5) : -variance;
+            }
+
             this.sensorValue = Math.Round(tempNum, 3).ToString();
+        }
+
+        protected override void addWork(string jsonString)
+        {
+            JsonUnit work = JsonUnit.Parse(jsonString);
+            int number = int.Parse(work.value);
+
+            for (int i = 0; i < number; i++)
+            {
+                workQueue.Enqueue(0.2);
+            }
         }
     }
 }

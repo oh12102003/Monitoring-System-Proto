@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Net.Sockets;
 using DataStreamType;
+using System.Collections.Generic;
 
 namespace SensorValueGenerator
 {
     sealed class MaterialSensor : ISensor
     {
-        double amount;
+        Queue<double> workQueue = new Queue<double>();
 
         public MaterialSensor()
         {
@@ -35,70 +35,29 @@ namespace SensorValueGenerator
             sensorValue = tempValue.ToString();
         }
 
-        protected override void setSensorSettings()
-        {
-            asyncReceive();
-        }
-
-        protected override void printSensorStatus()
-        {
-            Console.WriteLine("{0} Sensor : {1}", this.sensorType, inputSensorName);
-        }
-
         override protected void changeValue()
         {
-            this.sensorValue = (double.Parse(sensorValue) - amount).ToString();
-        }
-
-        void asyncReceive()
-        {
-            try
+            if (workQueue.Count > 0)
             {
-                Sensor sensor = new Sensor(toServer, inputSensorName);
-                sensor.sensorType = sensorType;
-
-                sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0,
-                    ref sensor.whereFrom, receiveCallback, sensor);
-            }
-
-            catch
-            {
-                tryAsyncReconnect();
+                double amount = workQueue.Dequeue();
+                this.sensorValue = (double.Parse(sensorValue) - amount).ToString();
             }
         }
 
-        void receiveCallback(IAsyncResult ar)
+        protected override void addWork(string jsonString)
         {
-            Sensor receiveSensor = (Sensor)ar.AsyncState;
+            JsonUnit work = JsonUnit.Parse(jsonString);
+            int workNumber = int.Parse(work.value);
 
-            try
+            Random rand = new Random();
+
+            JsonStream js = new JsonStream();
+            double amount = double.Parse(js.getAmount(work.name, inputSensorName));
+
+            for (int i = 0; i < workNumber; i++)
             {
-                int recvData = receiveSensor.socket.EndReceiveFrom(ar, ref receiveSensor.whereFrom);
-
-                if (recvData > 0)
-                {
-                    Sensor.TryParse(receiveSensor.getBuffer(), ref receiveSensor);
-                    Console.WriteLine("received data : " + receiveSensor.getBuffer());
-
-                    if (receiveSensor.patternMatching(messageType: "make"))
-                    {
-                        Console.WriteLine("Consume {0} for product {1}", inputSensorName, receiveSensor.messageValue);
-
-                        JsonStream js = new JsonStream();
-                        amount = double.Parse(js.getAmount(receiveSensor.messageValue, inputSensorName));
-
-                        changeValue();
-                    }
-                }
-
-                receiveSensor.clear();
-                receiveSensor.socket.BeginReceiveFrom(receiveSensor.buffer, 0, receiveSensor.length, 0,
-                    ref receiveSensor.whereFrom, receiveCallback, receiveSensor);
-            }
-
-            catch
-            {
-                tryAsyncReconnect();
+                double randAmount = Math.Round(amount + rand.NextDouble(), 3);
+                workQueue.Enqueue(randAmount);
             }
         }
     }

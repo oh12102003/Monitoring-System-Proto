@@ -126,7 +126,7 @@ namespace CometServer_MiddleServer
         void asyncReceive(Sensor sensor)
         {
             sensor.clear();
-            sensor.socket.BeginReceiveFrom(sensor.buffer, 0, 0, 0, ref sensor.whereFrom, receiveCallback, sensor);
+            sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0, ref sensor.whereFrom, receiveCallback, sensor);
         }
 
         /// <summary>
@@ -324,11 +324,13 @@ namespace CometServer_MiddleServer
         /// <param name="sensor"> 데이터를 보낼 센서</param>
         /// <param name="messageType"> 메시지의 타입</param>
         /// <param name="messageValue"> 메시지의 값 </param>
-        void asyncSend(Sensor sensor, string messageType, string messageValue)
+        void asyncSend(Sensor sensor, string messageType, string messageTarget, string messageValue)
         {
-            sensor.clear();
-            sensor.setBuffer(messageType, messageValue);
+            sensor.setBuffer(messageType, messageTarget, messageValue);
+
+            Console.WriteLine("send : " + sensor.getBuffer());
             sensor.socket.BeginSendTo(sensor.buffer, 0, sensor.length, 0, sensor.whereFrom, sendCallback, sensor);
+            sensor.clear();
         }
 
         /// <summary>

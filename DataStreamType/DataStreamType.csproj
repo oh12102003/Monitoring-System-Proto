@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Global.cs" />
     <Compile Include="JsonStream.cs" />
+    <Compile Include="JsonUnit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensor.cs" />
   </ItemGroup>
