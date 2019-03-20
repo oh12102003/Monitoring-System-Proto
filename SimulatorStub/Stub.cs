@@ -59,8 +59,8 @@ namespace SimulatorStub
             Sensor drinkSensor;
 
             // start to conect server
-            Console.Write("Write the drink for management : ");
-            string drinkName = Console.ReadLine();
+            Console.Write("Write the user name : ");
+            string userName = Console.ReadLine();
 
             // connect to server
             toSimulator.Connect(endPoint);
@@ -160,6 +160,8 @@ namespace SimulatorStub
             List<AmountPerDrinks> chilsung = new List<AmountPerDrinks>();
             List<AmountPerDrinks> pepsi = new List<AmountPerDrinks>();
             List<AmountPerDrinks> water = new List<AmountPerDrinks>();
+            List<AmountPerDrinks> controlTest = new List<AmountPerDrinks>();
+            List<AmountPerDrinks> vesselTest = new List<AmountPerDrinks>();
 
             chilsung.Add(new AmountPerDrinks("1.5L 칠성사이다 패트병", "1"));
             chilsung.Add(new AmountPerDrinks("탄산 혼합물", "20"));
@@ -172,6 +174,10 @@ namespace SimulatorStub
             water.Add(new AmountPerDrinks("패트병", "1"));
             water.Add(new AmountPerDrinks("물", "20"));
 
+            vesselTest.Add(new AmountPerDrinks("패트병", "1"));
+
+            js.applyInputData("패트병", vesselTest);
+            js.applyInputData("테스트", controlTest);
             js.applyInputData("생수", water);
             js.applyInputData("칠성사이다", chilsung);
             js.applyInputData("펩시", pepsi);

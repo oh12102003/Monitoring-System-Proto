@@ -63,9 +63,9 @@ namespace CometServer_MiddleServer
 
                         // recovery
                         serverSocket.Disconnect(true);
+
                         serverSocket.Bind(Global.serverAddr);
                         serverSocket.Listen(5);
-
                         asyncAccept();
                     }
 

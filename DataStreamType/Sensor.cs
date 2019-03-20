@@ -107,6 +107,7 @@ namespace DataStreamType
         /// 
         /// <param name="ipAddr"> 패턴 매칭을 수행할 해당 소켓의 ip:port 값 (기본값 null, 매칭에 포함하지 않음) </param>
         /// <param name="notIpAddr"> 해당 데이터가 없는지 패턴 매칭을 수행할 ip:port 값 (기본값 null, 매칭에 포함하지 않음) </param>
+        /// 
         /// <returns> 매칭 되었는지에 대한 true / false </returns>
         public bool patternMatching(string sensorType = null, string notSensorType = null,
             string sensorName = null, string notSensorName = null,
