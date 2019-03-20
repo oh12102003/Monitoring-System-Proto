@@ -54,6 +54,24 @@ namespace CometServer_MiddleServer
                     {
                         Console.WriteLine("Connected sensor list");
                         printsensorList();
+
+                        foreach(var sensor in sensorList)
+                        {
+                            if (sensor.patternMatching(sensorType : "webClient"))
+                            {
+                                StringBuilder context = new StringBuilder();
+
+                                foreach(var targetSensor in sensorList)
+                                {
+                                    if (targetSensor.patternMatching(notSensorType : "webClient"))
+                                    {
+                                        context.Append(JsonConvert.SerializeObject(new JsonUnit(targetSensor.sensorName, targetSensor.messageValue)));
+                                    }
+                                }
+
+                                asyncSend(sensor, "Status", sensor.messageTarget, context.ToString());
+                            }
+                        }
                     }
 
 
