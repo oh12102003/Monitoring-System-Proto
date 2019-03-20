@@ -76,3 +76,4 @@ C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\ko\Microsoft.Owin.Security.resources.dll
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\DataStreamType.dll
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\DataStreamType.pdb
+C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\Newtonsoft.Json.pdb

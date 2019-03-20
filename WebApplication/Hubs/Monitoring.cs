@@ -10,55 +10,110 @@ namespace WebApplication.Hubs
     public class Monitoring : Hub
     {
         static IHubContext toClient = GlobalHost.ConnectionManager.GetHubContext<Monitoring>();
-        static Sensor toMiddleServer;
+        static Socket toSimulator = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        static Sensor hubSensor;
 
-        public Monitoring()
+        public void start()
         {
-            // 미들 서버에 연결
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(Global.serverAddr);
-            toClient.Clients.All.printInConsole("Connected to Middle Server..");
+            // connect to server
+            toSimulator.Connect(Global.serverAddr);
+            hubSensor = new Sensor(toSimulator);
 
-            toMiddleServer = new Sensor(socket);
+            // 차후에 유저 아이디 구해오는거 구현 예정
+            // string userId = toClient.Clients.All.getUserId();
+            string userId = "user";
+            string str = string.Format("webClient#{0}#Register#All#{0}", userId);
 
-            // register 코드
-            toMiddleServer.sensorName = "칠성사이다";
-            toMiddleServer.sensorType = "webClient";
+            Sensor.TryParse(str, ref hubSensor);
+            hubSensor.socket.SendTo(hubSensor.buffer, hubSensor.whereFrom);
 
-            toMiddleServer.setBuffer("Register", "칠성사이다");
-            toMiddleServer.socket.Send(toMiddleServer.buffer, 0, toMiddleServer.length, SocketFlags.None);
-            toClient.Clients.All.printInConsole("Send register request...");
+            asyncReceive(hubSensor);
         }
 
-        public void Show(string type, string msg)
+        public void product(string productName, string productNumber)
         {
-            // Show 명령어 전송
-            toMiddleServer.setBuffer(type, msg);
-            toMiddleServer.socket.BeginSendTo(toMiddleServer.buffer, 0, toMiddleServer.length, SocketFlags.None,
-                toMiddleServer.whereFrom, asyncSendShowCommand, toMiddleServer);
-            toMiddleServer.socket.BeginReceiveFrom(toMiddleServer.buffer, 0, toMiddleServer.length, SocketFlags.None,
-                ref toMiddleServer.whereFrom, asyncReceiveResponseData, toMiddleServer);
+            JsonUnit productUnit = new JsonUnit(productName, productNumber);
+            asyncSend(hubSensor, "Product", hubSensor.messageTarget, productUnit.serialize());
         }
 
-        void asyncSendShowCommand(IAsyncResult ar)
+        public void disconnect()
         {
-            Sensor toServer = ar.AsyncState as Sensor;
-            toServer.socket.EndSend(ar);
-
-            toServer.setBuffer("Show", "All");
-            toServer.socket.BeginSendTo(toServer.buffer, 0, toServer.length, SocketFlags.None,
-                toServer.whereFrom, asyncSendShowCommand, toServer);
+            // 이상하게 작동하지 않는 함수....
+            hubSensor.Dispose();
         }
 
-        void asyncReceiveResponseData(IAsyncResult ar)
+        protected void asyncConnect()
         {
-            Sensor fromServer = ar.AsyncState as Sensor;
-            fromServer.socket.EndReceive(ar);
-            toClient.Clients.All.printInPage(fromServer.getBuffer());
+            toSimulator.BeginConnect(Global.serverAddr, connectCallback, toSimulator);
+        }
 
-            fromServer.clear();
-            fromServer.socket.BeginReceiveFrom(fromServer.buffer, 0, fromServer.length, SocketFlags.None,
-                ref fromServer.whereFrom, asyncReceiveResponseData, fromServer);
+        protected void connectCallback(IAsyncResult ar)
+        {
+            try
+            {
+                toSimulator.EndConnect(ar);
+            }
+
+            catch
+            {
+                Console.WriteLine("Fail to connect server. Retry connect");
+                asyncConnect();
+            }
+        }
+
+        void asyncReceive(Sensor sensor)
+        {
+            sensor.clear();
+            sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0, ref sensor.whereFrom, receiveCallback, sensor);
+        }
+
+        void receiveCallback(IAsyncResult ar)
+        {
+            Sensor inputSensor = ar.AsyncState as Sensor;
+
+            try
+            {
+                int dataSize = inputSensor.socket.EndReceiveFrom(ar, ref inputSensor.whereFrom);
+
+                if (dataSize > 0)
+                {
+                    Sensor.TryParse(inputSensor.getBuffer(), ref inputSensor);
+                    toClient.Clients.All.printInPage(inputSensor.getBuffer());
+                    inputSensor.clear();
+                }
+
+                inputSensor.socket.BeginReceiveFrom(inputSensor.buffer, 0, inputSensor.length, 0,
+                    ref inputSensor.whereFrom, receiveCallback, inputSensor);
+            }
+
+            catch
+            {
+                toSimulator.Disconnect(true);
+                asyncConnect();
+            }
+        }
+
+        void asyncSend(Sensor sensor, string messageType, string messageTarget, string messageValue)
+        {
+            sensor.setBuffer(messageType, messageTarget, messageValue);
+            sensor.socket.BeginSendTo(sensor.buffer, 0, sensor.length, 0, sensor.whereFrom, sendCallback, sensor);
+            sensor.clear();
+        }
+
+        void sendCallback(IAsyncResult ar)
+        {
+            Sensor sendSensor = ar.AsyncState as Sensor;
+
+            try
+            {
+                sendSensor.socket.EndSendTo(ar);
+            }
+
+            catch
+            {
+                toSimulator.Disconnect(true);
+                asyncConnect();
+            }
         }
     }
 }

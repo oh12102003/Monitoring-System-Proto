@@ -7,6 +7,12 @@
 </div>
 
 <div>
+    <form>
+        <input id = "productName" type = "text" placeholder = "생산할 음료수 이름" />
+        <input id  = "productNumber" type = "number" placeholder = "생산 개수" />
+        <input id = "productStartButton" type = "button" value = "생산" />
+    </form>
+
     <div id = "messageLayer"> </div>
 </div>
 
@@ -32,7 +38,21 @@
            
             // Start the connection.
             $.connection.hub.start().done(function () {
-                monitoringHub.server.show("Show", "All");
+                monitoringHub.server.start();
+
+                $("#productStartButton").click(function () {
+                    let name = $("#productName").val();
+                    let number = $("#productNumber").val();
+
+                    monitoringHub.server.product(name, number);
+                });
+            });
+
+            // 창 닫을 때 연결 종료하기
+            $(window).bind('beforeunload', function () {
+                alert("진짜로 닫히는 이벤트가 맞나요?");
+                monitoringHub.server.disconnect();
+                alert("설마 이거도 되었는데?");
             });
         });
 
