@@ -11,35 +11,27 @@ namespace WebApplication.Hubs
     {
         static IHubContext toClient = GlobalHost.ConnectionManager.GetHubContext<Monitoring>();
         static Socket toSimulator = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        static Sensor hubSensor;
+        Sensor hubSensor;
+
+        string userId;
 
         public void start()
         {
             // connect to server
-            toSimulator.Connect(Global.serverAddr);
-            hubSensor = new Sensor(toSimulator);
-
-            // 차후에 유저 아이디 구해오는거 구현 예정
-            // string userId = toClient.Clients.All.getUserId();
-            string userId = "user";
-            string str = string.Format("webClient#{0}#Register#All#{0}", userId);
-
-            Sensor.TryParse(str, ref hubSensor);
-            hubSensor.socket.SendTo(hubSensor.buffer, hubSensor.whereFrom);
-
-            asyncReceive(hubSensor);
+            asyncConnect();
         }
 
         public void product(string productName, string productNumber)
         {
+            Sensor productSensor = new Sensor(toSimulator, "webClient", userId);
+
             JsonUnit productUnit = new JsonUnit(productName, productNumber);
-            asyncSend(hubSensor, "Product", hubSensor.messageTarget, productUnit.serialize());
+            asyncSend(productSensor, "Product", productSensor.messageTarget, productUnit.serialize());
         }
 
         public void disconnect()
         {
-            // 이상하게 작동하지 않는 함수....
-            hubSensor.Dispose();
+            // unregister 명령어 구현 예정
         }
 
         protected void asyncConnect()
@@ -52,6 +44,16 @@ namespace WebApplication.Hubs
             try
             {
                 toSimulator.EndConnect(ar);
+                
+                // 차후에 유저 아이디 구해오는거 구현 예정
+                // string userId = toClient.Clients.All.getUserId();
+                userId = "user";
+
+                hubSensor = new Sensor(toSimulator, "webClient", userId);
+                asyncSend(hubSensor, "register", "all", userId);
+
+                Sensor receiveSensor = new Sensor(toSimulator, "webClient", userId);
+                asyncReceive(receiveSensor);
             }
 
             catch
@@ -78,10 +80,14 @@ namespace WebApplication.Hubs
                 if (dataSize > 0)
                 {
                     Sensor.TryParse(inputSensor.getBuffer(), ref inputSensor);
-                    toClient.Clients.All.printInPage(inputSensor.getBuffer());
-                    inputSensor.clear();
+
+                    if (inputSensor.patternMatching(messageType : "status"))
+                    {
+                        toClient.Clients.All.printInPage(inputSensor.getBuffer());
+                    }
                 }
 
+                inputSensor.clear();
                 inputSensor.socket.BeginReceiveFrom(inputSensor.buffer, 0, inputSensor.length, 0,
                     ref inputSensor.whereFrom, receiveCallback, inputSensor);
             }
@@ -97,7 +103,6 @@ namespace WebApplication.Hubs
         {
             sensor.setBuffer(messageType, messageTarget, messageValue);
             sensor.socket.BeginSendTo(sensor.buffer, 0, sensor.length, 0, sensor.whereFrom, sendCallback, sensor);
-            sensor.clear();
         }
 
         void sendCallback(IAsyncResult ar)

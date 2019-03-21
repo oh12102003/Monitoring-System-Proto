@@ -96,14 +96,18 @@ namespace SimulatorStub
 
                         else if (clientCommand.Equals("Product", StringComparison.OrdinalIgnoreCase) && isRegistered)
                         {
+                            /*
                             Console.Write("생산 대상 : ");
                             string productName = Console.ReadLine();
 
                             Console.Write("생산 개수 : ");
-                            string productNumber = Console.ReadLine();
+                            string productNumber = Console.ReadLine();*/
+                            string productName = "패트병";
+                            string productNumber = "20";
 
                             JsonUnit productUnit = new JsonUnit(productName, productNumber);
                             drinkSensor.setBuffer("Product", drinkSensor.messageTarget, productUnit.serialize());
+                            Console.WriteLine(drinkSensor.getBuffer());
                             drinkSensor.socket.SendTo(drinkSensor.buffer, drinkSensor.whereFrom);
                         }
 

@@ -23,12 +23,12 @@ namespace DataStreamType
         public byte[] buffer { get; private set; }
         public int length { get { return buffer.Length; } }
 
-        public Sensor(Socket dataSocket, string _sensorName = "unRegistered")
+        public Sensor(Socket dataSocket, string _sensorType = "none", string _sensorName = "unRegistered")
         {
             socket = dataSocket;
             whereFrom = dataSocket.RemoteEndPoint;
 
-            sensorType = "none";
+            sensorType = _sensorType;
             sensorName = _sensorName;
 
             messageTarget = "none";

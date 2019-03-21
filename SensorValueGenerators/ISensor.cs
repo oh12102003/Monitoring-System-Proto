@@ -100,8 +100,7 @@ namespace SensorValueGenerator
         {
             try
             {
-                Sensor sensor = new Sensor(toServer, inputSensorName);
-                sensor.sensorType = this.sensorType;
+                Sensor sensor = new Sensor(toServer, sensorType, inputSensorName);
 
                 sensor.setBuffer(_type, inputSensorName, _value);
 
@@ -138,8 +137,7 @@ namespace SensorValueGenerator
         {
             try
             {
-                Sensor sensor = new Sensor(toServer, inputSensorName);
-                sensor.sensorType = this.sensorType;
+                Sensor sensor = new Sensor(toServer, sensorType, inputSensorName);
 
                 sensor.socket.BeginReceiveFrom(sensor.buffer, 0, sensor.length, 0,
                     ref sensor.whereFrom, receiveCallback, sensor);

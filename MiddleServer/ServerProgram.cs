@@ -52,26 +52,14 @@ namespace CometServer_MiddleServer
 
                     try
                     {
-                        Console.WriteLine("Connected sensor list");
                         printsensorList();
-
-                        foreach(var sensor in sensorList)
+                        sensorList.ForEach(sensor =>
                         {
                             if (sensor.patternMatching(sensorType : "webClient"))
                             {
-                                StringBuilder context = new StringBuilder();
-
-                                foreach(var targetSensor in sensorList)
-                                {
-                                    if (targetSensor.patternMatching(notSensorType : "webClient"))
-                                    {
-                                        context.Append(JsonConvert.SerializeObject(new JsonUnit(targetSensor.sensorName, targetSensor.messageValue)));
-                                    }
-                                }
-
-                                asyncSend(sensor, "Status", sensor.messageTarget, context.ToString());
+                                asyncSendLoop(sensor);
                             }
-                        }
+                        });
                     }
 
 
@@ -94,6 +82,42 @@ namespace CometServer_MiddleServer
                         Console.Clear();
                     }
                 }
+            }
+        }
+
+        void asyncSendLoop(Sensor targetSensor)
+        {
+            Sensor newSensor = new Sensor(targetSensor.socket, targetSensor.sensorType, targetSensor.sensorName);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Clear();
+
+            foreach (var sensor in sensorList)
+            {
+                if (sensor.patternMatching(notSensorType: "webClient"))
+                {
+                    JsonUnit unit = new JsonUnit(sensor.sensorName, sensor.messageValue);
+                    sb.Append(unit.serialize());
+                }
+            }
+
+            newSensor.setBuffer("status", newSensor.messageTarget, sb.ToString());
+            newSensor.socket.BeginSendTo(newSensor.buffer, 0, newSensor.length, 0, newSensor.whereFrom, asyncSendLoopCallback, newSensor);
+        }
+
+        void asyncSendLoopCallback(IAsyncResult ar)
+        {
+            Sensor inputSensor = ar.AsyncState as Sensor;
+
+            try
+            {
+                inputSensor.socket.EndSendTo(ar);
+            }
+
+            catch
+            {
+                sensorList.Remove(inputSensor);
+                inputSensor.Dispose();
             }
         }
 
@@ -245,10 +269,10 @@ namespace CometServer_MiddleServer
         /// <summary>
         /// 현재 미들 서버에 연결되어 있는 센서 및 클라이언트를 모두 출력하는 함수
         /// </summary>
-        static void printsensorList()
+        void printsensorList()
         {
             Console.WriteLine("------------------------------------------");
-            Console.WriteLine("Sensor Status");
+            Console.WriteLine("Connected sensor status");
 
             if (sensorList.Count == 0)
             {
@@ -269,7 +293,7 @@ namespace CometServer_MiddleServer
 
         void registerRespond(Sensor inputSensor)
         {
-            bool checker = sensorList.Exists(sensor => sensor.patternMatching(sensorName: inputSensor.sensorName));
+            bool checker = sensorList.Exists(sensor => sensor.patternMatching(sensorName: inputSensor.sensorName, notIpAddr : inputSensor.getIP()));
 
             if (checker)
             {
