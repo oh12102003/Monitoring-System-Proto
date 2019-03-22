@@ -11,9 +11,8 @@ namespace WebApplication.Hubs
     {
         static IHubContext toClient = GlobalHost.ConnectionManager.GetHubContext<Monitoring>();
         static Socket toSimulator = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        Sensor hubSensor;
-
-        string userId;
+        static string userId;
+        static string messageTarget;
 
         public void start()
         {
@@ -26,7 +25,7 @@ namespace WebApplication.Hubs
             Sensor productSensor = new Sensor(toSimulator, "webClient", userId);
 
             JsonUnit productUnit = new JsonUnit(productName, productNumber);
-            asyncSend(productSensor, "Product", productSensor.messageTarget, productUnit.serialize());
+            asyncSend(productSensor, "Product", productUnit.serialize());
         }
 
         public void disconnect()
@@ -49,8 +48,9 @@ namespace WebApplication.Hubs
                 // string userId = toClient.Clients.All.getUserId();
                 userId = "user";
 
-                hubSensor = new Sensor(toSimulator, "webClient", userId);
-                asyncSend(hubSensor, "register", "all", userId);
+                Sensor hubSensor = new Sensor(toSimulator, "webClient", userId);
+                messageTarget = "all";
+                asyncSend(hubSensor, "register", userId);
 
                 Sensor receiveSensor = new Sensor(toSimulator, "webClient", userId);
                 asyncReceive(receiveSensor);
@@ -99,7 +99,7 @@ namespace WebApplication.Hubs
             }
         }
 
-        void asyncSend(Sensor sensor, string messageType, string messageTarget, string messageValue)
+        void asyncSend(Sensor sensor, string messageType, string messageValue)
         {
             sensor.setBuffer(messageType, messageTarget, messageValue);
             sensor.socket.BeginSendTo(sensor.buffer, 0, sensor.length, 0, sensor.whereFrom, sendCallback, sensor);
