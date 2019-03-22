@@ -1,0 +1,17 @@
+﻿.slideContainer {
+    width : 100%;
+    max-width:800px;
+
+    margin-top : 3em;
+
+    display:inline-block
+}
+
+.slideImageContainer {
+    border-radius : 2em;
+    
+    width : 100%;
+    height : 500px;
+
+    display : none;
+}

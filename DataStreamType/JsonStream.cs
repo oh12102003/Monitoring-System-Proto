@@ -6,64 +6,7 @@ using System;
 
 namespace DataStreamType
 {
-    public class Drink
-    {
-        public string drinkName;
-        public List<AmountPerDrinks> recipe;
-
-        public Drink(string _drinkName, List<AmountPerDrinks> _recipe)
-        {
-            this.drinkName = _drinkName;
-            this.recipe = _recipe;
-        }
-
-        public void addIngredient(AmountPerDrinks apd)
-        {
-            this.recipe.Add(apd);
-        }
-
-        public void updateIngredient(AmountPerDrinks apd)
-        {
-            foreach(var oneData in recipe)
-            {
-                if (oneData.ingredient.Equals(apd.ingredient))
-                {
-                    oneData.amount = apd.amount;
-                    return;
-                }
-            }
-        }
-
-        public void deleteIngredient(string ingredient)
-        {
-            foreach (var oneData in recipe)
-            {
-                if (oneData.ingredient.Equals(ingredient))
-                {
-                    recipe.Remove(oneData);
-                    return;
-                }
-            }
-        }
-
-        public void deleteIngredient(AmountPerDrinks apd)
-        {
-            this.deleteIngredient(apd.ingredient);
-        }
-
-        public string getAmount(string ingredientName)
-        {
-            foreach (var oneData in recipe)
-            {
-                if (oneData.ingredient.Equals(ingredientName))
-                {
-                    return oneData.amount;
-                }
-            }
-
-            return null;
-        }
-    }
+    
 
     public class AmountPerDrinks
     {
@@ -137,24 +80,24 @@ namespace DataStreamType
             // 한 줄씩 읽으면서 수정되었다면 수정
             using (reader = new StreamReader(filePath, Encoding.UTF8))
             {
-                while (!reader.EndOfStream)
-                {
-                    Drink drink = JsonConvert.DeserializeObject<Drink>(reader.ReadLine());
+                string stringJson = reader.ReadToEnd();
 
+                List<Drink> drinkList = JsonConvert.DeserializeObject<List<Drink>>(stringJson);
+                foreach (var drink in drinkList)
+                {
                     if (drink.drinkName.Equals(_drinkName))
                     {
                         isUpdated = true;
                         drink.recipe = _recipe;
                     }
 
-                    sb.AppendLine(JsonConvert.SerializeObject(drink));
+                    sb.Append(JsonConvert.SerializeObject(drink));
                 }
 
                 // (업데이트 되지 않음 = 추가) 마지막 라인에 추가
                 if (!isUpdated)
                 {
-                    Drink drink = new Drink(_drinkName, _recipe);
-                    sb.AppendLine(JsonConvert.SerializeObject(drink));
+                    sb.Append(JsonConvert.SerializeObject(new Drink(_drinkName, _recipe)));
                 }
             }
 

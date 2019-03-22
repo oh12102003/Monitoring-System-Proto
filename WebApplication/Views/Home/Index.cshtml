@@ -1,65 +1,22 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
 }
 
-<div class = "jumbotron" style = "border : solid grey 1px; border-color : #ccc; height : 15em; width : 100%; margin : 1em; padding : 1em;">
-    넘어가는 사진 넣기
-</div>
-
-<div>
-    <form>
-        <input id = "productName" type = "text" placeholder = "생산할 음료수 이름" />
-        <input id  = "productNumber" type = "number" placeholder = "생산 개수" />
-        <input id = "productStartButton" type = "button" value = "생산" />
-    </form>
-
-    <div id = "messageLayer"> </div>
-</div>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="@Url.Content("~/Content/mainPageStyleSheet.css")" />
 
 @section scripts {
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>
-
-    <script>
-        $(function () {
-            // Reference the auto-generated proxy for the hub.
-            var monitoringHub = $.connection.monitoringHub;
-
-            // client(in hub) function
-            monitoringHub.client.printInConsole = function (text) {
-                console.log("[" + text + "]");
-            };
-
-            monitoringHub.client.printInPage = function (text) {
-                $("#messageLayer").html(text);
-            };
-
-           
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                monitoringHub.server.start();
-
-                $("#productStartButton").click(function () {
-                    let name = $("#productName").val();
-                    let number = $("#productNumber").val();
-
-                    monitoringHub.server.product(name, number);
-                });
-            });
-
-            // 창 닫을 때 연결 종료하기
-            $(window).bind('beforeunload', function () {
-                alert("진짜로 닫히는 이벤트가 맞나요?");
-                monitoringHub.server.disconnect();
-                alert("설마 이거도 되었는데?");
-            });
-        });
-
-        // This optional function html-encodes messages for display in the page.
-        function htmlEncode(value) {
-            var encodedValue = $('<div />').text(value).html();
-            return encodedValue;
-        }
-    </script>
+    <script src="~/Scripts/mainPage.js"></script>
 }
+
+<div style = "text-align : center;">
+    <div class="w3-content w3-display-container slideContainer">
+        <img class="slideImageContainer w3-animate-opacity" src="@Url.Content("~/Sources/Images/mainPagePic_1.png")" style="width:100%">
+        <img class="slideImageContainer w3-animate-opacity" src="@Url.Content("~/Sources/Images/mainPagePic_2.png")" style="width:100%">
+        <img class="slideImageContainer w3-animate-opacity" src="@Url.Content("~/Sources/Images/mainPagePic_3.png")" style="width:100%">
+
+        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+    </div>
+</div>

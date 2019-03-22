@@ -182,6 +182,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\mainPageStyleSheet.css" />
     <Content Include="Content\navBarStyleSheet.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -204,10 +205,19 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\mainPage.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Sources\Images\mainPagePic_1.png" />
+    <Content Include="Sources\Images\mainPagePic_2.png" />
+    <Content Include="Sources\Images\mainPagePic_3.png" />
+    <Content Include="Sources\Images\생수.jpg" />
+    <Content Include="Sources\Images\칠성사이다.jpg" />
+    <Content Include="Sources\Images\테스트.jpg" />
+    <Content Include="Sources\Images\패트병.jpg" />
+    <Content Include="Sources\Images\펩시.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -219,9 +229,9 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Monitoring\Index.cshtml" />
+    <Content Include="Sources\drink.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
