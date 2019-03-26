@@ -6,3 +6,11 @@ C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.csprojResolveAssemblyReference.cache
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.dll
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\bin\Debug\DataStreamType.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\bin\Debug\DataStreamType.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\bin\Debug\Newtonsoft.Json.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\bin\Debug\Newtonsoft.Json.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\bin\Debug\Newtonsoft.Json.xml
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.csprojResolveAssemblyReference.cache
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.pdb

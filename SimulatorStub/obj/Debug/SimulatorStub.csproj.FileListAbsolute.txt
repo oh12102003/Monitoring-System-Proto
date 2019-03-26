@@ -9,3 +9,14 @@ C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.csprojResolveAssemblyReference.cache
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.exe
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\SimulatorStub.exe.config
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.exe
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\obj\Debug\SimulatorStub.csprojResolveAssemblyReference.cache
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\SimulatorStub.exe
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\SimulatorStub.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\DataStreamType.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\Newtonsoft.Json.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\DataStreamType.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\Newtonsoft.Json.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\Newtonsoft.Json.xml

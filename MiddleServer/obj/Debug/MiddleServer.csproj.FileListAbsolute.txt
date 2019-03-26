@@ -12,3 +12,14 @@ C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\MiddleServer.pdb
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.exe
 C:\Users\LDCC\Desktop\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\MiddleServer.exe.config
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.exe
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\MiddleServer.exe
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\MiddleServer.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\DataStreamType.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\Newtonsoft.Json.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\DataStreamType.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\Newtonsoft.Json.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\Newtonsoft.Json.xml
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.csprojResolveAssemblyReference.cache
