@@ -3,9 +3,14 @@ using System.Collections.Generic;
 
 namespace DataStreamType
 {
-    public class JsonList
+    public interface IJsonType
     {
-        List<JsonUnit> sensorList;
+        string serialize();
+    }
+
+    public class JsonList : IJsonType
+    {
+        public List<JsonUnit> sensorList = null;
 
         public JsonList()
         {
@@ -47,9 +52,14 @@ namespace DataStreamType
         {
             return JsonConvert.SerializeObject(this);
         }
+
+        public static JsonList Parse(string str)
+        {
+            return JsonConvert.DeserializeObject<JsonList>(str);
+        }
     }
 
-    public class JsonUnit
+    public class JsonUnit : IJsonType
     {
         public string name;
         public string type;
