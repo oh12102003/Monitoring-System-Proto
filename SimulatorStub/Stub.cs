@@ -104,7 +104,7 @@ namespace SimulatorStub
                             string productName = "패트병";
                             string productNumber = "20";
 
-                            JsonUnit productUnit = new JsonUnit(productName,"drink", productNumber);
+                            JsonUnit productUnit = new JsonUnit(productName, "drink", productNumber);
                             drinkSensor.setBuffer("Product", drinkSensor.messageTarget, productUnit.serialize());
                             Console.WriteLine(drinkSensor.getBuffer());
                             drinkSensor.socket.SendTo(drinkSensor.buffer, drinkSensor.whereFrom);
