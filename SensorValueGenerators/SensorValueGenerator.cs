@@ -1,7 +1,4 @@
-﻿using DataStreamType;
-using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System;
 
 namespace SensorValueGenerator
 {
