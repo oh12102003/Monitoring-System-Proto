@@ -20,11 +20,11 @@ namespace WebApplication.Hubs
             asyncConnect();
         }
 
-        public void product(string productName, string productNumber)
+        public void product(string productName, string matType, string productNumber)
         {
             Sensor productSensor = new Sensor(toSimulator, "webClient", userId);
 
-            JsonUnit productUnit = new JsonUnit(productName, productNumber);
+            JsonUnit productUnit = new JsonUnit(productName, matType, productNumber);
             asyncSend(productSensor, "Product", productUnit.serialize());
         }
 
@@ -33,12 +33,12 @@ namespace WebApplication.Hubs
             // unregister 명령어 구현 예정
         }
 
-        protected void asyncConnect()
+        void asyncConnect()
         {
             toSimulator.BeginConnect(Global.serverAddr, connectCallback, toSimulator);
         }
 
-        protected void connectCallback(IAsyncResult ar)
+        void connectCallback(IAsyncResult ar)
         {
             try
             {

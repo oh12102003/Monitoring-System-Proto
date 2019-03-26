@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drink.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="JsonStream.cs" />
     <Compile Include="JsonUnit.cs" />

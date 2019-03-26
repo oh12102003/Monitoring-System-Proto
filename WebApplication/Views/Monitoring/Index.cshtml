@@ -3,7 +3,7 @@
 }
 
 <div class="jumbotron" style="border : solid grey 1px; border-color : #ccc; height : 15em; width : 100%; margin : 1em; padding : 1em;">
-    긁어온 값들 뿌려주기
+    <div id = "dataSet" class="container sensorDataContainer"> </div>
 </div>
 
 <div>
@@ -13,7 +13,7 @@
         <input id="productStartButton" type="button" value="생산" />
     </form>
 
-    <div id="messageLayer"> </div>
+    <div id="messageLayer" style = "border : solid red 1px;"> </div>
 </div>
 
 @section scripts {
@@ -32,14 +32,93 @@
             };
 
             monitoringHub.client.printInPage = function (text) {
+                $("#dataSet").empty();
+
                 $("#messageLayer").html(text);
+
+                let controlNumber = 0;
+                let materialNumber = 0;
+                let vesselNumber = 0;
+
+                let message = text.split('#')[4];
+                let dataList = $.parseJSON(message).sensorList;
+
+                for (let i = 0; i < dataList.length; i++)
+                {
+                    let newData = document.createElement("li");
+                    newData.classList.add("list-group-item");
+                    newData.innerHTML = dataList[i].name + " : " + dataList[i].value;
+
+                    if (dataList[i].type == "Control") {
+                        controlNumber++;
+
+                        if (controlNumber == 1) {
+                            let controlColumn = document.createElement("ul");
+                            controlColumn.classList.add("list-group");
+                            controlColumn.id = "list-control";
+
+                            let controlColumnTitle = document.createElement("li");
+                            controlColumnTitle.classList.add("list-group-item");
+                            controlColumnTitle.classList.add("list-group-item-warning");
+                            controlColumnTitle.innerHTML = "Control Sensor List";
+                            controlColumn.append(controlColumnTitle);
+
+                            $("#dataSet").append(controlColumn);
+                        }
+
+                        $("#list-control").append(newData);
+                    }
+
+                    else if (dataList[i].type == "Material") {
+                        console.log("material");
+                        materialNumber++;
+
+                        if (materialNumber == 1) {
+                            let materialColumn = document.createElement("ul");
+                            materialColumn.classList.add("list-group");
+                            materialColumn.id = "list-material";
+
+                            let materialColumnTitle = document.createElement("li");
+                            materialColumnTitle.classList.add("list-group-item");
+                            materialColumnTitle.classList.add("list-group-item-info");
+                            materialColumnTitle.innerHTML = "Material Sensor List";
+                            materialColumn.append(materialColumnTitle);
+
+                            $("#dataSet").append(materialColumn);
+                        }
+
+                        $("#list-material").append(newData);
+                    }
+
+                    else if (dataList[i].type == "Vessel") {
+                        vesselNumber++;
+
+                        if (vesselNumber == 1) {
+                            let vesselColumn = document.createElement("ul");
+                            vesselColumn.classList.add("list-group");
+                            vesselColumn.id = "list-vessel";
+
+                            let vesselColumnTitle = document.createElement("li");
+                            vesselColumnTitle.classList.add("list-group-item");
+                            vesselColumnTitle.classList.add("list-group-item-success");
+                            vesselColumnTitle.innerHTML = "Vessel Sensor List";
+                            vesselColumn.append(vesselColumnTitle);
+
+                            $("#dataSet").append(vesselColumn);
+                        }
+
+                        $("#list-vessel").append(newData);
+                    }
+                }
             };
+
 
 
             // Start the connection.
             $.connection.hub.start().done(function () {
                 monitoringHub.server.start();
 
+                // 생산 버튼 이벤트 추가
                 $("#productStartButton").click(function () {
                     let name = $("#productName").val();
                     let number = $("#productNumber").val();
@@ -50,9 +129,7 @@
 
             // 창 닫을 때 연결 종료하기
             $(window).bind('beforeunload', function () {
-                alert("진짜로 닫히는 이벤트가 맞나요?");
                 monitoringHub.server.disconnect();
-                alert("설마 이거도 되었는데?");
             });
         });
 

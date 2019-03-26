@@ -87,21 +87,19 @@ namespace CometServer_MiddleServer
 
         void asyncSendLoop(Sensor targetSensor)
         {
+            JsonList list = new JsonList();
             Sensor newSensor = new Sensor(targetSensor.socket, targetSensor.sensorType, targetSensor.sensorName);
-
-            StringBuilder sb = new StringBuilder();
-            sb.Clear();
 
             foreach (var sensor in sensorList)
             {
                 if (sensor.patternMatching(notSensorType: "webClient"))
                 {
-                    JsonUnit unit = new JsonUnit(sensor.sensorName, sensor.messageValue);
-                    sb.Append(unit.serialize());
+                    JsonUnit unit = new JsonUnit(sensor.sensorName, sensor.sensorType, sensor.messageValue);
+                    list.add(unit);
                 }
             }
 
-            newSensor.setBuffer("status", newSensor.messageTarget, sb.ToString());
+            newSensor.setBuffer("status", newSensor.messageTarget, list.serialize());
             newSensor.socket.BeginSendTo(newSensor.buffer, 0, newSensor.length, 0, newSensor.whereFrom, asyncSendLoopCallback, newSensor);
         }
 

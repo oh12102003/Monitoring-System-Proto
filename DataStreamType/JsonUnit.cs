@@ -7,15 +7,25 @@ using System.Threading.Tasks;
 
 namespace DataStreamType
 {
-    public class JsonList
+    public interface IJsonType
     {
-        List<JsonUnit> list;
+        string serialize();
+    }
+
+    public class JsonList : IJsonType
+    {
+        public List<JsonUnit> sensorList = null;
+
+        public JsonList()
+        {
+            sensorList = new List<JsonUnit>();
+        }
 
         public int length
         {
             get
             {
-                return list.Count;
+                return sensorList.Count;
             }
         }
 
@@ -23,34 +33,46 @@ namespace DataStreamType
         {
             get
             {
-                if (index > list.Count)
+                if (index > sensorList.Count)
                 {
                     return null;
                 }
 
-                return list[index];
+                return sensorList[index];
             }
         }
 
         public void add(JsonUnit unit)
         {
-            list.Add(unit);
+            sensorList.Add(unit);
         }
 
         public void remove(JsonUnit unit)
         {
-            list.Remove(unit);
+            sensorList.Remove(unit);
+        }
+
+        public string serialize()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+
+        public static JsonList Parse(string str)
+        {
+            return JsonConvert.DeserializeObject<JsonList>(str);
         }
     }
 
-    public class JsonUnit
+    public class JsonUnit : IJsonType
     {
         public string name;
+        public string type;
         public string value;
 
-        public JsonUnit(string _name, string _value)
+        public JsonUnit(string _name, string _type, string _value)
         {
             name = _name;
+            type = _type;
             value = _value;
         }
 
