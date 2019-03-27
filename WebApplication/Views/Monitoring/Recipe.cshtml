@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Recipe";
+}
+
+@Styles.Render("~/Content/bootstrap.min.css")
+@Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
+
+<script>
+    $(document).ready(() => {
+        $.getJSON("@Url.Content("~/Sources/drink.json")", drinkList => {
+            for (let i = 0; i < drinkList.length; i++) {
+                let drinkName = drinkList[i].drinkName;
+                let recipeList = drinkList[i].recipe;
+
+                let card = document.createElement("div");
+                let cardHeader = document.createElement("div");
+                let cardButton = document.createElement("button");
+                let cardCollapse = document.createElement("div");
+                let cardBody = document.createElement("div");
+                let dataList = document.createElement("ul");
+
+                card.classList.add("card", "text-black", "bg-light");
+                card.appendChild(cardHeader);
+                card.appendChild(cardCollapse);
+
+                cardHeader.appendChild(cardButton);
+
+                cardCollapse.appendChild(cardBody);
+                cardBody.appendChild(dataList);
+
+                cardHeader.classList.add("card-header");
+                cardHeader.id = drinkName + "_header";
+                cardHeader.appendChild(cardButton);
+
+                cardButton.classList.add("btn", "btn-info");
+                cardButton.setAttribute("data-toggle", "collapse");
+                cardButton.setAttribute("data-target", "#" + drinkName + "_collapse");
+                cardButton.setAttribute("aria-expanded", "true");
+                cardButton.setAttribute("aria-controls", drinkName + "_collapse");
+                cardButton.innerHTML = drinkName;
+
+                cardCollapse.classList.add("collapse", "show");
+                cardCollapse.setAttribute("aria-labelledby", drinkName + "_header");
+                cardCollapse.setAttribute("data-parent", "#dataSet");
+                cardCollapse.id = drinkName + "_collapse";
+
+                cardBody.classList.add("card-body");
+                
+                dataList.classList.add("list-group");
+
+                // 각 레시피에 대한 함수
+                for (let j = 0; j < recipeList.length; j++)
+                {
+                    let data = document.createElement("li");
+                    data.classList.add("list-group-item");
+                    data.innerHTML = recipeList[j].ingredient + " : " + recipeList[j].amount;
+                    dataList.appendChild(data);
+                }
+
+                // 마지막 추가를 위한 list
+                
+                $("#dataSet").append(card);
+            }
+
+            // 초기 모두 unfold를 위한 반복문
+            for (let i = 0; i < drinkList.length; i++) {
+                $(`#${drinkList[i].drinkName}_collapse`).collapse("hide");
+            }
+        });
+    });
+</script>
+
+<br />
+<h2>Recipe List</h2>
+<br />
+
+<div id = "dataSet" class="container sensorDataContainer"> </div>

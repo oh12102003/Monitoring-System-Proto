@@ -7,41 +7,69 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .item-margin {
+            margin-left : 1.5em;
+        }
+
+        body {
+            overflow : hidden;
+        }
+    </style>
+
+    <script>
+        function recipeButtonCallback() {
+            window.location.href = "@Url.Content("~/Monitoring/Recipe")";
+        }
+    </script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a href = "@Url.Content("~/")">
+            <img src="@Url.Content("~/Sources/logo.svg")" class="d-inline-block align-top" width='40' height='40' alt='' style="margin-right : 10px">
+        </a>
+        
+        @Html.ActionLink("SimulMot", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
-                @Html.ActionLink("Simualator Monitoring", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class= "nav navbar-nav navbar-left">
-                    <li class = "nav-item">
-                        <a class = "nav-link"> Monitoring </a>
-                    </li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                    <li class="nav-item">
-                        <a class="nav-link"> Rule </a>
-                    </li>
-                </ul>
+        <div class = "collapse navbar-collapse" id = "navbarToggler">
+            <ul class = "navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class = "nav-item dropdown">
+                    <button class="btn btn-secondary dropdown-toggle item-margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Monitoring
+                    </button>
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <button id = "loginButton" class= "btn btn-primary navbar-btn"> <span class="glyphicon glyphicon-user"></span> 로그인 </button>
-                    </li>
-                    <li>
-                        <button id = "signUpButton" class="btn btn-success navbar-btn"> <span class="glyphicon glyphicon-log-in"></span> 회원가입 </button>
-                    </li>
-                </ul>
-            </div>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"> All </a>
+                        <a class="dropdown-item" href="#"> Controls </a>
+                        <a class="dropdown-item" href="#"> Materials </a>
+                        <a class="dropdown-item" href="#"> Vessels </a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <button id = "recipeButton" class="btn btn-secondary item-margin" onclick = "recipeButtonCallback()">
+                        Recipe
+                    </button>
+                </li>
+            </ul>
+
+            <ul class= "nav justify-content-end">
+                <li class ="nav-item item-margin">
+                    <button id="loginButton" class="btn btn-primary"> Sign in </button>
+                </li>
+
+                <li class = "nav-item item-margin">
+                    <button id="signUpButton" class="btn btn-success"> Sign up </button>
+                </li>
+            </ul>
         </div>
-    </div>
+    </nav>
 
     <div class="container body-content">
         @RenderBody()

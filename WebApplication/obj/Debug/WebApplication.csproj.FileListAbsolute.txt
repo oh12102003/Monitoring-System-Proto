@@ -156,3 +156,4 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\obj\Debug\WebApplication.csprojResolveAssemblyReference.cache
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\obj\Debug\WebApplication.dll
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\obj\Debug\WebApplication.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\WebActivatorEx.dll

@@ -6,9 +6,8 @@ $(document).ready(() => {
     // get slider object
     let imageSlide = $(".slideContainer");
 
-    $.getJSON("/Sources/drink.json", data => {
-        let drinkList = data.drinkList;
-        
+    $.getJSON("/Sources/drink.json", drinkList => {
+
         for (var i = 0; i < drinkList.length; i++)
         {
             let drinkName = drinkList[i].drinkName;
@@ -19,11 +18,24 @@ $(document).ready(() => {
             newImage.classList.add("slideImageContainer");
             newImage.classList.add("w3-animate-opacity");
 
-            newImage.style.width = "100%";
+            newImage.style.width = imageSlide.width() + "px";
+            newImage.style.height = imageSlide.height() + "px";
             newImage.style.display = "none";
 
             // src append
-            newImage.src = `/Sources/Images/${drinkName}.jpg`;
+            $.get(`/Sources/Images/${drinkName}.png`)
+                .done(() => {
+                    newImage.src = `/Sources/Images/${drinkName}.png`;
+                })
+                .fail(() => {
+                    $.get(`/Sources/Images/${drinkName}.jpg`)
+                        .done(() => {
+                            newImage.src = `/Sources/Images/${drinkName}.jpg`;
+                        })
+                        .fail(() => {
+                            newImage.src = '/Sources/Images/NoImage.png';
+                        })
+                })
 
             newImage.addEventListener("click", () => {
                 window.location.href = `/Monitoring?target=${drinkName}`;
@@ -31,7 +43,7 @@ $(document).ready(() => {
 
             imageSlide.append(newImage);
         }
-
+    }).then(() => {
         // 좌측 버튼
         //<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
         let prevButton = document.createElement("button");
@@ -52,8 +64,6 @@ $(document).ready(() => {
         nextButton.addEventListener("click", () => { plusDivs(1) });
         imageSlide.append(nextButton);
 
-
-    }).success(() => {
         showDivs(slideIndex);
 
         setInterval(() => {
