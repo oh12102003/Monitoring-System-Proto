@@ -20,21 +20,24 @@ namespace SimulatorStub
                 Console.Write("Input : ");
                 reading = Console.ReadLine();
 
-                if (reading.Equals("g", StringComparison.OrdinalIgnoreCase))
+                foreach (char readChar in reading)
                 {
-                    using (var process = new Process())
+                    if (readChar == 'g' || readChar == 'G')
                     {
-                        process.StartInfo.FileName = @"..\..\..\SensorValueGenerators\bin\Debug\SensorValueGenerator.exe";
-                        process.Start();
+                        using (var process = new Process())
+                        {
+                            process.StartInfo.FileName = @"..\..\..\SensorValueGenerators\bin\Debug\SensorValueGenerator.exe";
+                            process.Start();
+                        }
                     }
-                }
 
-                else if (reading.Equals("s", StringComparison.OrdinalIgnoreCase))
-                {
-                    using (var process = new Process())
+                    else if (readChar == 's' || readChar == 'S')
                     {
-                        process.StartInfo.FileName = @"..\..\..\MiddleServer\bin\Debug\MiddleServer.exe";
-                        process.Start();
+                        using (var process = new Process())
+                        {
+                            process.StartInfo.FileName = @"..\..\..\MiddleServer\bin\Debug\MiddleServer.exe";
+                            process.Start();
+                        }
                     }
                 }
 
@@ -160,30 +163,36 @@ namespace SimulatorStub
         {
             JsonStream js = new JsonStream("drink");
 
-            List<AmountPerDrinks> chilsung = new List<AmountPerDrinks>();
-            List<AmountPerDrinks> pepsi = new List<AmountPerDrinks>();
-            List<AmountPerDrinks> water = new List<AmountPerDrinks>();
-            List<AmountPerDrinks> controlTest = new List<AmountPerDrinks>();
-            List<AmountPerDrinks> vesselTest = new List<AmountPerDrinks>();
+            DrinkList testDrinkList = new DrinkList();
 
-            chilsung.Add(new AmountPerDrinks("1.5L 칠성사이다 패트병", "1"));
-            chilsung.Add(new AmountPerDrinks("탄산 혼합물", "20"));
-            chilsung.Add(new AmountPerDrinks("구연산", "30"));
+            Drink chilsung = new Drink("칠성사이다");
+            chilsung.addIngredient(new AmountPerDrinks("1.5 칠성사이다 패트병", "1"));
+            chilsung.addIngredient(new AmountPerDrinks("탄산 혼합물", "20"));
+            chilsung.addIngredient(new AmountPerDrinks("구연산", "30"));
+            testDrinkList.Add(chilsung);
 
-            pepsi.Add(new AmountPerDrinks("1.5L 팹시 패트병", "1"));
-            pepsi.Add(new AmountPerDrinks("탄산 혼합물", "15"));
-            pepsi.Add(new AmountPerDrinks("혼합제제", "50"));
+            Drink pepsi = new Drink("펩시");
+            pepsi.addIngredient(new AmountPerDrinks("1.5L 팹시 패트병", "1"));
+            pepsi.addIngredient(new AmountPerDrinks("탄산 혼합물", "15"));
+            pepsi.addIngredient(new AmountPerDrinks("혼합제제", "50"));
+            testDrinkList.Add(pepsi);
 
-            water.Add(new AmountPerDrinks("패트병", "1"));
-            water.Add(new AmountPerDrinks("물", "20"));
+            Drink orange = new Drink("델몬트");
+            orange.addIngredient(new AmountPerDrinks("1.5L 주스 패트병", "1"));
+            orange.addIngredient(new AmountPerDrinks("정제수", "50"));
+            orange.addIngredient(new AmountPerDrinks("오렌지 과즙", "5"));
+            testDrinkList.Add(orange);
 
-            vesselTest.Add(new AmountPerDrinks("패트병", "1"));
+            Drink water = new Drink("생수");
+            water.addIngredient(new AmountPerDrinks("패트병", "1"));
+            water.addIngredient(new AmountPerDrinks("물", "20"));
+            testDrinkList.Add(water);
 
-            js.applyInputData("패트병", vesselTest);
-            js.applyInputData("테스트", controlTest);
-            js.applyInputData("생수", water);
-            js.applyInputData("칠성사이다", chilsung);
-            js.applyInputData("펩시", pepsi);
+            Drink vesselTest = new Drink("패트병");
+            vesselTest.addIngredient(new AmountPerDrinks("패트병", "1"));
+            testDrinkList.Add(vesselTest);
+
+            js.applyInputData(testDrinkList);
         }
     }
 }

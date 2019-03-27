@@ -1,11 +1,106 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DataStreamType
 {
+    public class DrinkList : ICollection<Drink>
+    {
+        public List<Drink> drinkList;
+
+        public DrinkList()
+        {
+            drinkList = new List<Drink>();
+        }
+
+        int ICollection<Drink>.Count
+        {
+            get
+            {
+                return drinkList.Count;
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public void Clear()
+        {
+            drinkList.Clear();
+        }
+
+        public bool Contains(Drink drink)
+        {
+            return drinkList.Contains(drink);
+        }
+
+        public void Add(Drink drink)
+        {
+            drinkList.Add(drink);
+        }
+
+
+        public bool Remove(Drink drink)
+        {
+            return drinkList.Remove(drink);
+        }
+
+        public Drink find(string _drinkName)
+        {
+            return drinkList.Find(drink => drink.drinkName.Equals(_drinkName));
+        }
+
+        public void addOrUpdate(string _drinkName, List<AmountPerDrinks> _recipe)
+        {
+            Drink target = find(_drinkName);
+
+            if (target != null)
+            {
+                target.recipe = _recipe;
+            }
+
+            else
+            {
+                Add(new Drink(_drinkName, _recipe));
+            }
+        }
+
+        public IEnumerator<Drink> GetEnumerator()
+        {
+            return drinkList.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void CopyTo(Drink[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class Drink
     {
         public string drinkName;
         public List<AmountPerDrinks> recipe;
+
+        public Drink()
+        {
+            recipe = new List<AmountPerDrinks>();
+        }
+
+        public Drink(string _drinkName)
+        {
+            this.drinkName = _drinkName;
+            recipe = new List<AmountPerDrinks>();
+        }
 
         public Drink(string _drinkName, List<AmountPerDrinks> _recipe)
         {

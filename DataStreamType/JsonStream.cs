@@ -1,12 +1,11 @@
 ﻿using System.IO;
-using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 
 namespace DataStreamType
 {
-    
+
 
     public class AmountPerDrinks
     {
@@ -32,12 +31,24 @@ namespace DataStreamType
             Console.WriteLine(filePath);
         }
 
-        private void apply(StringBuilder sb)
+        public void writeData(DrinkList data)
         {
             using (writer = new StreamWriter(filePath))
             {
-                writer.Write(sb.ToString());
+                writer.Write(JsonConvert.SerializeObject(data));
             }
+        }
+
+        public DrinkList readData()
+        {
+            string returnString;
+
+            using (reader = new StreamReader(filePath))
+            {
+                returnString = reader.ReadToEnd();
+            }
+
+            return JsonConvert.DeserializeObject<DrinkList>(returnString);
         }
 
         public bool isRegisteredDrink(string _drinkName)
@@ -47,20 +58,10 @@ namespace DataStreamType
 
         public List<AmountPerDrinks> getAmountPerDrinks(string _drinkName)
         {
-            using (reader = new StreamReader(filePath))
-            {
-                while (!reader.EndOfStream)
-                {
-                    Drink drink = JsonConvert.DeserializeObject<Drink>(reader.ReadLine());
+            DrinkList drinkList = readData();
+            Drink drink = drinkList.find(_drinkName);
 
-                    if (drink.drinkName.Equals(_drinkName))
-                    {
-                        return drink.recipe;
-                    }
-                }
-            }
-
-            return null;
+            return (drink == null) ? null : drink.recipe;
         }
 
         /// <summary>
@@ -70,38 +71,30 @@ namespace DataStreamType
         /// <param name="value"> 필요 재료 수치(수정 or 추가) </param>
         public void applyInputData(string _drinkName, List<AmountPerDrinks> _recipe)
         {
-            StringBuilder sb = new StringBuilder();
-            bool isUpdated = false;
+            DrinkList drinkList = readData();
 
             // 파일 여부 확인, 없으면 생성
             FileStream file = new FileStream(this.filePath, FileMode.OpenOrCreate);
             file.Close();
 
-            // 한 줄씩 읽으면서 수정되었다면 수정
-            using (reader = new StreamReader(filePath, Encoding.UTF8))
+            drinkList.addOrUpdate(_drinkName, _recipe);
+            writeData(drinkList);
+        }
+
+        public void applyInputData(DrinkList inputDataList)
+        {
+            DrinkList drinkList = readData();
+
+            // 파일 여부 확인, 없으면 생성
+            FileStream file = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            file.Close();
+
+            foreach (var inputData in inputDataList)
             {
-                string stringJson = reader.ReadToEnd();
-
-                List<Drink> drinkList = JsonConvert.DeserializeObject<List<Drink>>(stringJson);
-                foreach (var drink in drinkList)
-                {
-                    if (drink.drinkName.Equals(_drinkName))
-                    {
-                        isUpdated = true;
-                        drink.recipe = _recipe;
-                    }
-
-                    sb.Append(JsonConvert.SerializeObject(drink));
-                }
-
-                // (업데이트 되지 않음 = 추가) 마지막 라인에 추가
-                if (!isUpdated)
-                {
-                    sb.Append(JsonConvert.SerializeObject(new Drink(_drinkName, _recipe)));
-                }
+                drinkList.addOrUpdate(inputData.drinkName, inputData.recipe);
             }
-
-            apply(sb);
+            
+            writeData(drinkList);
         }
 
         /// <summary>
@@ -110,22 +103,12 @@ namespace DataStreamType
         /// <param name="drink"> 음료수 명 </param>
         public void deleteData(string _drinkName)
         {
-            StringBuilder sb = new StringBuilder();
+            DrinkList drinkList = readData();
 
-            using (reader = new StreamReader(filePath, Encoding.UTF8))
-            {
-                while (!reader.EndOfStream)
-                {
-                    Drink oneData = JsonConvert.DeserializeObject<Drink>(reader.ReadLine());
+            Drink target = drinkList.find(_drinkName);
+            drinkList.Remove(target);
 
-                    if (!oneData.drinkName.Equals(_drinkName))
-                    {
-                        sb.AppendLine(JsonConvert.SerializeObject(oneData));
-                    }
-                }
-            }
-
-            apply(sb);
+            writeData(drinkList);
         }
 
         /// <summary>
@@ -133,23 +116,13 @@ namespace DataStreamType
         /// </summary>
         /// <param name="drink"> input 음료수 명 </param>
         /// <returns> 특정 음료수에 대한 필요 재료 수치 (없다면 null 반환) </returns>
-        public string getAmount(string drinkName, string ingredientName)
+        public string getAmount(string _drinkName, string _ingredientName)
         {
-            using (reader = new StreamReader(filePath, Encoding.UTF8))
-            {
-                while (!reader.EndOfStream)
-                {
-                    Drink oneData = JsonConvert.DeserializeObject<Drink>(reader.ReadLine());
+            DrinkList drinkList = readData();
 
-                    if (oneData.drinkName.Equals(drinkName))
-                    {
-                        reader.Close();
-                        return oneData.getAmount(ingredientName);
-                    }
-                }
-            }
+            Drink target = drinkList.find(_drinkName);
 
-            return null;
+            return (target == null) ? null : target.getAmount(_ingredientName);
         }
     }
 }

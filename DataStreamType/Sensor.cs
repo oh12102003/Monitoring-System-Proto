@@ -34,7 +34,7 @@ namespace DataStreamType
             messageTarget = "none";
             messageType = "register";
 
-            buffer = new byte[100];
+            buffer = new byte[1024];
         }
 
         public static bool TryParse(string str, ref Sensor targetSensor)
