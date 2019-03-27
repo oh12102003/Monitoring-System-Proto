@@ -3,9 +3,6 @@
     ViewBag.Title = "Recipe";
 }
 
-@Styles.Render("~/Content/bootstrap.min.css")
-@Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
-
 <script>
     $(document).ready(() => {
         $.getJSON("@Url.Content("~/Sources/drink.json")", drinkList => {
@@ -14,51 +11,180 @@
                 let recipeList = drinkList[i].recipe;
 
                 let card = document.createElement("div");
-                let cardHeader = document.createElement("div");
-                let cardButton = document.createElement("button");
-                let cardCollapse = document.createElement("div");
-                let cardBody = document.createElement("div");
-                let dataList = document.createElement("ul");
-
                 card.classList.add("card", "text-black", "bg-light");
+
+                let cardHeader = document.createElement("div");
+                cardHeader.classList.add("card-header");
+
+                let cardHeaderInputGroup = document.createElement("div");
+                cardHeaderInputGroup.classList.add("input-group");
+
+                let cardCollapse = document.createElement("div");
+                cardCollapse.classList.add("collapse", "show");
+
+                let cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                let dataList = document.createElement("ul");
+                dataList.classList.add("list-group");
+                dataList.id = `${drinkName}_dataList`;
+
                 card.appendChild(cardHeader);
                 card.appendChild(cardCollapse);
 
-                cardHeader.appendChild(cardButton);
+                cardHeader.appendChild(cardHeaderInputGroup);
 
                 cardCollapse.appendChild(cardBody);
                 cardBody.appendChild(dataList);
 
-                cardHeader.classList.add("card-header");
-                cardHeader.id = drinkName + "_header";
-                cardHeader.appendChild(cardButton);
+                cardHeader.id = `${drinkName}_header`;
 
+
+
+                // card header input group
+                let cardButton = document.createElement("button");
                 cardButton.classList.add("btn", "btn-info");
+
                 cardButton.setAttribute("data-toggle", "collapse");
-                cardButton.setAttribute("data-target", "#" + drinkName + "_collapse");
+                cardButton.setAttribute("data-target", `#${drinkName}_collapse`);
                 cardButton.setAttribute("aria-expanded", "true");
-                cardButton.setAttribute("aria-controls", drinkName + "_collapse");
+                cardButton.setAttribute("aria-controls", `${drinkName}_collapse`);
                 cardButton.innerHTML = drinkName;
 
-                cardCollapse.classList.add("collapse", "show");
-                cardCollapse.setAttribute("aria-labelledby", drinkName + "_header");
-                cardCollapse.setAttribute("data-parent", "#dataSet");
-                cardCollapse.id = drinkName + "_collapse";
+                let resetButton = document.createElement("button");
+                resetButton.classList.add("btn", "btn-dark");
+                resetButton.style.width = "5%";
+                resetButton.style.marginLeft = "2.5%";
+                resetButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
+                resetButton.id = `${drinkName}_resetButton`;
+                resetButton.addEventListener("click", function () {
+                    let listing = document.getElementById(`${drinkName}_dataList`).childNodes;
 
-                cardBody.classList.add("card-body");
-                
-                dataList.classList.add("list-group");
+                    for (let i = 0; i < listing.length; i++)
+                    {
+                        listing[i].style.display = "block";
+                    }
+
+                    this.classList.remove("btn-primary");
+                    this.classList.add("btn-dark");
+                });
+
+                let deleteButton = document.createElement("button");
+                deleteButton.classList.add("btn", "btn-danger");
+                deleteButton.style.width = "5%";
+                deleteButton.style.marginLeft = "0.5%";
+                deleteButton.innerHTML = `<i class = "fa fa-lg fa-trash"></i>`;
+
+                cardHeaderInputGroup.appendChild(cardButton);
+                cardHeaderInputGroup.appendChild(resetButton);
+                cardHeaderInputGroup.appendChild(deleteButton);
+
+                cardCollapse.setAttribute("aria-labelledby", `${drinkName}_header`);
+                cardCollapse.setAttribute("data-parent", "#dataSet");
+                cardCollapse.id = `${drinkName}_collapse`;
 
                 // 각 레시피에 대한 함수
                 for (let j = 0; j < recipeList.length; j++)
                 {
-                    let data = document.createElement("li");
-                    data.classList.add("list-group-item");
-                    data.innerHTML = recipeList[j].ingredient + " : " + recipeList[j].amount;
-                    dataList.appendChild(data);
-                }
+                    let ingredient = recipeList[j].ingredient;
+                    let amount = recipeList[j].amount;
+                    let summaryTagName = drinkName + ingredient;
 
-                // 마지막 추가를 위한 list
+                    let listing = document.createElement("li");
+                    listing.classList.add("list-group-item");
+                    listing.id = summaryTagName;
+
+                    // for prepend naming
+                    let inputGroup = document.createElement("div");
+                    inputGroup.classList.add("input-group");
+
+                    let prependName = document.createElement("div");
+                    prependName.style.width = "30%";
+                    prependName.classList.add("input-group-prepend");
+
+                    let prependSpan = document.createElement("span");
+                    prependSpan.style.width = "100%";
+                    prependSpan.classList.add("input-group-text");
+                    prependSpan.innerHTML = ingredient;
+                    prependSpan.id = `${summaryTagName}_tag`;
+                    prependName.appendChild(prependSpan);
+
+                    // for input form
+                    let defaultAmount = document.createElement("input");
+                    defaultAmount.setAttribute("type", "hidden");
+                    defaultAmount.value = amount;
+                    defaultAmount.id = `${summaryTagName}_default`;
+
+                    let inputAmount = document.createElement("input");
+                    inputAmount.classList.add("form-control");
+                    inputAmount.style.textAlign = "right";
+                    inputAmount.value = amount;
+
+                    inputAmount.setAttribute("type", "number");
+                    inputAmount.setAttribute("min", "0");
+                    inputAmount.setAttribute("placeholder", "Amount of " + ingredient);
+                    inputAmount.setAttribute("aria-describedby", `${summaryTagName}_tag`);
+                    inputAmount.id = `${summaryTagName}_value`;
+
+                    inputAmount.addEventListener("change", () => {
+                        let currentValue = document.getElementById(`${summaryTagName}_value`).value;
+                        let defaultValue = document.getElementById(`${summaryTagName}_default`).value;
+                        let targetButton = document.getElementById(`${summaryTagName}_refreshButton`);
+                        
+                        if (currentValue == defaultValue)
+                        {
+                            targetButton.classList.remove("btn-success");
+                            targetButton.classList.add("btn-dark");
+                        }
+
+                        else
+                        {
+                            targetButton.classList.remove("btn-dark");
+                            targetButton.classList.add("btn-success");
+                        }
+                    });
+
+                    // for add / remove button
+                    let refreshButton  = document.createElement("button");
+                    refreshButton.classList.add("btn", "btn-dark");
+                    refreshButton.style.width = "5%";
+                    refreshButton.style.marginLeft = "2.5%";
+                    refreshButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
+                    refreshButton.id = `${summaryTagName}_refreshButton`;
+                    refreshButton.addEventListener("click", function () {
+                        let visibleTag = document.getElementById(`${summaryTagName}_value`);
+                        let hiddenTag = document.getElementById(`${summaryTagName}_default`);
+
+                        this.classList.remove("btn-success");
+                        this.classList.add("btn-dark");
+
+                        visibleTag.value = hiddenTag.value;
+                    });
+
+                    let removeButton = document.createElement("button");
+                    removeButton.classList.add("btn", "btn-danger");
+                    removeButton.style.width = "5%";
+                    removeButton.style.marginLeft = "0.5%";
+                    removeButton.innerHTML = `<i class = "fa fa-lg fa-trash"></i>`;
+                    removeButton.addEventListener("click", function () {
+                        let drinkResetButton = document.getElementById(`${drinkName}_resetButton`);
+
+                        drinkResetButton.classList.remove("btn-dark");
+                        drinkResetButton.classList.add("btn-primary");
+                        document.getElementById(summaryTagName).style.display = "none";
+                    });
+
+                    // 각각의 요소 append
+                    inputGroup.appendChild(prependName);
+                    inputGroup.appendChild(defaultAmount);
+                    inputGroup.appendChild(inputAmount);
+                    inputGroup.appendChild(refreshButton);
+                    inputGroup.appendChild(removeButton);
+
+                    listing.appendChild(inputGroup);
+
+                    dataList.appendChild(listing);
+                }
                 
                 $("#dataSet").append(card);
             }
