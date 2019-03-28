@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,6 +12,12 @@ namespace DataStreamType
         public DrinkList()
         {
             drinkList = new List<Drink>();
+        }
+
+        public static DrinkList Parse(string jsonString)
+        {
+            Console.WriteLine(jsonString);
+            return JsonConvert.DeserializeObject<DrinkList>(jsonString);
         }
 
         int ICollection<Drink>.Count
@@ -52,6 +59,11 @@ namespace DataStreamType
 
         public Drink find(string _drinkName)
         {
+            if (_drinkName == null)
+            {
+                return null;
+            }
+
             return drinkList.Find(drink => drink.drinkName.Equals(_drinkName));
         }
 
