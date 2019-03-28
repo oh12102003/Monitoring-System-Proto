@@ -1,0 +1,19 @@
+﻿.dataTitle {
+    margin-top : 3em;
+    margin-bottom : 2em;
+}
+
+.dataContainer {
+    margin-top : 2em;
+}
+
+.dataElement .btn:first-child {
+    margin-right : 2%;
+    width : 20%;
+}
+
+.dataElement .btn {
+    margin-left : 0.5%;
+    width : 5%;
+    color : white;
+}

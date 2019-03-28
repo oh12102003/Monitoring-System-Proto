@@ -3,6 +3,8 @@
     ViewBag.Title = "Recipe";
 }
 
+@Styles.Render("~/Content/dataContainer.css")
+
 <script>
     $(document).ready(() => {
         $.getJSON("@Url.Content("~/Sources/drink.json")", drinkList => {
@@ -15,6 +17,7 @@
 
                 let cardHeader = document.createElement("div");
                 cardHeader.classList.add("card-header");
+                cardHeader.id = `${drinkName}_header`;
 
                 let cardHeaderInputGroup = document.createElement("div");
                 cardHeaderInputGroup.classList.add("input-group");
@@ -29,15 +32,14 @@
                 dataList.classList.add("list-group");
                 dataList.id = `${drinkName}_dataList`;
 
+
+
+                // append elements
                 card.appendChild(cardHeader);
                 card.appendChild(cardCollapse);
-
                 cardHeader.appendChild(cardHeaderInputGroup);
-
                 cardCollapse.appendChild(cardBody);
                 cardBody.appendChild(dataList);
-
-                cardHeader.id = `${drinkName}_header`;
 
 
 
@@ -60,13 +62,21 @@
                 resetButton.addEventListener("click", function () {
                     let listing = document.getElementById(`${drinkName}_dataList`).childNodes;
 
-                    for (let i = 0; i < listing.length; i++)
-                    {
+                    let refreshButtonList = document.getElementsByClassName(`${drinkName}_refreshButtons`);
+                    let recipeValueList = document.getElementsByClassName(`${drinkName}_values`);
+                    let recipeDefaultValueList = document.getElementsByClassName(`${drinkName}_defaults`);
+
+                    for (let i = 0; i < listing.length; i++) {
                         listing[i].style.display = "block";
                     }
 
-                    this.classList.remove("btn-primary");
-                    this.classList.add("btn-dark");
+                    for (let i = 0; i < refreshButtonList.length; i++) {
+                        updateButtonColor(refreshButtonList[i], "btn-success", "btn-dark");
+                        recipeValueList[i].value = recipeDefaultValueList[i].value;
+                    }
+
+                    updateButtonColor(this, "btn-primary", "btn-dark");
+
                 });
 
                 let deleteButton = document.createElement("button");
@@ -96,7 +106,7 @@
 
                     // for prepend naming
                     let inputGroup = document.createElement("div");
-                    inputGroup.classList.add("input-group");
+                    inputGroup.classList.add("input-group", "dataElement");
 
                     let prependName = document.createElement("div");
                     prependName.style.width = "30%";
@@ -111,12 +121,13 @@
 
                     // for input form
                     let defaultAmount = document.createElement("input");
+                    defaultAmount.classList.add(`${drinkName}_defaults`);
                     defaultAmount.setAttribute("type", "hidden");
                     defaultAmount.value = amount;
                     defaultAmount.id = `${summaryTagName}_default`;
 
                     let inputAmount = document.createElement("input");
-                    inputAmount.classList.add("form-control");
+                    inputAmount.classList.add("form-control", `${drinkName}_values`);
                     inputAmount.style.textAlign = "right";
                     inputAmount.value = amount;
 
@@ -129,34 +140,36 @@
                     inputAmount.addEventListener("change", () => {
                         let currentValue = document.getElementById(`${summaryTagName}_value`).value;
                         let defaultValue = document.getElementById(`${summaryTagName}_default`).value;
+
+                        let parentResetButton = document.getElementById(`${drinkName}_resetButton`);
                         let targetButton = document.getElementById(`${summaryTagName}_refreshButton`);
                         
                         if (currentValue == defaultValue)
                         {
-                            targetButton.classList.remove("btn-success");
-                            targetButton.classList.add("btn-dark");
+                            updateButtonColor(targetButton, "btn-success", "btn-dark");
+                            updateButtonColor(parentResetButton, "btn-primary", "btn-dark");
                         }
 
                         else
                         {
-                            targetButton.classList.remove("btn-dark");
-                            targetButton.classList.add("btn-success");
+                            updateButtonColor(targetButton, "btn-dark", "btn-success");
+                            updateButtonColor(parentResetButton, "btn-dark", "btn-primary");
                         }
                     });
 
                     // for add / remove button
                     let refreshButton  = document.createElement("button");
-                    refreshButton.classList.add("btn", "btn-dark");
+                    refreshButton.classList.add("btn", "btn-dark", `${drinkName}_refreshButtons`);
                     refreshButton.style.width = "5%";
-                    refreshButton.style.marginLeft = "2.5%";
                     refreshButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
                     refreshButton.id = `${summaryTagName}_refreshButton`;
                     refreshButton.addEventListener("click", function () {
                         let visibleTag = document.getElementById(`${summaryTagName}_value`);
                         let hiddenTag = document.getElementById(`${summaryTagName}_default`);
+                        let parentButton = document.getElementById(`${drinkName}_resetButton`);
 
-                        this.classList.remove("btn-success");
-                        this.classList.add("btn-dark");
+                        updateButtonColor(this, "btn-success", "btn-dark");
+                        updateButtonColor(parentButton, "btn-primary", "btn-dark");
 
                         visibleTag.value = hiddenTag.value;
                     });
@@ -164,13 +177,11 @@
                     let removeButton = document.createElement("button");
                     removeButton.classList.add("btn", "btn-danger");
                     removeButton.style.width = "5%";
-                    removeButton.style.marginLeft = "0.5%";
                     removeButton.innerHTML = `<i class = "fa fa-lg fa-trash"></i>`;
                     removeButton.addEventListener("click", function () {
                         let drinkResetButton = document.getElementById(`${drinkName}_resetButton`);
 
-                        drinkResetButton.classList.remove("btn-dark");
-                        drinkResetButton.classList.add("btn-primary");
+                        updateButtonColor(drinkResetButton, "btn-dark", "btn-primary");
                         document.getElementById(summaryTagName).style.display = "none";
                     });
 
@@ -195,10 +206,28 @@
             }
         });
     });
+
+    function updateButtonColor(element, removeClass, addClass)
+    {
+        element.classList.remove(removeClass);
+        element.classList.add(addClass);
+    }
 </script>
 
-<br />
-<h2>Recipe List</h2>
-<br />
+<div class = "dataTitle">
+    <h2>
+        Recipe List
+    </h2>
+</div>
 
-<div id = "dataSet" class="container sensorDataContainer"> </div>
+<div id = "dataSet" class="container dataContainer">
+    <div class = "card text-black bg-link" data-spy = "affix" data-offset-top = "3em">
+        <div class = "card-header bg-secondary">
+            <div class = "input-group dataElement">
+                <button class = "btn btn-dark"> drink list </button>
+                <button class = "btn btn-dark"> <i class="fa fa-lg fa-refresh"></i> </button>
+                <button class = "btn btn-danger"> <i class="fa fa-lg fa-trash"></i> </button>
+            </div>
+        </div>
+    </div>
+</div>
