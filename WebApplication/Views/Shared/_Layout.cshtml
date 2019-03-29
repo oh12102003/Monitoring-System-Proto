@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
@@ -13,6 +13,12 @@
 
     @Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
 
+    <style>
+        .item-margin {
+            margin-left: 1.5em;
+        }
+    </style>
+
     <script>
         function recipeButtonCallback() {
             window.location.href = "@Url.Content("~/Recipe")";
@@ -21,10 +27,10 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a href = "@Url.Content("~/")">
+        <a href="@Url.Content("~/")">
             <img src="@Url.Content("~/Sources/logo.svg")" class="d-inline-block align-top" width='40' height='40' alt='' style="margin-right : 10px">
         </a>
-        
+
         @Html.ActionLink("SimulMot", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -32,9 +38,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class = "collapse navbar-collapse" id = "navbarToggler">
-            <ul class = "navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class = "nav-item dropdown">
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item dropdown">
                     <button class="btn btn-secondary dropdown-toggle item-margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Monitoring
                     </button>
@@ -48,18 +54,18 @@
                 </li>
 
                 <li class="nav-item">
-                    <button id = "recipeButton" class="btn btn-secondary item-margin" onclick = "recipeButtonCallback()">
+                    <button id="recipeButton" class="btn btn-secondary item-margin" onclick="recipeButtonCallback()">
                         Recipe
                     </button>
                 </li>
             </ul>
 
-            <ul class= "nav justify-content-end">
-                <li class ="nav-item item-margin">
+            <ul class="nav justify-content-end">
+                <li class="nav-item item-margin">
                     <button id="loginButton" class="btn btn-primary"> Sign in </button>
                 </li>
 
-                <li class = "nav-item item-margin">
+                <li class="nav-item item-margin">
                     <button id="signUpButton" class="btn btn-success"> Sign up </button>
                 </li>
             </ul>
@@ -70,7 +76,7 @@
         @RenderBody()
         <hr />
 
-        <footer style = "text-align : right">
+        <footer style="text-align : right">
             <p>Simulator Monitoring System</p>
         </footer>
     </div>
