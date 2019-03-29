@@ -239,3 +239,7 @@ C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\obj\Debug\WebApplic
 C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\obj\Debug\WebApplication.csproj.CopyComplete
 C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\obj\Debug\WebApplication.dll
 C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\obj\Debug\WebApplication.pdb
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\Google.Protobuf.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\MySql.Data.dll
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\Google.Protobuf.xml
+D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\MySql.Data.xml

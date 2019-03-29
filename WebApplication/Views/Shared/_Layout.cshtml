@@ -23,6 +23,14 @@
         function recipeButtonCallback() {
             window.location.href = "@Url.Content("~/Recipe")";
         }
+
+        function signInButtonCallback() {
+            window.location.href = "@Url.Content("~/Home/SignIn")";
+        }
+
+        function signUpButtonCallback() {
+            window.location.href = "@Url.Content("~/Home/SignUp")";
+        }
     </script>
 </head>
 <body>
@@ -62,11 +70,17 @@
 
             <ul class="nav justify-content-end">
                 <li class="nav-item item-margin">
-                    <button id="loginButton" class="btn btn-primary"> Sign in </button>
+                    <button id="loginButton" class="btn btn-primary"
+                            onclick = "signInButtonCallback()">
+                        Sign in
+                    </button>
                 </li>
 
                 <li class="nav-item item-margin">
-                    <button id="signUpButton" class="btn btn-success"> Sign up </button>
+                    <button id="signUpButton" class="btn btn-success"
+                            onclick = "signUpButtonCallback()">
+                        Sign up
+                    </button>
                 </li>
             </ul>
         </div>
