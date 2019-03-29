@@ -97,6 +97,15 @@ namespace DataStreamType
             writeData(drinkList);
         }
 
+        public void hardApplyInputData(DrinkList inputDataList)
+        {
+            // 파일 여부 확인, 없으면 생성
+            FileStream file = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            file.Close();
+
+            writeData(inputDataList);
+        }
+
         /// <summary>
         /// 특정 음료수에 대한 필요 재료 수치 제거
         /// </summary>

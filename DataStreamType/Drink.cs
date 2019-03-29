@@ -16,7 +16,6 @@ namespace DataStreamType
 
         public static DrinkList Parse(string jsonString)
         {
-            Console.WriteLine(jsonString);
             return JsonConvert.DeserializeObject<DrinkList>(jsonString);
         }
 

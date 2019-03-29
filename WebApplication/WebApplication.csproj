@@ -270,14 +270,6 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Sources\Images\mainPagePic_1.png" />
-    <Content Include="Sources\Images\mainPagePic_2.png" />
-    <Content Include="Sources\Images\mainPagePic_3.png" />
-    <Content Include="Sources\Images\생수.jpg" />
-    <Content Include="Sources\Images\칠성사이다.jpg" />
-    <Content Include="Sources\Images\테스트.jpg" />
-    <Content Include="Sources\Images\패트병.jpg" />
-    <Content Include="Sources\Images\펩시.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -291,7 +283,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Monitoring\Index.cshtml" />
-    <Content Include="Sources\drink.json" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />

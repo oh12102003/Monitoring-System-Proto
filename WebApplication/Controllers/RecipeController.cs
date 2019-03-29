@@ -11,14 +11,22 @@ namespace WebApplication.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult Save(string jsonString)
         {
-            JsonStream js = new JsonStream();
-            DrinkList drinkList = DrinkList.Parse(jsonString);
+            try
+            {
+                JsonStream js = new JsonStream();
+                DrinkList drinkList = DrinkList.Parse(jsonString);
+                js.hardApplyInputData(drinkList);
 
-            js.applyInputData(drinkList);
+                return Json(jsonString);
+            }
 
-            return View("Index", null);
+            catch
+            {
+                return null;
+            }
         }
     }
 }
