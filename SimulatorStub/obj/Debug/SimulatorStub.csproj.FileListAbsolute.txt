@@ -20,3 +20,16 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\DataStreamType.pdb
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\Newtonsoft.Json.pdb
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SimulatorStub\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\SimulatorStub.exe.config
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\SimulatorStub.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\SimulatorStub.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\DataStreamType.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.csprojAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.csproj.CopyComplete
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.pdb

@@ -23,3 +23,16 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\Newtonsoft.Json.pdb
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\bin\Debug\Newtonsoft.Json.xml
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\MiddleServer\obj\Debug\MiddleServer.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\MiddleServer.exe.config
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\MiddleServer.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\MiddleServer.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\DataStreamType.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\obj\Debug\MiddleServer.csprojAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\obj\Debug\MiddleServer.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\obj\Debug\MiddleServer.csproj.CopyComplete
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\obj\Debug\MiddleServer.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\MiddleServer\obj\Debug\MiddleServer.pdb

@@ -14,3 +14,13 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.csprojResolveAssemblyReference.cache
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.dll
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\DataStreamType\obj\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\DataStreamType.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.csprojAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.csproj.CopyComplete
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.pdb

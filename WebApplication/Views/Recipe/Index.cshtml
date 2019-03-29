@@ -20,16 +20,28 @@
                 drinkList[drinkIndex].style.display = "block";
                 updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-primary", "btn-dark");
 
+                let dataList = document.getElementById(`${drinkName}_dataList`);
                 let recipeList = document.getElementsByClassName(`${drinkName}_recipeList`);
                 let currentValueList = document.getElementsByClassName(`${drinkName}_valueList`);
                 let defaultValueList = document.getElementsByClassName(`${drinkName}_defaultList`);
                 let recipeResetButtonList = document.getElementsByClassName(`${drinkName}_recipeResetButtonList`);
+                let removeRecipeList = new Array();
 
                 for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
-                    recipeList[recipeIndex].style.display = "block";
-                    currentValueList[recipeIndex].value = defaultValueList[recipeIndex].value;
+                    if (recipeList[recipeIndex].classList.contains("added")) {
+                        removeRecipeList.push(recipeList[recipeIndex]);
+                    }
 
-                    updateButtonColor(recipeResetButtonList[recipeIndex], "btn-success", "btn-dark");
+                    else {
+                        recipeList[recipeIndex].style.display = "block";
+                        currentValueList[recipeIndex].value = defaultValueList[recipeIndex].value;
+
+                        updateButtonColor(recipeResetButtonList[recipeIndex], "btn-success", "btn-dark");
+                    }
+                }
+
+                for (let removeIndex = 0; removeIndex < removeRecipeList.length; removeIndex++) {
+                    dataList.removeChild(removeRecipeList[removeIndex]);
                 }
             }
 
@@ -58,14 +70,15 @@
 
                     let jsonRecipeList = new Array();
 
-                    let recipeList = document.getElementsByClassName(`${drinkName}_recipeList`);
-                    let currentValueList = document.getElementsByClassName(`${drinkName}_valueList`);
+                    
+                    let recipeList = $(`.${drinkName}_recipeList`);
+                    let currentValueList = $(`.${drinkName}_valueList`);
 
                     for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
-                        if (recipeList[recipeIndex].style.display != "none") {
+                        if (recipeList.eq(recipeIndex).css("display") != "none") {
                             let jsonRecipe = new Object();
-                            jsonRecipe.ingredient = recipeList[recipeIndex].id;
-                            jsonRecipe.amount = currentValueList[recipeIndex].value;
+                            jsonRecipe.ingredient = recipeList.eq(recipeIndex).data("value");
+                            jsonRecipe.amount = currentValueList.eq(recipeIndex).val();
 
                             jsonRecipeList.push(jsonRecipe);
                         }
@@ -148,14 +161,26 @@
                 drinkResetButton.style.marginLeft = "2.5%";
                 drinkResetButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
                 drinkResetButton.addEventListener("click", function () {
-                    let listing = document.getElementById(`${drinkName}_dataList`).childNodes;
+                    let topDataList = document.getElementById(`${drinkName}_dataList`);
+                    let listing = topDataList.childNodes;
+                    let addedList = new Array();
 
                     let recipeResetButtonList = document.getElementsByClassName(`${drinkName}_recipeResetButtonList`);
                     let recipeValueList = document.getElementsByClassName(`${drinkName}_valueList`);
                     let recipeDefaultValueList = document.getElementsByClassName(`${drinkName}_defaultList`);
 
                     for (let i = 0; i < listing.length; i++) {
-                        listing[i].style.display = "block";
+                        if (listing[i].classList.contains("added")) {
+                            addedList.push(listing[i])
+                        }
+
+                        else {
+                            listing[i].style.display = "block";
+                        }
+                    }
+
+                    for (let i = 0; i < addedList.length; i++) {
+                        topDataList.removeChild(addedList[i]);
                     }
 
                     updateButtonColor(this, "btn-primary", "btn-dark");
@@ -165,7 +190,7 @@
                         recipeValueList[i].value = recipeDefaultValueList[i].value;
                     }
 
-                    if (!checkAllDrinkNotChaned())
+                    if (checkAllDrinkNotChanged())
                     {
                         updateButtonColor(document.getElementById("totalResetButton"), "btn-primary", "btn-dark");
                         updateButtonColor(document.getElementById("totalSaveButton"), "btn-warning", "btn-dark");
@@ -203,7 +228,9 @@
 
                     let listing = document.createElement("li");
                     listing.classList.add("list-group-item", `${drinkName}_recipeList`);
-                    listing.id = ingredient;
+                    listing.id = summaryTagName;
+                    listing.setAttribute("data-value", ingredient);
+
 
                     // for prepend naming
                     let inputGroup = document.createElement("div");
@@ -314,12 +341,201 @@
                     inputGroup.appendChild(recipeRemoveButton);
 
                     listing.appendChild(inputGroup);
-
                     dataList.appendChild(listing);
                 }
 
+                // 레시피 추가를 위한 추가 inputgroup
+                let addListGroupItem = document.createElement("li");
+                addListGroupItem.classList.add("list-group-item");
+                addListGroupItem.id = `${drinkName}_added`;
+
+                let dataElement = document.createElement("div");
+                dataElement.classList.add("input-group", "dataElement");
+
+                let addedIngredientname = document.createElement("input");
+                addedIngredientname.classList.add("form-control");
+                addedIngredientname.id = `${drinkName}_newIngredient`;
+                addedIngredientname.setAttribute("type", "text");
+                addedIngredientname.setAttribute("placeholder", "new ingredient name");
+                addedIngredientname.addEventListener("change", function () {
+                    if ($(this).val() != "") {
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-dark", "btn-success");
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-dark", "btn-primary");
+                    }
+
+                    else {
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-success", "btn-dark");
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-primary", "btn-dark");
+                    }
+                });
+
+                let addedAmountNumber = document.createElement("input");
+                addedAmountNumber.classList.add("form-control");
+                addedAmountNumber.id = `${drinkName}_newAmount`;
+                addedAmountNumber.setAttribute("type", "number");
+                addedAmountNumber.setAttribute("placeholder", "new ingredient amount");
+                addedAmountNumber.setAttribute("min", "0");
+                addedAmountNumber.addEventListener("change", function () {
+                    if ($(this).val() != "") {
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-dark", "btn-success");
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-dark", "btn-primary");
+                    }
+
+                    else {
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-success", "btn-dark");
+                        updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-primary", "btn-dark");
+                    }
+                });
+
+                let newRecipeInitButton = document.createElement("button");
+                newRecipeInitButton.classList.add("btn", "btn-dark");
+                newRecipeInitButton.id = `${drinkName}_addRecipeInitButton`;
+                newRecipeInitButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
+                newRecipeInitButton.addEventListener("click", function () {
+                    $(`#${drinkName}_newIngredient`).val("");
+                    $(`#${drinkName}_newAmount`).val("");
+
+                    updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-success", "btn-dark");
+                    updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-primary", "btn-dark");
+                });
+
+                let newRecipeAddButton = document.createElement("button");
+                newRecipeAddButton.classList.add("btn", "btn-dark");
+                newRecipeAddButton.id = `${drinkName}_addRecipeAddButton`;
+                newRecipeAddButton.innerHTML = `<i class = "fa fa-lg fa-plus"></i>`;
+
+                newRecipeAddButton.addEventListener("click", function () {
+                    let newIngredient = document.getElementById(`${drinkName}_newIngredient`).value;
+                    let newAmount = document.getElementById(`${drinkName}_newAmount`).value;
+
+                    document.getElementById(`${drinkName}_newIngredient`).value = "";
+                    document.getElementById(`${drinkName}_newAmount`).value = "";
+
+                    updateButtonColor(document.getElementById("totalResetButton"), "btn-dark", "btn-primary");
+                    updateButtonColor(document.getElementById("totalSaveButton"), "btn-dark", "btn-warning");
+
+                    updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-dark", "btn-primary");
+
+                    updateButtonColor(document.getElementById(`${drinkName}_addRecipeInitButton`), "btn-success", "btn-dark");
+                    updateButtonColor(document.getElementById(`${drinkName}_addRecipeAddButton`), "btn-primary", "btn-dark");
+
+                    // 새로운 element 추가
+                    let newSummaryTagName = drinkName + newIngredient;
+                    let newListing = document.createElement("li");
+                    newListing.classList.add("list-group-item", `${drinkName}_recipeList`, "added");
+                    newListing.id = newSummaryTagName;
+                    newListing.setAttribute("data-value", newIngredient);
+
+                    $(`#${drinkName}_recipeList`).data("value", newIngredient);
+
+                    // for prepend naming
+                    let newInputGroup = document.createElement("div");
+                    newInputGroup.classList.add("input-group", "dataElement");
+
+                    let newPrependName = document.createElement("div");
+                    newPrependName.style.width = "30%";
+                    newPrependName.classList.add("input-group-prepend");
+
+                    let newPrependSpan = document.createElement("span");
+                    newPrependSpan.style.width = "100%";
+                    newPrependSpan.classList.add("input-group-text");
+                    newPrependSpan.innerHTML = newIngredient;
+                    newPrependSpan.id = `${newSummaryTagName}_tag`;
+                    newPrependName.appendChild(newPrependSpan);
+
+                    // for input form
+                    let newDefaultAmount = document.createElement("input");
+                    newDefaultAmount.classList.add(`${drinkName}_defaultList`);
+                    newDefaultAmount.setAttribute("type", "hidden");
+                    newDefaultAmount.value = newAmount;
+                    newDefaultAmount.id = `${newSummaryTagName}_default`;
+
+                    let newInputAmount = document.createElement("input");
+                    newInputAmount.classList.add("form-control", `${drinkName}_valueList`);
+                    newInputAmount.id = `${newSummaryTagName}_value`;
+                    newInputAmount.style.textAlign = "right";
+                    newInputAmount.value = newAmount;
+                    newInputAmount.setAttribute("type", "number");
+                    newInputAmount.setAttribute("min", "0");
+                    newInputAmount.setAttribute("placeholder", "Amount of " + newIngredient);
+                    newInputAmount.setAttribute("aria-describedby", `${newSummaryTagName}_tag`);
+
+                    newInputAmount.addEventListener("change", () => {
+                        let currentValue = document.getElementById(`${newSummaryTagName}_value`).value;
+                        let defaultValue = document.getElementById(`${newSummaryTagName}_default`).value;
+
+                        if (currentValue == defaultValue) {
+                            updateButtonColor(document.getElementById(`${newSummaryTagName}_recipeResetButton`), "btn-success", "btn-dark");
+                        }
+
+                        else {
+                            updateButtonColor(document.getElementById(`${newSummaryTagName}_recipeResetButton`), "btn-dark", "btn-success");
+                        }
+                    });
+
+                    // for add / remove button
+                    let newRecipeResetButton = document.createElement("button");
+                    newRecipeResetButton.classList.add("btn", "btn-dark", `${drinkName}_recipeResetButtonList`);
+                    newRecipeResetButton.style.width = "5%";
+                    newRecipeResetButton.innerHTML = `<i class = "fa fa-lg fa-refresh"></i>`;
+                    newRecipeResetButton.id = `${newSummaryTagName}_recipeResetButton`;
+                    newRecipeResetButton.addEventListener("click", function () {
+                        // change value
+                        let visibleTag = document.getElementById(`${newSummaryTagName}_value`);
+                        let hiddenTag = document.getElementById(`${newSummaryTagName}_default`);
+                        visibleTag.value = hiddenTag.value;
+
+                        updateButtonColor(this, "btn-success", "btn-dark");
+                    });
+
+                    let newRecipeRemoveButton = document.createElement("button");
+                    newRecipeRemoveButton.classList.add("btn", "btn-danger");
+                    newRecipeRemoveButton.style.width = "5%";
+                    newRecipeRemoveButton.innerHTML = `<i class = "fa fa-lg fa-trash"></i>`;
+                    newRecipeRemoveButton.addEventListener("click", function () {
+                        dataList.removeChild(document.getElementById(`${newSummaryTagName}`));
+
+                        if (checkAllDrinkNotChanged()) {
+                            updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-primary", "btn-dark");
+                            updateButtonColor(document.getElementById("totalResetButton"), "btn-primary", "btn-dark");
+                            updateButtonColor(document.getElementById("totalSaveButton"), "btn-warning", "btn-dark");
+                        }
+
+                        else if (checkOtherRecipeValueDefault(drinkName)) {
+                            updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-primary", "btn-dark");
+                        }
+                    });
+
+                    let newRecipeAddedTag = document.createElement("button");
+                    newRecipeAddedTag.classList.add("btn", "btn-primary");
+                    newRecipeAddedTag.style.width = "5em";
+                    newRecipeAddedTag.innerHTML = "added";
+
+                    // 각각의 요소 append
+                    newInputGroup.appendChild(newPrependName);
+                    newInputGroup.appendChild(newDefaultAmount);
+                    newInputGroup.appendChild(newInputAmount);
+                    newInputGroup.appendChild(newRecipeResetButton);
+                    newInputGroup.appendChild(newRecipeRemoveButton);
+                    newInputGroup.appendChild(newRecipeAddedTag);
+
+                    newListing.appendChild(newInputGroup);
+                    dataList.appendChild(newListing);
+                });
+
+                dataElement.appendChild(addedIngredientname);
+                dataElement.appendChild(addedAmountNumber);
+                dataElement.appendChild(newRecipeInitButton);
+                dataElement.appendChild(newRecipeAddButton);
+
+                addListGroupItem.appendChild(dataElement);
+
+                cardCollapse.appendChild(addListGroupItem);
+
                 $("#dataSet").append(card);
             }
+
+            // 음료 추가를 위한 추가 inputgroup
 
             // 초기 모두 unfold를 위한 반복문
             for (let i = 0; i < drinkList.length; i++) {
@@ -343,14 +559,22 @@
         let currentRecipeList = document.getElementsByClassName(`${drinkName}_recipeList`);
         let currentValueList = document.getElementsByClassName(`${drinkName}_valueList`);
         let defaultValueList = document.getElementsByClassName(`${drinkName}_defaultList`);
-        let checker = true;
 
         for (let i = 0; i < currentValueList.length; i++) {
-            checker &= (currentRecipeList[i].style.display != "none");
-            checker &= (currentValueList[i].value == defaultValueList[i].value);
+            if (currentRecipeList[i].classList.contains("added")) {
+                return false;
+            }
+
+            if (currentRecipeList[i].style.display == "none") {
+                return false;
+            }
+
+            if (currentValueList[i].value != defaultValueList[i].value) {
+                return false;
+            }
         }
 
-        return checker;
+        return true;
     }
 
     function checkAllDrinkNotChanged() {
