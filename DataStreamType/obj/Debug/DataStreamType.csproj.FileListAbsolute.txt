@@ -24,3 +24,7 @@ C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStrea
 C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.csproj.CopyComplete
 C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.dll
 C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\obj\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\Google.Protobuf.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\MySql.Data.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\Google.Protobuf.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\DataStreamType\bin\Debug\MySql.Data.xml

@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewBag.Title = "Message";
+}
+
+<script>
+    alert("@Session["message"]");
+    window.location.href = "@Session["redirect"]";
+</script>

@@ -243,3 +243,9 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\MySql.Data.dll
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\Google.Protobuf.xml
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\WebApplication\bin\MySql.Data.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\Google.Protobuf.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\MySql.Data.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\Google.Protobuf.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\MySql.Data.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\Microsoft.AspNet.SignalR.Core.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\WebApplication\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb

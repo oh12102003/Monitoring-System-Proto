@@ -20,3 +20,20 @@ D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket clie
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerators\bin\Debug\Newtonsoft.Json.pdb
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerators\bin\Debug\Newtonsoft.Json.xml
 D:\백업 파일\신입사원 2차 개발 과제\Asynchornouse multi-socket client-server program\SensorValueGenerators\obj\Debug\SensorValueGenerator.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\SensorValueGenerator.exe.config
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\SensorValueGenerator.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\SensorValueGenerator.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\DataStreamType.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\MySql.Data.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\Google.Protobuf.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\DataStreamType.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\MySql.Data.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\bin\Debug\Google.Protobuf.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\obj\Debug\SensorValueGenerator.csprojAssemblyReference.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\obj\Debug\SensorValueGenerator.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\obj\Debug\SensorValueGenerator.csproj.CopyComplete
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\obj\Debug\SensorValueGenerator.exe
+C:\Users\user\Desktop\Monitoring-System-Proto\SensorValueGenerators\obj\Debug\SensorValueGenerator.pdb

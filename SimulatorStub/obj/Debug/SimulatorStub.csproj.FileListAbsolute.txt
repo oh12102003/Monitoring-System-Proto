@@ -33,3 +33,7 @@ C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorS
 C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.csproj.CopyComplete
 C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.exe
 C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\obj\Debug\SimulatorStub.pdb
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\MySql.Data.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\Google.Protobuf.dll
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\MySql.Data.xml
+C:\Users\user\Desktop\Monitoring-System-Proto\SimulatorStub\bin\Debug\Google.Protobuf.xml

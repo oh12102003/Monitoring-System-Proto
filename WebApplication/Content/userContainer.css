@@ -1,0 +1,46 @@
+﻿.userTitle {
+    margin-top: 3em;
+    margin-bottom: 2em;
+}
+
+.userContainer {
+    margin-top: 2em;
+    text-align : center;
+}
+
+.userPanel {
+    width : 100%;
+}
+
+.userPanel_head {
+    margin : 1em;
+    font-size : 2em;
+}
+
+.userPanel_body {
+    margin : 1em;
+}
+
+.userPanel_bodyElement {
+    padding-left : 20%;
+    width : 80%;
+    margin : 0px;
+    margin-top : 1em;
+    margin-bottom : 1em;
+}
+
+.userPanel_bodyElement input {
+    width : 100%;
+}
+
+.userPanel_bodyElement button {
+    width : 6em;
+}
+
+.userPanel_bodyElement button:last-child {
+    margin-left: 2em;
+}
+
+.userInputTag {
+    width : 10em;
+}
