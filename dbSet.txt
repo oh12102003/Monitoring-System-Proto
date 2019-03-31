@@ -1,0 +1,12 @@
+create table userInfo (userId varchar(20), userPs varchar(20), userNumber varchar(20));
+alter table userInfo modify column userId varchar(20) not null primary key
+alter table userInfo modify column userPs varchar(20) not null
+alter table userInfo modify column userNumber varchar(20) not null
+
+create table authorInfo (authorNumber varchar(10), userId varchar(20), authorGrade char(1));
+alter table authorInfo modify column authorNumber varchar(10) not null;
+alter table authorInfo modify column authorGrade char(1) not null default 1;
+
+insert into authorInfo values("11111111", "admin", 5);
+insert into authorInfo values("11111112", null, 1);
+insert into authorInfo values("11111113", null, 2);
