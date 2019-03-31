@@ -13,6 +13,10 @@
 
     @Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
     <style>
         .item-margin {
             margin-left: 1.5em;
@@ -31,6 +35,14 @@
         function signUpButtonCallback() {
             window.location.href = "@Url.Content("~/Home/SignUp")";
         }
+
+        function signOutButtonCallback() {
+            window.location.href = "@Url.Content("~/Home/SignOut")";
+        }
+
+        function monitoringButtonCallback() {
+            window.location.href = "@Url.Content("~/Monitoring")";
+        }
     </script>
 </head>
 <body>
@@ -48,17 +60,10 @@
 
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item dropdown">
-                    <button class="btn btn-secondary dropdown-toggle item-margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item">
+                    <button id="recipeButton" class="btn btn-secondary item-margin" onclick="monitoringButtonCallback()">
                         Monitoring
                     </button>
-
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#"> All </a>
-                        <a class="dropdown-item" href="#"> Controls </a>
-                        <a class="dropdown-item" href="#"> Materials </a>
-                        <a class="dropdown-item" href="#"> Vessels </a>
-                    </div>
                 </li>
 
                 <li class="nav-item">
@@ -68,35 +73,55 @@
                 </li>
             </ul>
 
+            @if (Session["userId"] == null)
+            {
             <ul class="nav justify-content-end">
                 <li class="nav-item item-margin">
                     <button id="loginButton" class="btn btn-primary"
-                            onclick = "signInButtonCallback()">
+                            onclick="signInButtonCallback()">
                         Sign in
                     </button>
                 </li>
 
                 <li class="nav-item item-margin">
                     <button id="signUpButton" class="btn btn-success"
-                            onclick = "signUpButtonCallback()">
+                            onclick="signUpButtonCallback()">
                         Sign up
                     </button>
                 </li>
             </ul>
+            }
+
+            else
+            {
+            <ul class = "nav justify-content-end">
+                <li class="nav-item item-margin">
+                    <button id = "loginedUserId" class = "btn btn-info">
+                        환영합니다! @Session["userId"] 님!
+                    </button>
+                </li>
+                <li class="nav-item item-margin">
+                    <button id = "logoutButton" class = "btn btn-danger"
+                            onclick = "signOutButtonCallback()">
+                        Sign out
+                    </button>
+                </li>
+            </ul>
+            }
         </div>
     </nav>
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
+    <div class="container body-content" style="margin-top : 1.5em">
+        <div id="messageShower"> </div>
 
+        <setion>
+            @RenderBody()
+        </setion>
+
+        <hr />
         <footer style="text-align : right">
             <p>Simulator Monitoring System</p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

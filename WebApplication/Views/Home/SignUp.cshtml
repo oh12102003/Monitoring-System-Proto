@@ -1,35 +1,296 @@
 ﻿
 @{
-    ViewBag.Title = "SignUp";
+    ViewBag.Title = "SignIn";
 }
 
-@Styles.Render("~/Content/dataContainer.css")
+@Styles.Render("~/Content/bootstrap.min.css")
+@Styles.Render("~/Content/userContainer.css")
 
-<div class="dataTitle">
+<script>
+    function buttonChanger(element, removeClass1, removeClass2, addClass, htmlString) {
+        element.classList.remove(removeClass1);
+        element.classList.remove(removeClass2);
+        element.classList.add(addClass);
+        element.innerHTML = htmlString;
+    }
+
+    // 중복 확인 주기적으로 수행h
+    function idCheck() {
+        let inputUserId = document.getElementById("userInputId").value;
+        let resultButton = document.getElementById("userInputIdChecker");
+        let resultFeedback = document.getElementById("userInputIdFeedback");
+
+        // db에서 아이디의 중복 여부 체크
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("idCheck")",
+            data: { inputid: inputUserId },
+            success: (data) => {
+                if (data == "Success") {
+                    buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-danger", "btn-success", "사용가능한 아이디입니다.");
+                }
+
+                else if (data == "Failed") {
+                    buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-success", "btn-danger", "중복된 아이디입니다.");
+                }
+
+                 
+                else {
+                    buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                    buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                }
+
+                checkRegistable();
+            },
+            failure: () => {
+                buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                checkRegistable();
+            }
+        });
+    }
+
+    function psCheck() {
+        let inputUserPs = document.getElementById("userInputPs").value;
+        let resultButton = document.getElementById("userInputPsChecker");
+        let resultFeedback = document.getElementById("userInputPsFeedback");
+
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("psCheck")",
+            data: { inputPs: inputUserPs},
+            success: (data) => {
+                if (data == "Success") {
+                    buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-danger", "btn-success", "사용가능한 비밀번호입니다.");
+                }
+
+                else if (data == "Error") {
+                    buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                    buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                }
+                 
+                else {
+                    buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-success", "btn-danger", data);
+                }
+
+                checkRegistable();
+            },
+            failure: () => {
+                buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+
+                checkRegistable();
+            }
+        });
+    }
+
+    function psAgainCheck() {
+        let inputUserPs = document.getElementById("userInputPs").value;
+        let inputUserPsAgain = document.getElementById("userInputPsAgain").value;
+        let resultButton = document.getElementById("userInputPsAgainChecker");
+        let resultFeedback = document.getElementById("userInputPsAgainFeedback");
+
+        if (inputUserPs.value == "" || inputUserPsAgain.value == "") {
+            buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+            buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "입력하지 않은 란이 있습니다.");
+        }
+
+        else if (inputUserPs == inputUserPsAgain) {
+            buttonChanger(resultButton, "btn-danger", "btn-dark", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+            buttonChanger(resultFeedback, "btn-danger", "btn-dark", "btn-success", "입력한 비밀번호가 일치합니다.");
+        }
+
+        else {
+            buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-success", "btn-dark", "btn-danger", "비밀번호가 일치하지 않습니다.");
+        }
+
+        checkRegistable();
+    }
+
+    function checkAuthorNumber() {
+        let inputUserNumber = document.getElementById("userInputAuthorNumber").value;
+        let resultButton = document.getElementById("userInputAuthorNumberChecker");
+        let resultFeedback = document.getElementById("userInputAuthorNumberFeedback");
+
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("authorNumberCheck")",
+            data: { inputNumber: inputUserNumber},
+            success: (data) => {
+                if (data == "Error") {
+                    buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                    buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                }
+
+                else if (data == "Denied") {
+                    buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-success", "btn-danger", "인증되지 않았거나 사용된 번호입니다.");
+                }
+
+                else {
+                    buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+                    buttonChanger(resultFeedback, "btn-dark", "btn-danger", "btn-success", "인증된 번호입니다 : Grade_" + data);
+                }
+
+                checkRegistable();
+            },
+            failure: () => {
+                buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                checkRegistable();
+            }
+        });
+    }
+
+    function checkRegistable() {
+        let targetButton = document.getElementById("registerButton");
+
+        let idChecker = document.getElementById("userInputIdChecker");
+        let psChecker = document.getElementById("userInputPsChecker");
+        let psAgainChecker = document.getElementById("userInputPsAgainChecker");
+        let authorNumberChecker = document.getElementById("userInputAuthorNumberChecker");
+
+        let totalChecker = idChecker.classList.contains("btn-success")
+            && psChecker.classList.contains("btn-success")
+            && psAgainChecker.classList.contains("btn-success")
+            && authorNumberChecker.classList.contains("btn-success");
+
+        if (totalChecker == true) {
+            targetButton.classList.remove("btn-dark");
+            targetButton.classList.add("btn-success");
+        }
+
+        else {
+            targetButton.classList.remove("btn-success");
+            targetButton.classList.add("btn-dark");
+        }
+
+        return totalChecker;
+    }
+
+    function requestRegister() {
+        let registerButton = document.getElementById("registerButton");
+
+        let userId = document.getElementById("userInputId").value;
+        let userPs = document.getElementById("userInputPs").value;
+        let userAuthorNum = document.getElementById("userInputAuthorNumber").value;
+
+        
+        if (registerButton.classList.contains("btn-success")) {
+            jQuery.ajax({
+                type: "POST",
+                url: "@Url.Action("register")",
+                data: { inputId: userId, inputPs : userPs, inputAuthNum : userAuthorNum},
+                success: (data) => {
+                    if (data == "Success") {
+                        alert("회원가입이 완료되었습니다.");
+                        window.location.href = "@Url.Action("Index")";
+                    }
+
+                    else {
+                        alert("data");
+                    }
+                },
+                failure: (errMsg) => {
+                    alert(errMsg);
+                }
+            });
+        }
+
+        else {
+            alert("누락되거나 잘못된 형식의 데이터가 있습니다.");
+        }
+
+    }
+
+    function goToHome() {
+        window.location.href = "@Url.Action("Index")";
+    }
+</script>
+
+<div class="userTitle">
     <h2>
-        Sign In
+        Sign Up
     </h2>
 </div>
 
-<div id="dataSet" class="container dataContainer">
-    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <div class="panel-title">회원 가입 화면</div>
+<div class="userContainer">
+    <div class="userPanel">
+        <div class="userPanel_head">
+            <div class="bg-dark text-light" style="padding : 0.6em; margin : 0.3em; border-radius : 1em;">
+                <img src="/Sources/logo.svg" style="width : 40px; height : 40px;" /> SimulMot
             </div>
-            <div class="panel-body">
-                <form id="login-form" action="@Url.Action("checkSignIn")" method="post">
-                    <div>
-                        <input type="text" class="form-control" name="username" placeholder="Username" autofocus>
+        </div>
+
+        <div class="userPanel_body">
+            <form method="post">
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 아이디 </span>
                     </div>
-                    <div>
-                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    <input type="text" class="form-control" id="userInputId" name="userId" placeholder="Id" autofocus aria-describedby="idLabel"
+                           onchange="idCheck()">
+                    <button type="button" class="btn btn-dark" id="userInputIdChecker">
+                        <i class='fa fa-lg fa-question'></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-dark" id="userInputIdFeedback"> 아이디를 입력해주세요. </button>
+
+
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 비밀번호 </span>
                     </div>
-                    <div>
-                        <button type="submit" class="form-control btn btn-primary">로그인</button>
+                    <input type="password" class="form-control" id="userInputPs" name="userPs" placeholder="Password"
+                           onchange="psCheck(); psAgainCheck()">
+                    <button type="button" class="btn btn-dark" id="userInputPsChecker">
+                        <i class='fa fa-lg fa-question'></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-dark" id="userInputPsFeedback"> 비밀번호 입력해주세요. </button>
+
+
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 비밀번호확인 </span>
                     </div>
-                </form>
-            </div>
+                    <input type="password" class="form-control" id="userInputPsAgain" placeholder="Confirm Password"
+                           onchange = "psAgainCheck()">
+                    <button type="button" class="btn btn-dark" id="userInputPsAgainChecker">
+                        <i class='fa fa-lg fa-question'></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-dark" id="userInputPsAgainFeedback"> 다시 비밀번호를 입력해주세요.</button>
+
+
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 인증번호 </span>
+                    </div>
+                    <input type="text" class="form-control" id="userInputAuthorNumber" name="userInputAuthorNumber" placeholder="Authorized Number"
+                           onchange = "checkAuthorNumber()">
+                    <button type="button" class="btn btn-dark" id="userInputAuthorNumberChecker">
+                        <i class='fa fa-lg fa-exclamation'></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-dark" id="userInputAuthorNumberFeedback"> 인증번호를 입력해주세요. </button>
+
+                <div class="input-group userPanel_bodyElement">
+                    <button id = "registerButton" type="button" class="form-control btn btn-dark"
+                            onclick = "requestRegister()">
+                        회원가입
+                    </button>
+                    <button type="button" class="form-control btn btn-danger"
+                            onclick = "gotoHome()">
+                        취소
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

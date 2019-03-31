@@ -28,6 +28,12 @@ namespace WebApplication.Hubs
             asyncSend(productSensor, "Product", productUnit.serialize());
         }
 
+        public void register(string userId, string target)
+        {
+            Sensor hubSensor = new Sensor(toSimulator, "webClient", userId);
+            asyncSend(hubSensor, "register", userId);
+        }
+
         public void disconnect()
         {
             // unregister 명령어 구현 예정
@@ -43,14 +49,6 @@ namespace WebApplication.Hubs
             try
             {
                 toSimulator.EndConnect(ar);
-                
-                // 차후에 유저 아이디 구해오는거 구현 예정
-                // string userId = toClient.Clients.All.getUserId();
-                userId = "user";
-
-                Sensor hubSensor = new Sensor(toSimulator, "webClient", userId);
-                messageTarget = "all";
-                asyncSend(hubSensor, "register", userId);
 
                 Sensor receiveSensor = new Sensor(toSimulator, "webClient", userId);
                 asyncReceive(receiveSensor);

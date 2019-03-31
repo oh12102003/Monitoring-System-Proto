@@ -3,33 +3,65 @@
     ViewBag.Title = "SignIn";
 }
 
-@Styles.Render("~/Content/dataContainer.css")
+@Styles.Render("~/Content/bootstrap.min.css")
+@Styles.Render("~/Content/userContainer.css")
 
-<div class="dataTitle">
+<script>
+    function checkInput() {
+        let targetButton = document.getElementById("signInLoginButton");
+
+        let idInput = document.getElementById("inputId").value;
+        let psInput = document.getElementById("inputPs").value;
+
+        if (idInput != "" && psInput != "") {
+            targetButton.classList.remove("btn-dark");
+            targetButton.classList.add("btn-primary");
+        }
+
+        else {
+            targetButton.classList.remove('btn-primary');
+            targetButton.classList.add("btn-dark");
+        }
+    }
+</script>
+
+<div class="userTitle">
     <h2>
         Sign In
     </h2>
 </div>
 
-<div id="dataSet" class="container dataContainer">
-    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <div class="panel-title">로그인</div>
+<div class="userContainer">
+    <div class="userPanel">
+        <div class="userPanel_head">
+            <div class="bg-dark text-light" style = "padding : 0.6em; margin : 0.3em; border-radius : 1em;">
+                <img src = "/Sources/logo.svg" style = "width : 40px; height : 40px;"/> SimulMot
             </div>
-            <div class="panel-body">
-                <form id="login-form" action = "@Url.Action("checkLogin")" method = "post">
-                    <div>
-                        <input type="text" class="form-control" name="userId" placeholder="Id" autofocus>
+        </div>
+
+        <div class="userPanel_body">
+            <form action="@Url.Action("checkLogin")" method="post">
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 아이디 </span>
                     </div>
-                    <div>
-                        <input type="password" class="form-control" name="userPs" placeholder="Password">
+                    <input type="text" class="form-control" id = "inputId" name="inputId" placeholder="Id" autofocus aria-describedby="idLabel"
+                           onchange = "checkInput()">
+                </div>
+
+                <div class="input-group userPanel_bodyElement">
+                    <div class="input-group-prepend">
+                        <span id="idLabel" class="input-group-text userInputTag"> 비밀번호 </span>
                     </div>
-                    <div>
-                        <button type="submit" class="form-control btn btn-primary">로그인</button>
-                    </div>
-                </form>
-            </div>
+                    <input type="password" class="form-control" id = "inputPs" name="inputPs" placeholder="Password"
+                           onchange = "checkInput()">
+                </div>
+
+                <div class="input-group userPanel_bodyElement">
+                    <button type="submit" id = "signInLoginButton" class="form-control btn btn-dark">로그인</button>
+                    <button type="button" class="form-control btn btn-danger">취소</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

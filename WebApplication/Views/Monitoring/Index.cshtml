@@ -2,140 +2,159 @@
     ViewBag.Title = "Monitoring";
 }
 
-@Styles.Render("~/Content");
-@Scripts.Render("~/Scripts");
-
-<div class="jumbotron" style="border : solid grey 1px; border-color : #ccc; height : 15em; width : 100%; margin : 1em; padding : 1em;">
-    <div id = "dataSet" class="container sensorDataContainer"> </div>
-</div>
+@Styles.Render("~/Content/dataContainer.css")
 
 <div>
-    <form>
-        <input id="productName" type="text" placeholder="생산할 음료수 이름" />
-        <input id="productNumber" type="number" placeholder="생산 개수" />
-        <input id="productStartButton" type="button" value="생산" />
-    </form>
+    <div class="container sensorDataContainer" style="text-align : center;">
+        <ul class="list-group sensorShower">
+            <li class="list-group-item">
+                <div class="input-group dataElement" style="text-align : center;">
+                    <div class="input-group-prepend" style="width : 30%">
+                        <span id="productTargetDrink" class="input-group-text" style="width : 100%">
+                            생산할 음료수
+                        </span>
+                    </div>
+                    <input id="productName" type="text" placeholder="생산할 음료수 이름" aria-describedby="productTargetDrink" style="width : 60%" />
+                </div>
+            </li>
 
-    <div id="messageLayer" style = "border : solid red 1px;"> </div>
+            <li class="list-group-item">
+                <div class="input-group dataElement" style="text-align : center;">
+                    <div class="input-group-prepend" style="width : 30%">
+                        <span id="productDrinkNumber" class="input-group-text" style="width : 100%">
+                            생산 개수
+                        </span>
+                    </div>
+                    <input id="productNumber" type="number" placeholder="생산 개수" aria-describedby="productDrinkNumber" style="width : 60%" />
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="input-group dataElement" style="text-align : center;">
+                    <input id="productStartButton" type="button" value="생산" class="btn btn-primary" style="width : 20em" />
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="dataSet" class="container sensorDataContainer"> </div>
 </div>
 
-@section scripts {
-    <script>
-        $(function () {
-            // Reference the auto-generated proxy for the hub.
-            var monitoringHub = $.connection.monitoringHub;
+<style>
+    .sensorShower {
+        margin: 2em;
+    }
+</style>
 
-            // client(in hub) function
-            monitoringHub.client.printInConsole = function (text) {
-                console.log("[" + text + "]");
-            };
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/Scripts/jquery.signalR-2.4.0.min.js")
+<script src="/signalr/hubs"></script>
 
-            monitoringHub.client.printInPage = function (text) {
-                $("#dataSet").empty();
+<script>
+    $(document).ready(function () {
+        // Reference the auto-generated proxy for the hub.
+        var monitoringHub = $.connection.monitoringHub;
 
-                $("#messageLayer").html(text);
+        // client(in hub) function
+        monitoringHub.client.printInPage = function (text) {
+            $("#dataSet").empty();
 
-                let controlNumber = 0;
-                let materialNumber = 0;
-                let vesselNumber = 0;
+            let controlNumber = 0;
+            let materialNumber = 0;
+            let vesselNumber = 0;
 
-                let message = text.split('#')[4];
-                let dataList = $.parseJSON(message).sensorList;
+            let message = text.split('#')[4];
+            let dataList = $.parseJSON(message).sensorList;
 
-                for (let i = 0; i < dataList.length; i++)
-                {
-                    let newData = document.createElement("li");
-                    newData.classList.add("list-group-item");
-                    newData.innerHTML = dataList[i].name + " : " + dataList[i].value;
+            for (let i = 0; i < dataList.length; i++) {
+                let newData = document.createElement("li");
+                newData.classList.add("list-group-item");
+                newData.innerHTML = dataList[i].name + " : " + dataList[i].value;
 
-                    if (dataList[i].type == "Control") {
-                        controlNumber++;
+                if (dataList[i].type == "Control") {
+                    controlNumber++;
 
-                        if (controlNumber == 1) {
-                            let controlColumn = document.createElement("ul");
-                            controlColumn.classList.add("list-group");
-                            controlColumn.id = "list-control";
+                    if (controlNumber == 1) {
+                        let controlColumn = document.createElement("ul");
+                        controlColumn.classList.add("list-group", "sensorShower");
+                        controlColumn.id = "list-control";
 
-                            let controlColumnTitle = document.createElement("li");
-                            controlColumnTitle.classList.add("list-group-item");
-                            controlColumnTitle.classList.add("list-group-item-warning");
-                            controlColumnTitle.innerHTML = "Control Sensor List";
-                            controlColumn.append(controlColumnTitle);
+                        let controlColumnTitle = document.createElement("li");
+                        controlColumnTitle.classList.add("list-group-item", "list-group-item-warning");
+                        controlColumnTitle.innerHTML = "Control Sensor List";
+                        controlColumn.append(controlColumnTitle);
 
-                            $("#dataSet").append(controlColumn);
-                        }
-
-                        $("#list-control").append(newData);
+                        $("#dataSet").append(controlColumn);
                     }
 
-                    else if (dataList[i].type == "Material") {
-                        console.log("material");
-                        materialNumber++;
-
-                        if (materialNumber == 1) {
-                            let materialColumn = document.createElement("ul");
-                            materialColumn.classList.add("list-group");
-                            materialColumn.id = "list-material";
-
-                            let materialColumnTitle = document.createElement("li");
-                            materialColumnTitle.classList.add("list-group-item");
-                            materialColumnTitle.classList.add("list-group-item-info");
-                            materialColumnTitle.innerHTML = "Material Sensor List";
-                            materialColumn.append(materialColumnTitle);
-
-                            $("#dataSet").append(materialColumn);
-                        }
-
-                        $("#list-material").append(newData);
-                    }
-
-                    else if (dataList[i].type == "Vessel") {
-                        vesselNumber++;
-
-                        if (vesselNumber == 1) {
-                            let vesselColumn = document.createElement("ul");
-                            vesselColumn.classList.add("list-group");
-                            vesselColumn.id = "list-vessel";
-
-                            let vesselColumnTitle = document.createElement("li");
-                            vesselColumnTitle.classList.add("list-group-item");
-                            vesselColumnTitle.classList.add("list-group-item-success");
-                            vesselColumnTitle.innerHTML = "Vessel Sensor List";
-                            vesselColumn.append(vesselColumnTitle);
-
-                            $("#dataSet").append(vesselColumn);
-                        }
-
-                        $("#list-vessel").append(newData);
-                    }
+                    $("#list-control").append(newData);
                 }
-            };
 
+                else if (dataList[i].type == "Material") {
+                    materialNumber++;
 
+                    if (materialNumber == 1) {
+                        let materialColumn = document.createElement("ul");
+                        materialColumn.classList.add("list-group", "sensorShower");
+                        materialColumn.id = "list-material";
 
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                monitoringHub.server.start();
+                        let materialColumnTitle = document.createElement("li");
+                        materialColumnTitle.classList.add("list-group-item", "list-group-item-info");
+                        materialColumnTitle.innerHTML = "Material Sensor List";
+                        materialColumn.append(materialColumnTitle);
 
-                // 생산 버튼 이벤트 추가
-                $("#productStartButton").click(function () {
-                    let name = $("#productName").val();
-                    let number = $("#productNumber").val();
+                        $("#dataSet").append(materialColumn);
+                    }
 
-                    monitoringHub.server.product(name, number);
-                });
-            });
+                    $("#list-material").append(newData);
+                }
 
-            // 창 닫을 때 연결 종료하기
-            $(window).bind('beforeunload', function () {
-                monitoringHub.server.disconnect();
+                else if (dataList[i].type == "Vessel") {
+                    vesselNumber++;
+
+                    if (vesselNumber == 1) {
+                        let vesselColumn = document.createElement("ul");
+                        vesselColumn.classList.add("list-group", "sensorShower");
+                        vesselColumn.id = "list-vessel";
+
+                        let vesselColumnTitle = document.createElement("li");
+                        vesselColumnTitle.classList.add("list-group-item", "list-group-item-success");
+                        vesselColumnTitle.innerHTML = "Vessel Sensor List";
+                        vesselColumn.append(vesselColumnTitle);
+
+                        $("#dataSet").append(vesselColumn);
+                    }
+
+                    $("#list-vessel").append(newData);
+                }
+            }
+        };
+
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            monitoringHub.server.start();
+
+            // 등록
+            monitoringHub.server.register("@Session["userId"]", "@Session["target"]");
+
+            // 생산 버튼 이벤트 추가
+            $("#productStartButton").on("click", function () {
+                let name = $("#productName").val();
+                let number = $("#productNumber").val();
+
+                monitoringHub.server.product(name, "product", number);
             });
         });
 
-        // This optional function html-encodes messages for display in the page.
-        function htmlEncode(value) {
-            var encodedValue = $('<div />').text(value).html();
-            return encodedValue;
-        }
-    </script>
-}
+        // 창 닫을 때 연결 종료하기
+        $(window).bind('beforeunload', function () {
+            monitoringHub.server.disconnect();
+        });
+    });
+
+    // This optional function html-encodes messages for display in the page.
+    function htmlEncode(value) {
+        var encodedValue = $('<div />').text(value).html();
+        return encodedValue;
+    }
+</script>
