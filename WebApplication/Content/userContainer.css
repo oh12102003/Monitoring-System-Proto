@@ -82,8 +82,16 @@
     width : 20em;
 }
 
-.mt-element-button {
+.mt-element-button-large {
     width : 15%;
+}
+
+.mt-element-button-medium {
+    width : 10%;
+}
+
+.mt-element-button-small {
+    width : 5%;
 }
 
 
@@ -99,6 +107,10 @@
 
 .mt-margin-large {
     margin-left : 5%;
+}
+
+.mt-margin-slarge {
+    margin-left : 3%;
 }
 
 .mt-margin-small {

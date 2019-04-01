@@ -20,36 +20,43 @@
         let resultButton = document.getElementById("userInputIdChecker");
         let resultFeedback = document.getElementById("userInputIdFeedback");
 
-        // db에서 아이디의 중복 여부 체크
-        jQuery.ajax({
-            type: "POST",
-            url: "@Url.Action("idCheck")",
-            data: { inputid: inputUserId },
+        if (inputUserId == "") {
+            buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-dark", "btn-outline-danger", "아이디는 반드시 입력해야 합니다.");
+        }
+
+        else
+        {
+            // db에서 아이디의 중복 여부 체크
+            jQuery.ajax({
+                type: "POST",
+                url: "@Url.Action("idCheck")",
+                data: { inputid: inputUserId },
             success: (data) => {
                 if (data == "Success") {
                     buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
-                    buttonChanger(resultFeedback, "btn-dark", "btn-danger", "btn-success", "사용가능한 아이디입니다.");
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "사용가능한 아이디입니다.");
                 }
 
                 else if (data == "Failed") {
                     buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
-                    buttonChanger(resultFeedback, "btn-dark", "btn-success", "btn-danger", "중복된 아이디입니다.");
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", "중복된 아이디입니다.");
                 }
 
-                 
                 else {
                     buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
-                    buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                    buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
                 }
 
                 checkRegistable();
             },
             failure: () => {
                 buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
-                buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
                 checkRegistable();
             }
         });
+        }
     }
 
     function psCheck() {
@@ -64,24 +71,24 @@
             success: (data) => {
                 if (data == "Success") {
                     buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
-                    buttonChanger(resultFeedback, "btn-dark", "btn-danger", "btn-success", "사용가능한 비밀번호입니다.");
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "사용가능한 비밀번호입니다.");
                 }
 
                 else if (data == "Error") {
                     buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
-                    buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                    buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
                 }
                  
                 else {
                     buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
-                    buttonChanger(resultFeedback, "btn-dark", "btn-success", "btn-danger", data);
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", data);
                 }
 
                 checkRegistable();
             },
             failure: () => {
                 buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
-                buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "에러가 발생하였습니다.");
+                buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
 
                 checkRegistable();
             }
@@ -94,19 +101,19 @@
         let resultButton = document.getElementById("userInputPsAgainChecker");
         let resultFeedback = document.getElementById("userInputPsAgainFeedback");
 
-        if (inputUserPs.value == "" || inputUserPsAgain.value == "") {
-            buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
-            buttonChanger(resultFeedback, "btn-success", "btn-danger", "btn-dark", "입력하지 않은 란이 있습니다.");
+        if (inputUserPs == "" || inputUserPsAgain == "") {
+            buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-dark", "btn-outline-danger", "입력하지 않은 란이 있습니다.");
         }
 
         else if (inputUserPs == inputUserPsAgain) {
             buttonChanger(resultButton, "btn-danger", "btn-dark", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
-            buttonChanger(resultFeedback, "btn-danger", "btn-dark", "btn-success", "입력한 비밀번호가 일치합니다.");
+            buttonChanger(resultFeedback, "btn-outline-danger", "btn-outline-dark", "btn-outline-success", "입력한 비밀번호가 일치합니다.");
         }
 
         else {
             buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
-            buttonChanger(resultFeedback, "btn-success", "btn-dark", "btn-danger", "비밀번호가 일치하지 않습니다.");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-dark", "btn-outline-danger", "비밀번호가 일치하지 않습니다.");
         }
 
         checkRegistable();
@@ -197,7 +204,7 @@
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputIdChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
-                <div class="btn btn-dark mt-element-notice mt-margin-small" id="userInputIdFeedback"> 아이디를 입력해주세요. </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputIdFeedback"> 아이디를 입력해주세요. </div>
             </div>
 
 
@@ -210,7 +217,7 @@
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
-                <div class="btn btn-dark mt-element-notice mt-margin-small" id="userInputPsFeedback"> 비밀번호를 입력해주세요. </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputPsFeedback"> 비밀번호를 입력해주세요. </div>
             </div>
 
 
@@ -223,16 +230,16 @@
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsAgainChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
-                <div class="btn btn-dark mt-element-notice mt-margin-small" id="userInputPsAgainFeedback"> 다시 비밀번호를 입력해주세요.</div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputPsAgainFeedback"> 다시 비밀번호를 입력해주세요.</div>
             </div>
 
 
             <div class="input-group mt-element mt-margin-xxlarge mt-vertical-margin-large">
-                <button id = "registerButton" type="button" class="btn btn-dark mt-element-button mt-margin-xlarge"
+                <button id = "registerButton" type="button" class="btn btn-dark mt-element-button-large mt-margin-xlarge"
                         onclick = "requestRegister()">
                     회원가입
                 </button>
-                <button type="button" class="btn btn-danger mt-element-button mt-margin-xlarge"
+                <button type="button" class="btn btn-danger mt-element-button-large mt-margin-xlarge"
                         onclick = "goToHome()">
                     취소
                 </button>

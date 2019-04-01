@@ -3,7 +3,6 @@
     ViewBag.Title = "SignIn";
 }
 
-@Styles.Render("~/Content/bootstrap.min.css")
 @Styles.Render("~/Content/userContainer.css")
 
 <script>
@@ -23,43 +22,58 @@
             targetButton.classList.add("btn-dark");
         }
     }
+
+    function register() {
+        window.location.href = "@Url.Action("SignUp")";
+    }
 </script>
 
-<div class="userContainer">
-    <div class="userPanel">
-        <div class="userPanel_head">
-            <div class="bg-dark text-light" style = "padding : 0.6em; margin : 0.3em; border-radius : 1em;">
-                <img src = "/Sources/logo.svg" style = "width : 40px; height : 40px;"/> SimulMot
-            </div>
-
-            <div class="bg-secondary text-light" style="font-size : 0.8em; padding : 0.2em; margin : 0.3em; border-radius : 0.8em;">
-                - 로그인 -
-            </div>
+<div class="mt-container">
+    <div class="mt-panel">
+        <div class="bg-dark text-light mt-panel-title">
+            <img src = "/Sources/logo.svg" style = "width : 40px; height : 40px;"/> SimulMot
         </div>
 
-        <div class="userPanel_body">
-            <form action="@Url.Action("checkLogin")" method="post">
-                <div class="input-group userPanel_bodyElement">
-                    <div class="input-group-prepend">
-                        <span id="idLabel" class="input-group-text userInputTag"> 아이디 </span>
-                    </div>
-                    <input type="text" class="form-control" id = "inputId" name="inputId" placeholder="Id" autofocus aria-describedby="idLabel"
-                           onchange = "checkInput()">
-                </div>
-
-                <div class="input-group userPanel_bodyElement">
-                    <div class="input-group-prepend">
-                        <span id="idLabel" class="input-group-text userInputTag"> 비밀번호 </span>
-                    </div>
-                    <input type="password" class="form-control" id = "inputPs" name="inputPs" placeholder="Password"
-                           onchange = "checkInput()">
-                </div>
-
-                <div class="input-group userPanel_bodyElement">
-                    <button type="submit" id = "signInLoginButton" class="form-control btn btn-dark">로그인</button>
-                    <button type="button" class="form-control btn btn-danger">취소</button>
-                </div>
-            </form>
+        <div class="mt-panel-subtitle">
+            - 로그인 - <br />
+            로그인 이후 각종 기능을 사용할 수 있습니다.
         </div>
+    </div>
+
+    <div class="mt-container-body mt-margin-xxlarge mt-vertical-margin-large">
+        <form action="@Url.Action("checkLogin")" method="post">
+            <div class="input-group mt-element mt-margin-xlarge">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="idLabel" class="input-group-text"> 아이디 </span>
+                </div>
+                <input type="text" class="form-control mt-element-input" id = "inputId" name="inputId" placeholder="Id" autofocus aria-describedby="idLabel"
+                        onchange = "checkInput()">
+            </div>
+
+            <div class="input-group mt-element mt-margin-xlarge mt-vertical-margin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="idLabel" class="input-group-text"> 비밀번호 </span>
+                </div>
+                <input type="password" class="form-control mt-element-input" id = "inputPs" name="inputPs" placeholder="Password"
+                        onchange = "checkInput()">
+            </div>
+
+            <div class="input-group mt-element mt-margin-xlarge mt-vertical-margin-large">
+                <button type="submit" id = "signInLoginButton"
+                        class="btn btn-dark mt-element-button-medium mt-margin-small">
+                    로그인
+                </button>
+
+                <button type="button" onclick = "register()"
+                        class="btn btn-success mt-element-button-medium mt-margin-slarge">
+                    회원가입
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger mt-element-button-medium mt-margin-slarge">
+                    취소
+                </button>
+            </div>
+        </form>
     </div>
 </div>
