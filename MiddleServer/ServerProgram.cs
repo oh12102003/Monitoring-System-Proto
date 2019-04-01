@@ -38,16 +38,6 @@ namespace CometServer_MiddleServer
 
                 while (true)
                 {
-                    // check all of socket connection
-                    sensorList.ForEach(sensor =>
-                    {
-                        if (!sensor.socket.Connected)
-                        {
-                            sensorList.Remove(sensor);
-                            sensor.Dispose();
-                        }
-                    });
-
                     try
                     {
                         printsensorList();

@@ -17,6 +17,7 @@ namespace DataStreamType
         // execute query
         abstract public int inquire(ref DataTable result, string inputQuery, List<MySqlParameter> queryStringData);
         abstract public int inquire(string inputQuery, List<MySqlParameter> queryStringData);
+        abstract public int inquire(ref DataTable result, string inputQuery);
         abstract public int update(string inputQuery, List<MySqlParameter> queryStringData);
     }
 }

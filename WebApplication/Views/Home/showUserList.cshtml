@@ -1,0 +1,25 @@
+﻿@using WebApplication.Models;
+@model List<AuthInfo>
+
+@{
+    ViewBag.Title = "showUserList";
+}
+
+<h2> User List </h2>
+
+<table>
+    <tr>
+        <th>Auth Number</th>
+        <th>Auth Grade</th>
+        <th>Appended User Id</th>
+
+    </tr>
+    @foreach (var authInfo in Model)
+    {
+        <tr>
+            <td>@authInfo.authNumber</td>
+            <td>@authInfo.authGrade</td>
+            <td>@authInfo.userId</td>
+        </tr>
+    }
+</table>

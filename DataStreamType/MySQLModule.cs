@@ -61,6 +61,16 @@ namespace DataStreamType
             return result.Rows.Count;
         }
 
+        override public int inquire(ref DataTable result, string inputQuery)
+        {
+            MySqlCommand command = new MySqlCommand(inputQuery, connection);
+
+            MySqlDataReader readData = command.ExecuteReader();
+
+            result.Load(readData);
+            return result.Rows.Count;
+        }
+
         // 데이터 추가, 수정, 삭제 함수
         override public int update(string inputQuery, List<MySqlParameter> queryStringData)
         {

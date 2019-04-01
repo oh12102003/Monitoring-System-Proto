@@ -1,7 +1,6 @@
 ﻿using DataStreamType;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
-using System.Data;
 using System.Web.Mvc;
 
 namespace WebApplication.Controllers
@@ -12,7 +11,7 @@ namespace WebApplication.Controllers
         public ActionResult Index()
         {
             string userId = Session["userId"] as string;
-            string authNum = Session["authNum"] as string;
+            string authNum = Session["userAuth"] as string;
 
             if (userId == null)
             {
@@ -30,7 +29,7 @@ namespace WebApplication.Controllers
             {
                 db.connect();
 
-                string checkQuery = "select * from userInfo where userId=@userId and userNumber=@authNum";
+                string checkQuery = "select * from userInfo where userId=@userId and userAuth=@authNum";
 
                 List<MySqlParameter> queryData = new List<MySqlParameter>();
                 queryData.Add(new MySqlParameter("userId", userId));
@@ -42,15 +41,7 @@ namespace WebApplication.Controllers
                 {
                     queryData.Clear();
 
-                    DataTable result = new DataTable();
-                    checkQuery = "select authorGrade from authorInfo where authorNumber=@authNum";
-                    queryData.Add(new MySqlParameter("authNum", authNum));
-                    count = db.inquire(ref result, checkQuery, queryData);
-                    db.close();
-
-                    int userGrade = int.Parse(result.Rows[0]["authorGrade"] as string);
-
-                    if (userGrade >= 3)
+                    if (int.Parse(authNum) >= 3)
                     {
                         return View();
                     }

@@ -12,7 +12,7 @@ namespace WebApplication.Controllers
         public ActionResult Index()
         {
             string userId = Session["userId"] as string;
-            string authNum = Session["authNum"] as string;
+            string userAuth = Session["userAuth"] as string;
 
             if (userId == null)
             {
@@ -30,27 +30,18 @@ namespace WebApplication.Controllers
             {
                 db.connect();
 
-                string checkQuery = "select * from userInfo where userId=@userId and userNumber=@authNum";
+                DataTable dt = new DataTable();
+                string checkQuery = "select * from userInfo where userId=@userId and userAuth=@userAuth";
 
                 List<MySqlParameter> queryData = new List<MySqlParameter>();
                 queryData.Add(new MySqlParameter("userId", userId));
-                queryData.Add(new MySqlParameter("authNum", authNum));
+                queryData.Add(new MySqlParameter("userAuth", userAuth));
 
-                int count = db.inquire(checkQuery, queryData);
+                int count = db.inquire(ref dt, checkQuery, queryData);
 
                 if (count == 1)
                 {
-                    queryData.Clear();
-
-                    DataTable result = new DataTable();
-                    checkQuery = "select authorGrade from authorInfo where authorNumber=@authNum";
-                    queryData.Add(new MySqlParameter("authNum", authNum));
-                    count = db.inquire(ref result, checkQuery, queryData);
-                    db.close();
-
-                    int userGrade = int.Parse(result.Rows[0]["authorGrade"] as string);
-
-                    if (userGrade >= 2)
+                    if (int.Parse(userAuth) >= 1)
                     {
                         return View();
                     }

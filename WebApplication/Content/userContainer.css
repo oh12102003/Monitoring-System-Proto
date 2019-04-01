@@ -1,46 +1,138 @@
-﻿.userTitle {
-    margin-top: 3em;
-    margin-bottom: 2em;
+﻿.mt-container {
+    text-align : center;
+    margin-top: 5em;
 }
 
-.userContainer {
-    margin-top: 2em;
+.mt-container-body {
+    width : 100%;
     text-align : center;
 }
 
-.userPanel {
+
+
+.mt-panel {
     width : 100%;
 }
 
-.userPanel_head {
-    margin : 1em;
+.mt-panel-title {
+    border-radius : 0.5em;
+
+    text-align : center;
     font-size : 2em;
+
+    z-index : 5;
+    padding : 0.6em;
 }
 
-.userPanel_body {
+.mt-panel-subtitle {
+    position : relative;
+    top : -0.6em;
+
+    color : black;
+    font-weight : bold;
+
+    border : solid black 1px;
+    border-radius : 0.5em 0em;
+    background-color : azure;
+
+    text-align : center;
+    font-size : 1em;
+
+    z-index : 4;
+    padding : 0.5em;
+    margin-bottom : 2em;
+}
+
+.mt-panel-body {
     margin : 1em;
 }
 
-.userPanel_bodyElement {
-    padding-left : 20%;
-    width : 80%;
+.mt-panel-body-element {
+    width : 100%;
+
     margin : 0px;
     margin-top : 1em;
     margin-bottom : 1em;
 }
 
-.userPanel_bodyElement input {
-    width : 100%;
+.mt-element {
+    margin-top : 1em;
+    margin-bottom : 1em;
 }
 
-.userPanel_bodyElement button {
-    width : 6em;
-}
-
-.userPanel_bodyElement button:last-child {
-    margin-left: 2em;
-}
-
-.userInputTag {
+.mt-element-explain {
     width : 10em;
+    text-align : center;
+}
+
+.mt-element-explain span {
+    width : 20em;
+    text-align : center;
+}
+
+.mt-element-input {
+    width : 20em;
+}
+
+.mt-element-checker {
+    width : 3em;
+}
+
+.mt-element-notice {
+    width : 20em;
+}
+
+.mt-element-button {
+    width : 15%;
+}
+
+
+
+
+.mt-margin-xxlarge {
+    margin-left : 20%;
+}
+
+.mt-margin-xlarge {
+    margin-left : 10%;
+}
+
+.mt-margin-large {
+    margin-left : 5%;
+}
+
+.mt-margin-small {
+    margin-left : 2%;
+}
+
+
+
+
+
+.mt-vertical-margin-small {
+    margin-top : 2%;
+}
+
+.mt-vertical-margin-large {
+    margin-top : 5%;
+}
+
+.mt-vertical-margin-xlarge {
+    margin-top : 10%;
+}
+
+.mt-vertical-margin-xxlarge {
+    margin-top : 20%;
+}
+
+
+
+
+
+.mt-pos-left {
+    left : 10%;
+}
+
+.mt-pos-right {
+    right : 10%;
 }

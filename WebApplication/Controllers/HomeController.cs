@@ -4,6 +4,7 @@ using DataStreamType;
 using System.Data;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
@@ -13,7 +14,15 @@ namespace WebApplication.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session["userId"] == null)
+            {
+                return View("SignIn");
+            }
+
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult Login()
@@ -29,6 +38,60 @@ namespace WebApplication.Controllers
         public ActionResult SignUp()
         {
             return View();
+        }
+
+        public ActionResult showUserList()
+        {
+            string userId = Session["userId"] as string;
+            string userAuth = Session["userAuth"] as string;
+
+            DataBaseModuleFactory dbFactory = DataBaseModuleFactory.getInstance();
+            IDataBase db = dbFactory.getDataBaseModule(dataBaseType.MySql);
+
+            dbFactory = DataBaseModuleFactory.getInstance();
+
+            try
+            {
+                db.connect();
+
+                if (int.Parse(userAuth) >= 4)
+                {
+                    string checkQuery = "select * from userInfo";
+                    DataTable dt = new DataTable();
+                    List<AuthInfo> userTable = new List<AuthInfo>();
+
+                    db.inquire(ref dt, checkQuery);
+                    db.close();
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        AuthInfo info = new AuthInfo();
+                        info.authNumber = row["authorNumber"] as string;
+                        info.userId = row["userId"] as string;
+                        info.authGrade = row["authorGrade"] as string;
+
+                        userTable.Add(info);
+                    }
+
+                    return View(userTable);
+                }
+
+                else
+                {
+                    db.close();
+                    Session["message"] = "권한이 없습니다.";
+                    Session["redirect"] = Url.Content("~/Home");
+                    return RedirectToAction("Messaging", "Shared");
+                }
+            }
+
+            catch
+            {
+                db.close();
+                Session["message"] = "에러가 발생하였습니다.";
+                Session["redirect"] = Url.Content("~/Home");
+                return RedirectToAction("Messaging", "Shared");
+            }
         }
 
         [HttpPost]
@@ -84,7 +147,7 @@ namespace WebApplication.Controllers
 
                 else if (!regex.IsMatch(inputPs))
                 {
-                    return "사용할 수 있는 문자는 한글, 숫자, 영문자입니다.";
+                    return "한글, 숫자, 영문자만 사용 가능합니다.";
                 }
 
                 else
@@ -100,51 +163,10 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public string authorNumberCheck(string inputNumber)
-        {
-            dbFactory = DataBaseModuleFactory.getInstance();
-            IDataBase db = dbFactory.getDataBaseModule(dataBaseType.MySql);
-
-            dbFactory = DataBaseModuleFactory.getInstance();
-
-            try
-            {
-                db.connect();
-
-                DataTable result = new DataTable();
-                string checkQuery = "select * from authorInfo where authorNumber = @inputNumber";
-
-                List<MySqlParameter> queryData = new List<MySqlParameter>();
-                queryData.Add(new MySqlParameter("inputNumber", inputNumber));
-
-                int count = db.inquire(ref result, checkQuery, queryData);
-                db.close();
-
-                if (count == 1)
-                {
-                    DataRow row = result.Rows[0];
-                    string str = row["userId"] as string;
-                    return (str == null) ? row["authorGrade"] as string : "Denied";
-                }
-
-                else
-                {
-                    return "Denied";
-                }
-            }
-
-            catch
-            {
-                return "Error";
-            }
-        }
-
-        [HttpPost]
-        public string register(string inputId, string inputPs, string inputAuthNum)
+        public string register(string inputId, string inputPs)
         {
             bool idChecker = idCheck(inputId).Equals("Success");
             bool psChecker = psCheck(inputPs).Equals("Success");
-            bool authNumChecker = (!authorNumberCheck(inputAuthNum).Equals("Denied")) && (!authorNumberCheck(inputAuthNum).Equals("Error"));
 
             if (!idChecker)
             {
@@ -154,11 +176,6 @@ namespace WebApplication.Controllers
             else if (!psChecker)
             {
                 return "잘못된 비밀번호 입력입니다.";
-            }
-
-            else if (!authNumChecker)
-            {
-                return "잘못된 인증번호 입력입니다.";
             }
 
             else
@@ -173,19 +190,12 @@ namespace WebApplication.Controllers
                     DataTable result = new DataTable();
 
                     // 사용자 등록
-                    string registerQuery = "insert into userInfo values (@userId, @userPs, @authNum)";
+                    string registerQuery = "insert into userInfo values (@userId, @userPs, @userAuth)";
                     List<MySqlParameter> queryData = new List<MySqlParameter>();
                     queryData.Add(new MySqlParameter("userId", inputId));
                     queryData.Add(new MySqlParameter("userPs", inputPs));
-                    queryData.Add(new MySqlParameter("authNum", inputAuthNum));
+                    queryData.Add(new MySqlParameter("userAuth", "0"));
                     db.update(registerQuery, queryData);
-
-                    // 인증번호 업데이트
-                    string updateAuthNumQuery = "update authorInfo set userId = @userId where authorNumber = @authNum";
-                    queryData.Clear();
-                    queryData.Add(new MySqlParameter("userId", inputId));
-                    queryData.Add(new MySqlParameter("authNum", inputAuthNum));
-                    db.update(updateAuthNumQuery, queryData);
 
                     db.close();
 
@@ -222,10 +232,10 @@ namespace WebApplication.Controllers
 
                 if (count == 1)
                 {
-                    string userNumber = result.Rows[0]["userNumber"] as string;
+                    string userNumber = result.Rows[0]["userAuth"] as string;
 
                     Session["userId"] = inputId;
-                    Session["authNum"] = userNumber;
+                    Session["userAuth"] = userNumber;
 
                     Session["message"] = "로그인 되었습니다.";
                     Session["redirect"] = Url.Content("~/Home");
