@@ -19,12 +19,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-    <style>
-        .item-margin {
-            margin-left: 1.5em;
-        }
-    </style>
-
     <script>
         function recipeButtonCallback() {
             window.location.href = "@Url.Content("~/Recipe")";
@@ -66,54 +60,47 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarToggler">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <button id="recipeButton" class="btn btn-outline-secondary item-margin" onclick="monitoringButtonCallback()">
+            <div>
+                <ul class="navbar-nav">
+                    <li id="recipeButton" class="nav-item btn btn-outline-secondary mt-margin-xxxlarge"
+                        onclick="monitoringButtonCallback()">
                         Monitoring
-                    </button>
-                </li>
+                    </li>
 
-                <li class="nav-item">
-                    <button id="recipeButton" class="btn btn-outline-secondary item-margin" onclick="recipeButtonCallback()">
+                    <li id="recipeButton" class="nav-item btn btn-outline-secondary mt-margin-xxlarge"
+                        onclick="recipeButtonCallback()">
                         Recipe
-                    </button>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
 
             @if (Session["userId"] == null)
             {
-            <ul class="nav justify-content-end">
-                <li class="nav-item item-margin">
-                    <button id="loginButton" class="btn btn-outline-primary"
-                            onclick="signInButtonCallback()">
+                <ul>
+                    <li id = "loginButton" class="nav-item btn btn-outline-primary mt-margin-xxxlarge"
+                        onclick="signInButtonCallback()">
                         로그인
-                    </button>
-                </li>
+                    </li>
 
-                <li class="nav-item item-margin">
-                    <button id="signUpButton" class="btn btn-outline-success"
-                            onclick="signUpButtonCallback()">
+                    <li id = "signUpButton" class="nav-item btn btn-outline-success mt-margin-xxlarge"
+                        onclick = "signUpButtonCallback()">
                         회원가입
-                    </button>
-                </li>
-            </ul>
+                    </li>
+                </ul>
             }
 
             else
             {
-            <ul class = "nav justify-content-end">
-                <li class="nav-item item-margin">
-                    <button id = "loginedUserId" class = "btn btn-info">
+                <ul>
+                    <li id = "loginedUserId" class="nav-item item-margin btn btn-info">
                         환영합니다! @Session["userId"] 님!
-                    </button>
-                </li>
-                <li class="nav-item item-margin">
-                    <button id = "logoutButton" class = "btn btn-danger"
-                            onclick = "signOutButtonCallback()">
+                    </li>
+
+                    <li id = "logoutButton" class="nav-item item-margin btn btn-danger"
+                        onclick = "signOutButtonCallback()">
                         로그아웃
-                    </button>
-                </li>
-            </ul>
+                    </li>
+                </ul>
             }
         </div>
     </nav>
