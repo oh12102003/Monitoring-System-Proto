@@ -1,6 +1,6 @@
 ﻿.mt-container {
     text-align : center;
-    margin-top: 5em;
+    margin-top: 5%;
 }
 
 .mt-container-body {
@@ -12,35 +12,6 @@
 
 .mt-panel {
     width : 100%;
-}
-
-.mt-panel-title {
-    border-radius : 0.5em;
-
-    text-align : center;
-    font-size : 2em;
-
-    z-index : 5;
-    padding : 0.6em;
-}
-
-.mt-panel-subtitle {
-    position : relative;
-    top : -0.6em;
-
-    color : black;
-    font-weight : bold;
-
-    border : solid black 1px;
-    border-radius : 0.5em 0em;
-    background-color : azure;
-
-    text-align : center;
-    font-size : 1em;
-
-    z-index : 4;
-    padding : 0.5em;
-    margin-bottom : 2em;
 }
 
 .mt-panel-body {
@@ -92,6 +63,85 @@
 
 .mt-element-button-small {
     width : 5%;
+}
+
+
+
+.mt-nav-item {
+    white-space : nowrap;
+
+    margin-left : 5%;
+
+    margin-top : 0.5em;
+    margin-bottom : 0.5em;
+}
+
+.mt-panel-title {
+    border-radius : 0.5em;
+
+    text-align : center;
+    font-size : 2em;
+
+    z-index : 5;
+    padding : 0.6em;
+}
+
+.mt-panel-subtitle {
+    position : relative;
+    top : -0.6em;
+
+    color : black;
+    font-weight : bold;
+
+    border : solid black 1px;
+    border-radius : 0.5em 0em;
+    background-color : azure;
+
+    text-align : center;
+    font-size : 1em;
+
+    z-index : 4;
+    padding : 0.5em;
+    margin-bottom : 2em;
+}
+
+@media (min-width : 1024px) {
+    .mt-nav-set-left { margin-left : 2%; }
+    .mt-nav-set-right { margin-right : 10%; }
+
+    .mt-nav-item {
+        white-space : nowrap;
+        margin-left: 5%;
+    }
+
+    .mt-panel-title {
+        border-radius : 0.5em;
+
+        text-align : center;
+        font-size : 2em;
+
+        z-index : 5;
+        padding : 0.6em;
+    }
+
+    .mt-panel-subtitle {
+        position : relative;
+        top : -0.6em;
+
+        color : black;
+        font-weight : bold;
+
+        border : solid black 1px;
+        border-radius : 0.5em 0em;
+        background-color : azure;
+
+        text-align : center;
+        font-size : 1em;
+
+        z-index : 4;
+        padding : 0.5em;
+        margin-bottom : 2em;
+    }
 }
 
 

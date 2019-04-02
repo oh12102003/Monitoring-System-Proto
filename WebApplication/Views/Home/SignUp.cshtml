@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "SignIn";
+    ViewBag.Title = "회원가입";
 }
 
 <script>
@@ -140,40 +140,6 @@
         return totalChecker;
     }
 
-    function requestRegister() {
-        let registerButton = document.getElementById("registerButton");
-
-        let userId = document.getElementById("userInputId").value;
-        let userPs = document.getElementById("userInputPs").value;
-
-        
-        if (registerButton.classList.contains("btn-success")) {
-            jQuery.ajax({
-                type: "POST",
-                url: "@Url.Action("register")",
-                data: { inputId: userId, inputPs : userPs},
-                success: (data) => {
-                    if (data == "Success") {
-                        alert("회원가입이 완료되었습니다.");
-                        window.location.href = "@Url.Action("Index")";
-                    }
-
-                    else {
-                        alert("data");
-                    }
-                },
-                failure: (errMsg) => {
-                    alert(errMsg);
-                }
-            });
-        }
-
-        else {
-            alert("누락되거나 잘못된 형식의 데이터가 있습니다.");
-        }
-
-    }
-
     function goToHome() {
         window.location.href = "@Url.Action("Index")";
     }
@@ -191,13 +157,13 @@
     </div>
 
     <div class="mt-container-body mt-vmargin-large">
-        <form method="post">
+        <form action="@Url.Action("register")" method="post">
             <div class="input-group mt-element mt-margin-xlarge">
                 <div class="input-group-prepend mt-element-explain">
-                    <span id="idLabel" class="input-group-text"> 아이디 </span>
+                    <span id="inputId" class="input-group-text"> 아이디 </span>
                 </div>
                 <input type="text" class="form-control mt-element-input" id="userInputId" name="userId" placeholder="Id"
-                        autofocus aria-describedby="idLabel" onchange="idCheck()">
+                       autofocus aria-describedby="idLabel" onchange="idCheck()">
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputIdChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
@@ -207,10 +173,10 @@
 
             <div class="input-group mt-element mt-margin-xlarge mt-vmargin-small">
                 <div class="input-group-prepend mt-element-explain">
-                    <span id="idLabel" class="input-group-text"> 비밀번호 </span>
+                    <span id="inputPs" class="input-group-text"> 비밀번호 </span>
                 </div>
                 <input type="password" class="form-control mt-element-input" id="userInputPs" name="userPs" placeholder="Password"
-                        onchange="psCheck(); psAgainCheck()">
+                       onchange="psCheck(); psAgainCheck()">
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
@@ -220,10 +186,10 @@
 
             <div class="input-group mt-element mt-margin-xlarge mt-vmargin-small">
                 <div class="input-group-prepend mt-element-explain">
-                    <span id="idLabel" class="input-group-text"> 비밀번호확인 </span>
+                    <span id="inputPsAgain" class="input-group-text"> 비밀번호확인 </span>
                 </div>
-                <input type="password" class="form-control mt-element-input" id="userInputPsAgain" placeholder="Confirm Password"
-                        onchange = "psAgainCheck()">
+                <input type="password" class="form-control mt-element-input" id="userInputPsAgain" name = "userPsAgain" placeholder="Confirm Password"
+                       onchange="psAgainCheck()">
                 <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsAgainChecker">
                     <i class='fa fa-lg fa-question'></i>
                 </div>
@@ -232,12 +198,10 @@
 
 
             <div class="input-group mt-element mt-margin-xxlarge mt-vmargin-large">
-                <button id = "registerButton" type="button" class="btn btn-dark mt-element-button-large mt-margin-xlarge"
-                        onclick = "requestRegister()">
+                <button id="registerButton" type="submit" class="btn btn-dark mt-element-button-large mt-margin-xlarge">
                     회원가입
                 </button>
-                <button type="button" class="btn btn-danger mt-element-button-large mt-margin-xlarge"
-                        onclick = "goToHome()">
+                <button type="button" class="btn btn-danger mt-element-button-large mt-margin-xlarge" onclick="goToHome()">
                     취소
                 </button>
             </div>

@@ -1,18 +1,18 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-YA-Compatible" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    @Styles.Render("~/Content/bootstrap.css")
     @Styles.Render("~/Content/font-awesome.min.css")
 
     @Styles.Render("~/Content/SimulMotLayouts.css");
 
+    @Styles.Render("~/Content/bootstrap.css")
     @Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
 
     @Scripts.Render("~/bundles/jquery")
@@ -40,16 +40,29 @@
             window.location.href = "@Url.Content("~/Monitoring")";
         }
 
-        function userListButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/showUserList")";
+        function managementButtonCallback() {
+            window.location.href = "@Url.Content("~/Home/Management")";
         }
 
+        function messengerButtonCallback() {
+            window.location.href = "@Url.Content("~/Messenger")";
+        }
+
+        function accountButtonCallback() {
+            window.location.href = "@Url.Content("~/Home/Account")";
+        }
+
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 2000);
     </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a href="@Url.Content("~/")">
-            <img src="@Url.Content("~/Sources/logo.svg")" class="d-inline-block align-top" width='40' height='40' alt='' style="margin-right : 10px">
+        <a class = "navbar-brand" href = "@Url.Content("~/")">
+            <img src="@Url.Content("~/Sources/logo.svg")" class="d-inline-block align-top" width='40' height='40' alt=''>
         </a>
 
         @Html.ActionLink("SimulMot", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
@@ -60,53 +73,95 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarToggler">
-            <div>
-                <ul class="navbar-nav">
-                    <li id="recipeButton" class="nav-item btn btn-outline-secondary mt-margin-xxxlarge"
-                        onclick="monitoringButtonCallback()">
-                        Monitoring
-                    </li>
+            <ul class="navbar-nav mr-auto mt-nav-set-left">
 
-                    <li id="recipeButton" class="nav-item btn btn-outline-secondary mt-margin-xxlarge"
-                        onclick="recipeButtonCallback()">
-                        Recipe
-                    </li>
-                </ul>
-            </div>
-
-            @if (Session["userId"] == null)
-            {
-                <ul>
-                    <li id = "loginButton" class="nav-item btn btn-outline-primary mt-margin-xxxlarge"
-                        onclick="signInButtonCallback()">
-                        로그인
-                    </li>
-
-                    <li id = "signUpButton" class="nav-item btn btn-outline-success mt-margin-xxlarge"
-                        onclick = "signUpButtonCallback()">
-                        회원가입
-                    </li>
-                </ul>
-            }
-
-            else
-            {
-                <ul>
-                    <li id = "loginedUserId" class="nav-item item-margin btn btn-info">
-                        환영합니다! @Session["userId"] 님!
-                    </li>
-
-                    <li id = "logoutButton" class="nav-item item-margin btn btn-danger"
-                        onclick = "signOutButtonCallback()">
+                @if (Session["userId"] != null)
+                {
+                    <li class="mt-nav-item btn btn-outline-info" onclick="signOutButtonCallback()">
                         로그아웃
                     </li>
-                </ul>
-            }
+
+                    // 사용자 버튼 : 모니터링
+                    if (int.Parse(Session["userAuth"].ToString()) >= 1)
+                    {
+                        <li class="mt-nav-item btn btn-outline-light" onclick="monitoringButtonCallback()">
+                            Monitoring
+                        </li>
+                    }
+
+                    else
+                    {
+                        <li class="mt-nav-item btn btn-outline-secondary" onclick="monitoringButtonCallback()">
+                            Monitoring
+                        </li>
+                    }
+
+                    // 사용자 버튼 : 레시피
+                    if (int.Parse(Session["userAuth"].ToString()) >= 2)
+                    {
+                        <li class="mt-nav-item btn btn-outline-light" onclick="recipeButtonCallback()">
+                            Recipe
+                        </li>
+                    }
+
+                    else
+                    {
+                        <li class="mt-nav-item btn btn-outline-secondary" onclick="recipeButtonCallback()">
+                            Recipe
+                        </li>
+                    }
+
+                    // 사용자 버튼 : 유저 관리
+                    if (int.Parse(Session["userAuth"].ToString()) >= 3)
+                    {
+                        <li class="mt-nav-item btn btn-outline-light" onclick="managementButtonCallback()">
+                            Management
+                        </li>
+                    }
+
+                    else
+                    {
+                        <li class="mt-nav-item btn btn-outline-secondary" onclick="managementButtonCallback()">
+                            Management
+                        </li>
+                    }
+
+                    // 사용자 버튼 : 메신저
+                    if (int.Parse(Session["userAuth"].ToString()) >= 3)
+                    {
+                        <li class="mt-nav-item btn btn-outline-light" onclick="messengerButtonCallback()">
+                            Messenger
+                        </li>
+                    }
+
+                    else
+                    {
+                        <li class="mt-nav-item btn btn-outline-secondary" onclick="messengerButtonCallback()">
+                            Messenger
+                        </li>
+                    }
+
+                    <li class="mt-nav-item btn btn-outline-light" onclick="accountButtonCallback()">
+                        Account
+                    </li>
+                }
+            </ul>
         </div>
     </nav>
 
-    <div class="container body-content" style="margin-top : 1.5em">
-        <div id="messageShower"> </div>
+    @if (Session["message"] != null)
+    {
+    <div id="messageBox" class="alert alert-@Session["messageType"] alert-dismissible fade show" role="alert">
+        @Session["message"]
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    }
+
+    <div class="container body-content" style="margin-top : 1.5em;">
+        <div id="messageShower" style = "position : absolute; top : 0px;"> </div>
 
         <setion>
             @RenderBody()

@@ -17,6 +17,7 @@ namespace WebApplication.Controllers
             if (userId == null)
             {
                 Session["message"] = "로그인 이후에 사용할 수 있습니다.";
+                Session["messageType"] = "info";
                 Session["redirect"] = Url.Content("~/Home");
                 return RedirectToAction("Messaging", "Shared");
             }
@@ -43,12 +44,14 @@ namespace WebApplication.Controllers
                 {
                     if (int.Parse(userAuth) >= 1)
                     {
+                        Session["message"] = null;
                         return View();
                     }
 
                     else
                     {
                         Session["message"] = "권한이 없습니다.";
+                        Session["messageType"] = "warning";
                         Session["redirect"] = Url.Content("~/Home");
                         return RedirectToAction("Messaging", "Shared");
                     }
