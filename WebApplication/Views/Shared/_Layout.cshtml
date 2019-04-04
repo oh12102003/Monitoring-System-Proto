@@ -85,7 +85,7 @@
                     </li>
 
                     // 사용자 버튼 : 모니터링
-                    if ((Session["monitoring"].ToString()).Equals("True"))
+                    if (Session["monitoring"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="monitoringButtonCallback()">
                             Monitoring
@@ -100,7 +100,7 @@
                     }
 
                     // 사용자 버튼 : 레시피
-                    if (Session["recipe"].ToString().Equals("True"))
+                    if (Session["recipe"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="recipeButtonCallback()">
                             Recipe
@@ -115,7 +115,7 @@
                     }
 
                     // 사용자 버튼 : 유저 관리
-                    if (Session["management"].ToString().Equals("True"))
+                    if (Session["management"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="managementButtonCallback()">
                             Management

@@ -40,7 +40,7 @@ namespace WebApplication.Controllers
                 {
                     queryData.Clear();
 
-                    if (Session["recipe"].ToString().Equals("True"))
+                    if (Session["recipe"].Equals("true"))
                     {
                         Session["message"] = null;
                         return View();

@@ -40,7 +40,7 @@ namespace WebApplication.Controllers
 
                 if (count == 1)
                 {
-                    if (Session["monitoring"].ToString().Equals("True"))
+                    if (Session["monitoring"].Equals("true"))
                     {
                         Session["message"] = null;
                         return View();

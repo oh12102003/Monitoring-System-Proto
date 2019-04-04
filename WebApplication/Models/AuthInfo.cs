@@ -10,5 +10,9 @@ namespace WebApplication.Models
         public string userName { get; set; }
         public string authGrade { get; set; }
         public string userId { get; set; }
+
+        public string monitoring { get; set; }
+        public string recipe { get; set; }
+        public string management { get; set; }
     }
 }

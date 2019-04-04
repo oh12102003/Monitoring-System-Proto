@@ -42,9 +42,7 @@ namespace WebApplication.Controllers
                     Session["message"] = null;
                 }
 
-                Session["redirect"] = Url.Content("~/Messenger");
-
-                return RedirectToAction("Messaging", "Shared");
+                return View();
             }
         }
 
@@ -96,7 +94,7 @@ namespace WebApplication.Controllers
             {
                 db.connect();
 
-                if (Session["management"].ToString().Equals("True"))
+                if (Session["management"].Equals("true"))
                 {
                     string checkQuery = string.Format("select * from userInfo where userAuth < {0} order by userAuth desc", userAuth);
                     DataTable dt = new DataTable();
@@ -111,6 +109,10 @@ namespace WebApplication.Controllers
                         info.authGrade = row["userAuth"] as string;
                         info.userName = row["userName"] as string;
 
+                        info.monitoring = row["monitoring"] as string;
+                        info.recipe = row["recipe"] as string;
+                        info.management = row["management"] as string;
+                        
                         userTable.Add(info);
                     }
 
@@ -307,9 +309,9 @@ namespace WebApplication.Controllers
                     queryData.Add(new MySqlParameter("userId", userId));
                     queryData.Add(new MySqlParameter("userPs", userPs));
                     queryData.Add(new MySqlParameter("userName", userName));
-                    queryData.Add(new MySqlParameter("userMonitoring", "0"));
-                    queryData.Add(new MySqlParameter("userRecipe", "0"));
-                    queryData.Add(new MySqlParameter("userManagement", "0"));
+                    queryData.Add(new MySqlParameter("userMonitoring", "false"));
+                    queryData.Add(new MySqlParameter("userRecipe", "false"));
+                    queryData.Add(new MySqlParameter("userManagement", "false"));
                     queryData.Add(new MySqlParameter("userAuth", "0"));
                     db.update(registerQuery, queryData);
 
@@ -458,7 +460,7 @@ namespace WebApplication.Controllers
                     Session["management"] = result.Rows[0]["management"];
 
                     Session["messageType"] = "success";
-                    Session["message"] = string.Format("환영합니다! {0}님!", inputId).ToString();
+                    Session["message"] = string.Format("환영합니다! {0}님!", inputId);
                     Session["register"] = "newLogin";
                     Session["redirect"] = Url.Content("~/Home");
 
