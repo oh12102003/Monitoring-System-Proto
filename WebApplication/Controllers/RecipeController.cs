@@ -11,7 +11,6 @@ namespace WebApplication.Controllers
         public ActionResult Index()
         {
             string userId = Session["userId"] as string;
-            string authNum = Session["userAuth"] as string;
 
             if (userId == null)
             {
@@ -30,11 +29,10 @@ namespace WebApplication.Controllers
             {
                 db.connect();
 
-                string checkQuery = "select * from userInfo where userId=@userId and userAuth=@authNum";
+                string checkQuery = "select * from userInfo where userId=@userId";
 
                 List<MySqlParameter> queryData = new List<MySqlParameter>();
                 queryData.Add(new MySqlParameter("userId", userId));
-                queryData.Add(new MySqlParameter("authNum", authNum));
 
                 int count = db.inquire(checkQuery, queryData);
 
@@ -42,7 +40,7 @@ namespace WebApplication.Controllers
                 {
                     queryData.Clear();
 
-                    if (int.Parse(authNum) >= 2)
+                    if (Session["recipe"].ToString().Equals("True"))
                     {
                         Session["message"] = null;
                         return View();

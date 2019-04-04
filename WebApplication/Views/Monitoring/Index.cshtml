@@ -4,28 +4,32 @@
 
 @Styles.Render("~/Content/dataContainer.css")
 
-<div>
+<div class="mt-container">
+    <div class="mt-container-title">
+        모니터링 (Monitoring)
+    </div>
+
     <div class="container sensorDataContainer" style="text-align : center;">
         <ul class="list-group sensorShower">
             <li class="list-group-item">
                 <div class="input-group dataElement" style="text-align : center;">
-                    <div class="input-group-prepend" style="width : 30%">
+                    <div class="input-group-prepend" style="width : 15%">
                         <span id="productTargetDrink" class="input-group-text" style="width : 100%">
                             생산할 음료수
                         </span>
                     </div>
-                    <input id="productName" type="text" placeholder="생산할 음료수 이름" aria-describedby="productTargetDrink" style="width : 60%" />
+                    <input id="productName" type="text" placeholder="생산할 음료수 이름" aria-describedby="productTargetDrink" style="width : 30%" />
                 </div>
             </li>
 
             <li class="list-group-item">
                 <div class="input-group dataElement" style="text-align : center;">
-                    <div class="input-group-prepend" style="width : 30%">
+                    <div class="input-group-prepend" style="width : 15%">
                         <span id="productDrinkNumber" class="input-group-text" style="width : 100%">
                             생산 개수
                         </span>
                     </div>
-                    <input id="productNumber" type="number" placeholder="생산 개수" aria-describedby="productDrinkNumber" style="width : 60%" />
+                    <input id="productNumber" type="number" placeholder="생산 개수" aria-describedby="productDrinkNumber" style="width : 30%" />
                 </div>
             </li>
 

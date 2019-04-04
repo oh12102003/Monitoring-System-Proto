@@ -7,7 +7,7 @@ namespace WebApplication.Models
 {
     public class AuthInfo
     {
-        public string authNumber { get; set; }
+        public string userName { get; set; }
         public string authGrade { get; set; }
         public string userId { get; set; }
     }

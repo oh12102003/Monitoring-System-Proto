@@ -4,19 +4,22 @@
     <meta http-equiv="X-YA-Compatible" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
     @Styles.Render("~/Content/font-awesome.min.css")
-
-    @Styles.Render("~/Content/SimulMotLayouts.css");
 
     @Styles.Render("~/Content/bootstrap.css")
     @Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
+    @Styles.Render("~/Content/SimulMotLayouts.css");
+
     @RenderSection("scripts", required: false)
 
     <script>
@@ -82,7 +85,7 @@
                     </li>
 
                     // 사용자 버튼 : 모니터링
-                    if (int.Parse(Session["userAuth"].ToString()) >= 1)
+                    if ((Session["monitoring"].ToString()).Equals("True"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="monitoringButtonCallback()">
                             Monitoring
@@ -97,7 +100,7 @@
                     }
 
                     // 사용자 버튼 : 레시피
-                    if (int.Parse(Session["userAuth"].ToString()) >= 2)
+                    if (Session["recipe"].ToString().Equals("True"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="recipeButtonCallback()">
                             Recipe
@@ -112,7 +115,7 @@
                     }
 
                     // 사용자 버튼 : 유저 관리
-                    if (int.Parse(Session["userAuth"].ToString()) >= 3)
+                    if (Session["management"].ToString().Equals("True"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="managementButtonCallback()">
                             Management
@@ -123,21 +126,6 @@
                     {
                         <li class="mt-nav-item btn btn-outline-secondary" onclick="managementButtonCallback()">
                             Management
-                        </li>
-                    }
-
-                    // 사용자 버튼 : 메신저
-                    if (int.Parse(Session["userAuth"].ToString()) >= 3)
-                    {
-                        <li class="mt-nav-item btn btn-outline-light" onclick="messengerButtonCallback()">
-                            Messenger
-                        </li>
-                    }
-
-                    else
-                    {
-                        <li class="mt-nav-item btn btn-outline-secondary" onclick="messengerButtonCallback()">
-                            Messenger
                         </li>
                     }
 

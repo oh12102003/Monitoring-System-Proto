@@ -12,7 +12,6 @@ namespace WebApplication.Controllers
         public ActionResult Index()
         {
             string userId = Session["userId"] as string;
-            string userAuth = Session["userAuth"] as string;
 
             if (userId == null)
             {
@@ -32,17 +31,16 @@ namespace WebApplication.Controllers
                 db.connect();
 
                 DataTable dt = new DataTable();
-                string checkQuery = "select * from userInfo where userId=@userId and userAuth=@userAuth";
+                string checkQuery = "select * from userInfo where userId=@userId";
 
                 List<MySqlParameter> queryData = new List<MySqlParameter>();
                 queryData.Add(new MySqlParameter("userId", userId));
-                queryData.Add(new MySqlParameter("userAuth", userAuth));
 
                 int count = db.inquire(ref dt, checkQuery, queryData);
 
                 if (count == 1)
                 {
-                    if (int.Parse(userAuth) >= 1)
+                    if (Session["monitoring"].ToString().Equals("True"))
                     {
                         Session["message"] = null;
                         return View();

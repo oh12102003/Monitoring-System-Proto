@@ -35,7 +35,7 @@
                     buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "사용가능한 아이디입니다.");
                 }
 
-                else if (data == "Failed") {
+                else if (data == "Duplicate") {
                     buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
                     buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", "중복된 아이디입니다.");
                 }
@@ -92,6 +92,42 @@
         });
     }
 
+    function nameCheck() {
+        let inputUserName = document.getElementById("userInputName").value;
+        let resultButton = document.getElementById("userInputNameChecker");
+        let resultFeedback = document.getElementById("userInputNameFeedback");
+
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("nameCheck")",
+            data: { inputName: inputUserName},
+        success: (data) => {
+            if (data == "Success") {
+                buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+                buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "사용가능한 사용자 이름 입니다.");
+            }
+
+            else if (data == "Error") {
+                buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
+            }
+                 
+            else {
+                buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+                buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", data);
+            }
+
+            checkRegistable();
+        },
+        failure: () => {
+            buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
+
+            checkRegistable();
+        }
+    });
+    }
+
     function psAgainCheck() {
         let inputUserPs = document.getElementById("userInputPs").value;
         let inputUserPsAgain = document.getElementById("userInputPsAgain").value;
@@ -120,10 +156,12 @@
         let targetButton = document.getElementById("registerButton");
 
         let idChecker = document.getElementById("userInputIdChecker");
+        let nameChecker = documnet.getElementById("userNameChecker");
         let psChecker = document.getElementById("userInputPsChecker");
         let psAgainChecker = document.getElementById("userInputPsAgainChecker");
 
         let totalChecker = idChecker.classList.contains("btn-success")
+            && nameChecker.classList.contais("btn-succes")
             && psChecker.classList.contains("btn-success")
             && psAgainChecker.classList.contains("btn-success");
 
@@ -146,17 +184,11 @@
 </script>
 
 <div class="mt-container">
-    <div class="mt-panel">
-        <div class="bg-dark text-light mt-panel-title">
-            <img src="/Sources/logo.svg" style="width : 40px; height : 40px;" /> SimulMot
-        </div>
-
-        <div class="mt-panel-subtitle">
-            - 회원가입 -
-        </div>
+    <div class="mt-container-title">
+        회원가입 (Sign up)
     </div>
 
-    <div class="mt-container-body mt-vmargin-large">
+    <div class="mt-container-body mt-tmargin-large">
         <form action="@Url.Action("register")" method="post">
             <div class="input-group mt-element mt-margin-xlarge">
                 <div class="input-group-prepend mt-element-explain">
@@ -171,7 +203,20 @@
             </div>
 
 
-            <div class="input-group mt-element mt-margin-xlarge mt-vmargin-small">
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="inputName" class="input-group-text"> 사용자 이름 </span>
+                </div>
+                <input type="text" class="form-control mt-element-input" id="userInputName" name="userName" placeholder="User Name"
+                       onchange="nameCheck()">
+                <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputNameChecker">
+                    <i class='fa fa-lg fa-question'></i>
+                </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputNameFeedback"> 사용자의 이름을 입력해주세요. </div>
+            </div>
+
+
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
                 <div class="input-group-prepend mt-element-explain">
                     <span id="inputPs" class="input-group-text"> 비밀번호 </span>
                 </div>
@@ -184,7 +229,7 @@
             </div>
 
 
-            <div class="input-group mt-element mt-margin-xlarge mt-vmargin-small">
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
                 <div class="input-group-prepend mt-element-explain">
                     <span id="inputPsAgain" class="input-group-text"> 비밀번호확인 </span>
                 </div>
@@ -197,7 +242,7 @@
             </div>
 
 
-            <div class="input-group mt-element mt-margin-xxlarge mt-vmargin-large">
+            <div class="input-group mt-element mt-margin-xxlarge mt-tmargin-large">
                 <button id="registerButton" type="submit" class="btn btn-dark mt-element-button-large mt-margin-xlarge">
                     회원가입
                 </button>

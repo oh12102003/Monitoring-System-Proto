@@ -5,6 +5,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using WebApplication.Models;
+using System;
 
 namespace WebApplication.Controllers
 {
@@ -41,7 +42,9 @@ namespace WebApplication.Controllers
                     Session["message"] = null;
                 }
 
-                return View("Home");
+                Session["redirect"] = Url.Content("~/Messenger");
+
+                return RedirectToAction("Messaging", "Shared");
             }
         }
 
@@ -93,24 +96,26 @@ namespace WebApplication.Controllers
             {
                 db.connect();
 
-                if (int.Parse(userAuth) >= 3)
+                if (Session["management"].ToString().Equals("True"))
                 {
-                    string checkQuery = "select * from userInfo";
+                    string checkQuery = string.Format("select * from userInfo where userAuth < {0} order by userAuth desc", userAuth);
                     DataTable dt = new DataTable();
                     List<AuthInfo> userTable = new List<AuthInfo>();
 
                     db.inquire(ref dt, checkQuery);
-                    db.close();
 
                     foreach (DataRow row in dt.Rows)
                     {
                         AuthInfo info = new AuthInfo();
-                        info.authNumber = row["authorNumber"] as string;
                         info.userId = row["userId"] as string;
-                        info.authGrade = row["authorGrade"] as string;
+                        info.authGrade = row["userAuth"] as string;
+                        info.userName = row["userName"] as string;
 
                         userTable.Add(info);
                     }
+
+                    Session["message"] = null;
+                    db.close();
 
                     return View(userTable);
                 }
@@ -183,6 +188,35 @@ namespace WebApplication.Controllers
             }
         }
 
+        [HttpPost]
+        public string nameCheck(string inputName)
+        {
+            Regex regex = new Regex(@"[a-zA-Z가-힣]");
+
+            try
+            {
+                if (inputName.Length <= 0)
+                {
+                    return "이름을 입력하시지 않았습니다.";
+                }
+
+                else if (!regex.IsMatch(inputName))
+                {
+                    return "올바른 이름이 아닙니다.";
+                }
+
+                else
+                {
+                    return "Success";
+                }
+            }
+
+            catch
+            {
+                return "Error";
+            }
+        }
+
 
         [HttpPost]
         public string psCheck(string inputPs)
@@ -214,9 +248,10 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult register(string userId, string userPs, string userPsAgain)
+        public ActionResult register(string userId, string userName, string userPs, string userPsAgain)
         {
             bool idChecker = idCheck(userId).Equals("Success");
+            bool nameChecker = nameCheck(userName).Equals("Success");
             bool psChecker = psCheck(userPs).Equals("Success");
 
             if (!idChecker)
@@ -231,6 +266,15 @@ namespace WebApplication.Controllers
             else if (!psChecker)
             {
                 Session["message"] = "잘못된 비밀번호를 입력하였습니다.";
+                Session["messageType"] = "danger";
+                Session["redirect"] = Url.Content("~/Home/SignUp");
+
+                return RedirectToAction("Messaging", "Shared");
+            }
+
+            else if (!nameChecker)
+            {
+                Session["message"] = "올바르지 않은 이름을 입력하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignUp");
 
@@ -258,10 +302,14 @@ namespace WebApplication.Controllers
                     DataTable result = new DataTable();
 
                     // 사용자 등록
-                    string registerQuery = "insert into userInfo values (@userId, @userPs, @userAuth)";
+                    string registerQuery = "insert into userInfo values (@userId, @userPs, @userName, @userMonitoring, @userRecipe, @userManagement, @userAuth)";
                     List<MySqlParameter> queryData = new List<MySqlParameter>();
                     queryData.Add(new MySqlParameter("userId", userId));
                     queryData.Add(new MySqlParameter("userPs", userPs));
+                    queryData.Add(new MySqlParameter("userName", userName));
+                    queryData.Add(new MySqlParameter("userMonitoring", "0"));
+                    queryData.Add(new MySqlParameter("userRecipe", "0"));
+                    queryData.Add(new MySqlParameter("userManagement", "0"));
                     queryData.Add(new MySqlParameter("userAuth", "0"));
                     db.update(registerQuery, queryData);
 
@@ -402,10 +450,12 @@ namespace WebApplication.Controllers
 
                 if (count == 1)
                 {
-                    string userNumber = result.Rows[0]["userAuth"] as string;
-
                     Session["userId"] = inputId;
-                    Session["userAuth"] = userNumber;
+
+                    Session["userAuth"] = result.Rows[0]["userAuth"];
+                    Session["monitoring"] = result.Rows[0]["monitoring"];
+                    Session["recipe"] = result.Rows[0]["recipe"];
+                    Session["management"] = result.Rows[0]["management"];
 
                     Session["messageType"] = "success";
                     Session["message"] = string.Format("환영합니다! {0}님!", inputId).ToString();
