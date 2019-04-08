@@ -24,37 +24,29 @@
 
     <script>
         function recipeButtonCallback() {
-            window.location.href = "@Url.Content("~/Recipe")";
-        }
-
-        function signInButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/SignIn")";
-        }
-
-        function signUpButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/SignUp")";
+            window.location.href = "@Url.Content("~/Shared/Recipe")";
         }
 
         function signOutButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/SignOut")";
+            window.location.href = "@Url.Content("~/Shared/SignOut")";
         }
 
         function monitoringButtonCallback() {
-            window.location.href = "@Url.Content("~/Monitoring")";
+            window.location.href = "@Url.Content("~/Shared/Monitoring")";
         }
 
         function managementButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/Management")";
-        }
-
-        function messengerButtonCallback() {
-            window.location.href = "@Url.Content("~/Messenger")";
+            window.location.href = "@Url.Content("~/Shared/Management")";
         }
 
         function accountButtonCallback() {
-            window.location.href = "@Url.Content("~/Home/Account")";
+            window.location.href = "@Url.Content("~/Shared/Account")";
         }
 
+        function withdrawalButtonCallback() {
+            window.location.href = "@Url.Content("~/Shared/WithDrawal")";
+        }
+        
         window.setTimeout(function () {
             $(".alert").fadeTo(500, 0).slideUp(500, function () {
                 $(this).remove();
@@ -62,13 +54,13 @@
         }, 2000);
     </script>
 </head>
-<body>
+<body style="overflow-x : hidden">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class = "navbar-brand" href = "@Url.Content("~/")">
+        <a class = "navbar-brand" href = "@Url.Content("~/Shared/Home")">
             <img src="@Url.Content("~/Sources/logo.svg")" class="d-inline-block align-top" width='40' height='40' alt=''>
         </a>
 
-        @Html.ActionLink("SimulMot", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        @Html.ActionLink("SimulMot", "Home", "Shared", new { area = "" }, new { @class = "navbar-brand" })
 
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,14 +80,14 @@
                     if (Session["monitoring"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="monitoringButtonCallback()">
-                            Monitoring
+                            모니터링
                         </li>
                     }
 
                     else
                     {
                         <li class="mt-nav-item btn btn-outline-secondary" onclick="monitoringButtonCallback()">
-                            Monitoring
+                            모니터링
                         </li>
                     }
 
@@ -103,14 +95,14 @@
                     if (Session["recipe"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="recipeButtonCallback()">
-                            Recipe
+                            레시피
                         </li>
                     }
 
                     else
                     {
                         <li class="mt-nav-item btn btn-outline-secondary" onclick="recipeButtonCallback()">
-                            Recipe
+                            레시피
                         </li>
                     }
 
@@ -118,19 +110,31 @@
                     if (Session["management"].Equals("true"))
                     {
                         <li class="mt-nav-item btn btn-outline-light" onclick="managementButtonCallback()">
-                            Management
+                            사용자 관리
                         </li>
                     }
 
                     else
                     {
                         <li class="mt-nav-item btn btn-outline-secondary" onclick="managementButtonCallback()">
-                            Management
+                            사용자 관리
                         </li>
                     }
 
-                    <li class="mt-nav-item btn btn-outline-light" onclick="accountButtonCallback()">
-                        Account
+                    <li class="mt-nav-item btn-group dropdown">
+                        <button class = "btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            계정
+                        </button>
+                        
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="javascript:accountButtonCallback()">
+                                정보수정
+                            </a>
+                            
+                            <a class="dropdown-item" href="javascript:withdrawalButtonCallback()">
+                                탈퇴
+                            </a>
+                        </div>
                     </li>
                 }
             </ul>
@@ -151,14 +155,9 @@
     <div class="container body-content" style="margin-top : 1.5em;">
         <div id="messageShower" style = "position : absolute; top : 0px;"> </div>
 
-        <setion>
+        <setion style="margin-bottom : 30%; padding-bottom : 30%;">
             @RenderBody()
         </setion>
-
-        <hr />
-        <footer style="text-align : right">
-            <p>Simulator Monitoring System</p>
-        </footer>
-    </div>
+</div>
 </body>
 </html>

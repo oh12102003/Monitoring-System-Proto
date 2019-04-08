@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "계정관리";
+}
+
+<script>
+    function buttonChanger(element, removeClass1, removeClass2, addClass, htmlString) {
+        element.classList.remove(removeClass1);
+        element.classList.remove(removeClass2);
+        element.classList.add(addClass);
+        element.innerHTML = htmlString;
+    }
+
+    // 비밀번호 체크
+    function psCheck() {
+        let inputUserPs = document.getElementById("userInputPs").value;
+        let resultButton = document.getElementById("userInputPsChecker");
+        let resultFeedback = document.getElementById("userInputPsFeedback");
+
+        if (inputUserPs == "") {
+            buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", "이전 비밀번호를 입력해야 합니다.");
+        }
+
+        else {
+            buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+            buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "비밀번호를 입력하였습니다.");
+        }
+    }
+
+    // 변경할 비밀번호 체크
+    function newPsCheck() {
+        let inputUserPs = document.getElementById("userInputNewPs").value;
+        let resultButton = document.getElementById("userInputNewPsChecker");
+        let resultFeedback = document.getElementById("userInputNewPsFeedback");
+
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("psCheck")",
+            data: { inputPs: inputUserPs},
+            success: (data) => {
+                if (data == "Success") {
+                    buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "사용가능한 비밀번호입니다.");
+                }
+
+                else if (data == "Error") {
+                    buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                    buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
+                }
+
+                else {
+                    buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+                    buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", data);
+                }
+
+                checkAppliable();
+            },
+            failure: () => {
+                buttonChanger(resultButton, "btn-success", "btn-danger", "btn-dark", "<i class = 'fa fa-lg fa-exclamation'></i>");
+                buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-danger", "btn-outline-dark", "에러가 발생하였습니다.");
+
+                checkAppliable();
+            }
+        });
+    }
+
+    function newPsAgainCheck() {
+        let inputUserPs = document.getElementById("userInputNewPs").value;
+        let inputUserPsAgain = document.getElementById("userInputNewPsAgain").value;
+        let resultButton = document.getElementById("userInputNewPsAgainChecker");
+        let resultFeedback = document.getElementById("userInputNewPsAgainFeedback");
+
+        if (inputUserPs == "" || inputUserPsAgain == "") {
+            buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-dark", "btn-outline-danger", "입력하지 않은 란이 있습니다.");
+        }
+
+        else if (inputUserPs == inputUserPsAgain) {
+            buttonChanger(resultButton, "btn-danger", "btn-dark", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+            buttonChanger(resultFeedback, "btn-outline-danger", "btn-outline-dark", "btn-outline-success", "입력한 비밀번호가 일치합니다.");
+        }
+
+        else {
+            buttonChanger(resultButton, "btn-success", "btn-dark", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-success", "btn-outline-dark", "btn-outline-danger", "비밀번호가 일치하지 않습니다.");
+        }
+
+        checkAppliable();
+    }
+
+    function checkAppliable() {
+        let targetButton = document.getElementById("registerButton");
+
+        let psChecker = document.getElementById("userInputPsChecker");
+        let psAgainChecker = document.getElementById("userInputPsAgainChecker");
+
+        let totalChecker = psChecker.classList.contains("btn-success")
+            && psAgainChecker.classList.contains("btn-success");
+
+        if (totalChecker == true) {
+            targetButton.classList.remove("btn-dark");
+            targetButton.classList.add("btn-success");
+        }
+
+        else {
+            targetButton.classList.remove("btn-success");
+            targetButton.classList.add("btn-dark");
+        }
+
+        return totalChecker;
+    }
+
+    function goToHome() {
+        window.location.href = "@Url.Action("Index")";
+    }
+</script>
+
+<div class="mt-container">
+    <div class="mt-container-title">
+        회원정보 수정 (Account settings)
+    </div>
+
+    <div class="mt-container-body mt-vmargin-large">
+        <form action="@Url.Action("changePs")" method="post">
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="prevPsLabel" class="input-group-text"> 비밀번호 </span>
+                </div>
+                <input type="password" class="form-control mt-element-input" id="userInputPs" name="userInputPs" placeholder="Password"
+                       aria-describedby="prevPsLabel"
+                       onchange="psCheck();">
+                <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsChecker">
+                    <i class='fa fa-lg fa-question'></i>
+                </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputPsFeedback"> 비밀번호를 입력해주세요. </div>
+            </div>
+
+
+
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="newPsLabel" class="input-group-text"> 변경할 비밀번호 </span>
+                </div>
+                <input type="password" class="form-control mt-element-input" id="userInputNewPs" name="userInputNewPs" placeholder="Password" 
+                       aria-describedby="newPsLabel"
+                       onchange="newPsCheck(); newPsAgainCheck()">
+                <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputNewPsChecker">
+                    <i class='fa fa-lg fa-question'></i>
+                </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputNewPsFeedback"> 새로운 비밀번호를 입력해주세요. </div>
+            </div>
+
+
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="newPsAgainLabel" class="input-group-text"> 비밀번호확인 </span>
+                </div>
+                <input type="password" class="form-control mt-element-input" id="userInputNewPsAgain" name="userInputNewPsAgain" placeholder="Confirm Password"
+                       aria-describedby="newPsAgainLabel"
+                       onchange="newPsAgainCheck()">
+                <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputNewPsAgainChecker">
+                    <i class='fa fa-lg fa-question'></i>
+                </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputNewPsAgainFeedback"> 새로운 비밀번호를 다시 입력해주세요.</div>
+            </div>
+
+
+            <div class="input-group mt-element mt-margin-xxlarge mt-tmargin-large">
+                <button id="registerButton" type="submit" class="btn btn-dark mt-element-button-large mt-margin-xlarge">
+                    정보수정
+                </button>
+
+                <button type="button" class="btn btn-danger mt-element-button-large mt-margin-xlarge" onclick="goToHome()">
+                    취소
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

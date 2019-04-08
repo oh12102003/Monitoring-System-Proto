@@ -5,7 +5,6 @@ using System.Data;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using WebApplication.Models;
-using System;
 
 namespace WebApplication.Controllers
 {
@@ -15,40 +14,18 @@ namespace WebApplication.Controllers
 
         public ActionResult Index()
         {
+            // message showing checker reset 
             if (Session["userId"] == null)
             {
-                if (Session["register"] != null)
-                {
-                    Session["register"] = null;
-                }
-
-                else
-                {
-                    Session["message"] = null;
-                }
-
-                return View("SignIn");
+                Session["redirect"] = Url.Action("SignIn");
+                return RedirectToAction("Messaging", "Shared");
             }
 
             else
             {
-                if (Session["register"] != null)
-                {
-                    Session["register"] = null;
-                }
-
-                else
-                {
-                    Session["message"] = null;
-                }
-
+                Session["redirect"] = Url.Action("Index");
                 return View();
             }
-        }
-
-        public ActionResult Login()
-        {
-            return View();
         }
 
         public ActionResult SignIn()
@@ -56,8 +33,15 @@ namespace WebApplication.Controllers
             return View();
         }
 
+        public ActionResult WithDrawal()
+        {
+            return View();
+        }
+
         public ActionResult SignUp()
         {
+            Session["messageDisplay"] = null;
+            Session["message"] = null;
             return View();
         }
 
@@ -65,19 +49,11 @@ namespace WebApplication.Controllers
         {
             Session.Clear();
 
-            Session["register"] = "logout";
+            Session["messageDisplay"] = "true";
             Session["message"] = "로그아웃 되었습니다.";
             Session["messageType"] = "info";
-            Session["redirect"] = Url.Content("~/Home");
 
-            return RedirectToAction("Messaging", "Shared");
-        }
-
-
-        public ActionResult Messenger()
-        {
-            Session["message"] = null;
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Management()
@@ -96,7 +72,7 @@ namespace WebApplication.Controllers
 
                 if (Session["management"].Equals("true"))
                 {
-                    string checkQuery = string.Format("select * from userInfo where userAuth < {0} order by userAuth desc", userAuth);
+                    string checkQuery = string.Format("select * from userInfo where userAuth < {0} order by userAuth desc", userAuth).ToString();
                     DataTable dt = new DataTable();
                     List<AuthInfo> userTable = new List<AuthInfo>();
 
@@ -115,8 +91,7 @@ namespace WebApplication.Controllers
                         
                         userTable.Add(info);
                     }
-
-                    Session["message"] = null;
+                    
                     db.close();
 
                     return View(userTable);
@@ -125,6 +100,8 @@ namespace WebApplication.Controllers
                 else
                 {
                     db.close();
+
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "권한이 없습니다.";
                     Session["messageType"] = "warning";
                     Session["redirect"] = Url.Content("~/Home");
@@ -135,11 +112,93 @@ namespace WebApplication.Controllers
             catch
             {
                 db.close();
+
+                Session["messageDisplay"] = "true";
                 Session["message"] = "에러가 발생하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home");
                 return RedirectToAction("Messaging", "Shared");
             }
+        }
+
+        [HttpPost]
+        public string userManagement(string deletedString, string updatedString)
+        {
+            DataBaseModuleFactory dbFactory = DataBaseModuleFactory.getInstance();
+            IDataBase db = dbFactory.getDataBaseModule(dataBaseType.MySql);
+
+            dbFactory = DataBaseModuleFactory.getInstance();
+            db.connect();
+
+            try
+            {
+                UserAuthList deletedList, updatedList;
+
+                if (UserAuthList.TryParse(deletedString, out deletedList) && UserAuthList.TryParse(updatedString, out updatedList))
+                {
+                    if (deletedList.length == 0 && updatedList.length == 0)
+                    {
+                        Session["messageDisplay"] = "true";
+                        Session["message"] = "변경된 유저 정보가 없습니다.";
+                        Session["messageType"] = "warning";
+                        Session["redirect"] = Url.Action("Management");
+                    }
+
+                    else
+                    {
+                        foreach (var deletedUser in deletedList)
+                        {
+                            string deleteQuery = "delete from userInfo where userId = @userId";
+
+                            List<MySqlParameter> queryData = new List<MySqlParameter>();
+                            queryData.Add(new MySqlParameter("userId", deletedUser.userId));
+
+                            db.update(deleteQuery, queryData);
+                        }
+
+                        foreach (var updatedUser in updatedList)
+                        {
+                            string updateQuery = "update userInfo set monitoring = @mon, recipe = @rec, management = @man where userId = @userId";
+
+                            List<MySqlParameter> queryData = new List<MySqlParameter>();
+                            queryData.Add(new MySqlParameter("mon", updatedUser.monitoringAuth));
+                            queryData.Add(new MySqlParameter("rec", updatedUser.recipeAuth));
+                            queryData.Add(new MySqlParameter("man", updatedUser.managementAuth));
+                            queryData.Add(new MySqlParameter("userId", updatedUser.userId));
+
+                            db.update(updateQuery, queryData);
+                        }
+
+                        Session["messageDisplay"] = "true";
+                        Session["message"] = "유저 정보를 수정하였습니다.";
+                        Session["messageType"] = "success";
+                        Session["redirect"] = Url.Action("Management");
+                    }
+                }
+
+                else
+                {
+                    Session["messageDisplay"] = "true";
+                    Session["message"] = "에러가 발생하였습니다.";
+                    Session["messageType"] = "danger";
+                    Session["redirect"] = Url.Action("Management");
+                }
+            }
+
+            catch
+            {
+                Session["messageDisplay"] = "true";
+                Session["message"] = "에러가 발생하였습니다.";
+                Session["messageType"] = "danger";
+                Session["redirect"] = Url.Action("Management");
+            }
+
+            finally
+            {
+                db.close();
+            }
+
+            return Url.Content("~/Shared/Messaging");
         }
 
         public ActionResult Account()
@@ -258,6 +317,7 @@ namespace WebApplication.Controllers
 
             if (!idChecker)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "잘못된 아이디를 입력하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignUp");
@@ -267,6 +327,7 @@ namespace WebApplication.Controllers
 
             else if (!psChecker)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "잘못된 비밀번호를 입력하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignUp");
@@ -276,6 +337,7 @@ namespace WebApplication.Controllers
 
             else if (!nameChecker)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "올바르지 않은 이름을 입력하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignUp");
@@ -285,6 +347,7 @@ namespace WebApplication.Controllers
 
             else if (!userPs.Equals(userPsAgain))
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "비밀번호 입력 값과 비밀번호 확인 입력 값이 일치하지 않습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignUp");
@@ -317,16 +380,17 @@ namespace WebApplication.Controllers
 
                     db.close();
 
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "회원가입 되었습니다.";
                     Session["messageType"] = "success";
                     Session["redirect"] = Url.Content("~/Home/");
-                    Session["register"] = "register";
 
                     return RedirectToAction("Messaging", "Shared");
                 }
                 
                 catch
                 {
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "회원 가입 중 에러가 발생하였습니다.";
                     Session["messageType"] = "danger";
                     Session["redirect"] = Url.Content("~/Home/SignUp");
@@ -334,6 +398,90 @@ namespace WebApplication.Controllers
                     return RedirectToAction("Messaging", "Shared");
                 }
             }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult unRegisterUser(string userId, string userPs)
+        {
+            bool idChecker = idCheck(userId).Equals("Duplicate");
+            bool psChecker = psCheck(userPs).Equals("Success");
+
+            if (!idChecker)
+            {
+                Session["messageDisplay"] = "true";
+                Session["message"] = "잘못된 접근입니다.";
+                Session["messageType"] = "danger";
+                Session["redirect"] = Url.Content("~/Home/WithDrawal");
+            }
+
+            else if (!psChecker)
+            {
+                Session["messageDisplay"] = "true";
+                Session["message"] = "잘못된 비밀번호 입력입니다.";
+                Session["messageType"] = "warning";
+                Session["redirect"] = Url.Content("~/Home/WithDrawal");
+            }
+
+            else
+            {
+                DataBaseModuleFactory dbFactory = DataBaseModuleFactory.getInstance();
+                IDataBase db = dbFactory.getDataBaseModule(dataBaseType.MySql);
+
+                try
+                {
+                    db.connect();
+
+                    DataTable result = new DataTable();
+
+                    // 사용자 체크
+                    string findUserQuery = "select * from userInfo where userId = @userId and userPs = @userPs";
+                    List<MySqlParameter> queryData = new List<MySqlParameter>();
+                    queryData.Add(new MySqlParameter("userId", userId));
+                    queryData.Add(new MySqlParameter("userPs", userPs));
+
+                    // 검색 결과 사용자가 없거나 2명 이상인 경우
+                    if (db.inquire(findUserQuery, queryData) != 1)
+                    {
+                        Session["messageDisplay"] = "true";
+                        Session["message"] = "비밀번호가 일치하지 않습니다.";
+                        Session["messageType"] = "warning";
+                        Session["redirect"] = Url.Content("~/Home/WithDrawal");
+                    }
+
+                    else
+                    {
+                        string withDrawalQuery = "delete from userInfo where userId = @userId";
+
+                        queryData.Clear();
+                        queryData.Add(new MySqlParameter("userId", userId));
+                        db.update(withDrawalQuery, queryData);
+
+                        Session.Clear();
+
+                        Session["messageDisplay"] = "true";
+                        Session["message"] = "탈퇴처리 되었습니다.";
+                        Session["messageType"] = "success";
+
+                        Session["redirect"] = Url.Content("~/Home/");
+                    }
+                }
+
+                catch
+                {
+                    Session["messageDisplay"] = "true";
+                    Session["message"] = "회원 탈퇴 중 에러가 발생하였습니다.";
+                    Session["messageType"] = "danger";
+                    Session["redirect"] = Url.Content("~/Home/WithDrawal");
+                }
+
+                finally
+                {
+                    db.close();
+                }
+            }
+            return RedirectToAction("Messaging", "Shared");
         }
 
         [HttpPost]
@@ -346,6 +494,7 @@ namespace WebApplication.Controllers
 
             if (!idChecker)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "잘못된 접근입니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home");
@@ -355,6 +504,7 @@ namespace WebApplication.Controllers
 
             else if (!psChecker)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "잘못된 비밀번호를 입력하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/Account");
@@ -364,6 +514,7 @@ namespace WebApplication.Controllers
 
             else if (!userInputNewPs.Equals(userInputNewPsAgain))
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "비밀번호 입력 값과 비밀번호 확인 입력 값이 일치하지 않습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/Account");
@@ -387,6 +538,7 @@ namespace WebApplication.Controllers
 
                     if (db.inquire(query, queryData) != 1)
                     {
+                        Session["messageDisplay"] = "true";
                         Session["message"] = "입력한 이전 비밀번호가 일치하지 않습니다.";
                         Session["messageType"] = "warning";
                         Session["redirect"] = Url.Content("~/Home/Account");
@@ -403,10 +555,10 @@ namespace WebApplication.Controllers
                         
                         db.close();
 
+                        Session["messageDisplay"] = "true";
                         Session["message"] = "회원정보가 수정 되었습니다.";
                         Session["messageType"] = "success";
                         Session["redirect"] = Url.Content("~/Home/");
-                        Session["register"] = "updated";
 
                         return RedirectToAction("Messaging", "Shared");
                     }
@@ -414,6 +566,7 @@ namespace WebApplication.Controllers
 
                 catch
                 {
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "회원정보 수정 중 에러가 발생하였습니다.";
                     Session["messageType"] = "danger";
                     Session["redirect"] = Url.Content("~/Home/Account");
@@ -421,6 +574,7 @@ namespace WebApplication.Controllers
                     return RedirectToAction("Messaging", "Shared");
                 }
 
+                Session["messageDisplay"] = "true";
                 Session["message"] = "회원정보 수정 중 에러가 발생하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/Account");
@@ -459,16 +613,17 @@ namespace WebApplication.Controllers
                     Session["recipe"] = result.Rows[0]["recipe"];
                     Session["management"] = result.Rows[0]["management"];
 
+                    Session["messageDisplay"] = "true";
+                    Session["message"] = string.Format("환영합니다! {0}님!", result.Rows[0]["userName"]);
                     Session["messageType"] = "success";
-                    Session["message"] = string.Format("환영합니다! {0}님!", inputId);
-                    Session["register"] = "newLogin";
                     Session["redirect"] = Url.Content("~/Home");
 
                     return RedirectToAction("Messaging", "Shared");
                 }
 
                 else
-                {
+                {   
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "없는 아이디이거나 비밀번호가 일치하지 않습니다.";
                     Session["messageType"] = "danger";
                     Session["redirect"] = Url.Content("~/Home/SignIn");
@@ -479,6 +634,7 @@ namespace WebApplication.Controllers
 
             catch
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "에러가 발생하였습니다.";
                 Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home/SignIn");

@@ -212,6 +212,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\Monitoring.cs" />
+    <Compile Include="Models\AuthInfo.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserChecking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

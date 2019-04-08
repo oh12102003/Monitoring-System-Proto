@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "계정관리";
+}
+
+<script>
+    function buttonChanger(element, removeClass1, removeClass2, addClass, htmlString) {
+        element.classList.remove(removeClass1);
+        element.classList.remove(removeClass2);
+        element.classList.add(addClass);
+        element.innerHTML = htmlString;
+    }
+
+    // 비밀번호 체크
+    function psCheck() {
+        let inputUserPs = document.getElementById("userInputPs").value;
+        let resultButton = document.getElementById("userInputPsChecker");
+        let resultFeedback = document.getElementById("userInputPsFeedback");
+
+        let targetButton = document.getElementById("withDrawalButton");
+
+        if (inputUserPs == "") {
+            buttonChanger(resultButton, "btn-dark", "btn-success", "btn-danger", "<i class = 'fa fa-lg fa-times'></i>");
+            buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-success", "btn-outline-danger", "이전 비밀번호를 입력해야 합니다.");
+
+            targetButton.classList.remove("btn-warning");
+            targetButton.classList.add("btn-dark");
+        }
+
+        else {
+            buttonChanger(resultButton, "btn-dark", "btn-danger", "btn-success", "<i class = 'fa fa-lg fa-check'></i>");
+            buttonChanger(resultFeedback, "btn-outline-dark", "btn-outline-danger", "btn-outline-success", "비밀번호를 입력하였습니다.");
+
+            targetButton.classList.remove("btn-dark");
+            targetButton.classList.add("btn-warning");
+        }
+    }
+
+    function goToHome() {
+        window.location.href = "@Url.Action("Index")";
+    }
+</script>
+
+<div class="mt-container">
+    <div class="mt-container-title">
+        회원 탈퇴 (Withdrawal)
+    </div>
+
+    <div class="mt-container-body mt-vmargin-large">
+        <form action="@Url.Action("unRegisterUser")" method="post">
+            <input type="hidden" name="userId" value="@Session["userId"]" />
+
+            <div class="input-group mt-element mt-margin-xlarge mt-tmargin-small">
+                <div class="input-group-prepend mt-element-explain">
+                    <span id="prevPsLabel" class="input-group-text"> 비밀번호 </span>
+                </div>
+                <input type="password" class="form-control mt-element-input" id="userInputPs" name="userPs" placeholder="Password"
+                       aria-describedby="prevPsLabel"
+                       onchange="psCheck();">
+                <div class="btn btn-dark mt-element-checker mt-margin-large" id="userInputPsChecker">
+                    <i class='fa fa-lg fa-question'></i>
+                </div>
+                <div class="btn btn-outline-dark mt-element-notice mt-margin-small" id="userInputPsFeedback"> 비밀번호를 입력해주세요. </div>
+            </div>
+
+            <div class="input-group mt-element mt-margin-xxlarge mt-tmargin-large">
+                <button id="withDrawalButton" type="submit" class="btn btn-dark mt-element-button-large mt-margin-xlarge">
+                    회원 탈퇴
+                </button>
+
+                <button type="button" class="btn btn-danger mt-element-button-large mt-margin-xlarge" onclick="goToHome()">
+                    취소
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

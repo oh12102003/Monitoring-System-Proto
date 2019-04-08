@@ -1,0 +1,399 @@
+﻿@using WebApplication.Models;
+@model List<AuthInfo>
+
+@{
+    ViewBag.Title = "User Management";
+}
+
+<script>
+    function changeButtonColor(element, removeClassList, addClassList) {
+        for (let i = 0; i < removeClassList.length; i++) {
+            element.classList.remove(removeClassList[i]);
+        }
+
+        for (let i = 0; i < addClassList.length; i++) {
+            element.classList.add(addClassList[i]);
+        }
+    }
+
+    function refreshUserAuth(userId) {
+        let userRefreshButton = document.getElementById(`refreshButton_${userId}`);
+        
+        let monitoringIcon = document.getElementById(`monitoring_${userId}`);
+        let recipeIcon = document.getElementById(`recipe_${userId}`);
+        let managementIcon = document.getElementById(`management_${userId}`);
+        
+        // monitoring value init
+        if (document.getElementById(`monitoringDefault_${userId}`).value == "true") {
+            changeButtonColor(monitoringIcon, ["text-danger", "fa-times-circle"], ["text-success", "fa-check-circle"]);
+        }
+
+        else {
+            changeButtonColor(monitoringIcon, ["text-success", "fa-check-circle"], ["text-danger", "fa-times-circle"]);
+        }
+
+
+
+        // recipe value init
+        if (document.getElementById(`recipeDefault_${userId}`).value == "true") {
+            changeButtonColor(recipeIcon, ["text-danger", "fa-times-circle"], ["text-success", "fa-check-circle"]);
+        }
+
+        else {
+            changeButtonColor(recipeIcon, ["text-success", "fa-check_circle"], ["text-danger", "fa-times-circle"]);
+        }
+
+
+        // management value init
+        if (document.getElementById(`managementDefault_${userId}`).value == "true") {
+            changeButtonColor(managementIcon, ["text-danger", "fa-times-circle"], ["text-success", "fa-check-circle"]);
+        }
+
+        else {
+            changeButtonColor(managementIcon, ["text-success", "fa-check_circle"], ["text-danger", "fa-times-circle"]);
+        }
+
+        changeButtonColor(userRefreshButton, ["btn-primary"], ["btn-dark"]);
+
+        if (checkAllRightValueDefault()) {
+            changeButtonColor(document.getElementById("totalRefreshButton"), ["btn-primary"], ["btn-dark"]);
+            changeButtonColor(document.getElementById("totalSaveButton"), ["btn-warning"], ["btn-dark"]);
+        }
+
+        else {
+            changeButtonColor(document.getElementById("totalRefreshButton"), ["btn-dark"], ["btn-primary"]);
+            changeButtonColor(document.getElementById("totalSaveButton"), ["btn-dark"], ["btn-warning"]);
+        }
+    }
+
+    function removeUser(userId)
+    {
+        let userTr = document.getElementById(userId);
+        userTr.classList.add("changed");
+        userTr.style.display = "none";
+
+        changeButtonColor(document.getElementById("totalRefreshButton"), ["btn-dark"], ["btn-primary"]);
+        changeButtonColor(document.getElementById("totalSaveButton"), ["btn-dark"], ["btn-warning"]);
+    }
+
+    function refreshAll()
+    {
+        let totalRefreshButton = document.getElementById("totalRefreshButton");
+        let totalSaveButton = document.getElementById("totalSaveButton");
+
+        let userList = document.getElementsByClassName("userList");
+
+        for (let i = 0; i < userList.length; i++) {
+            let userId = userList[i].id;
+
+            // recovery temp deleted user data
+            if (userList[i].style.display == "none") {
+                userList[i].style.display = "table-row";
+                userList[i].classList.remove("changed");
+            }
+
+            // init monitoring value
+            if (document.getElementById(`monitoringDefault_${userId}`).value == "true") {
+                changeButtonColor(document.getElementById(`monitoring_${userId}`), ["fa-times-circle", "text-danger", "changed"], ["fa-check-circle", "text-success"]);
+            }
+
+            else {
+                changeButtonColor(document.getElementById(`monitoring_${userId}`), ["fa-check-circle", "text-success", "changed"], ["fa-times-circle", "text-danger"]);
+            }
+
+            // init recipe value
+            if (document.getElementById(`recipeDefault_${userId}`).value == "true") {
+                changeButtonColor(document.getElementById(`recipe_${userId}`), ["fa-times-circle", "text-danger", "changed"], ["fa-check-circle", "text-success"]);
+            }
+
+            else {
+                changeButtonColor(document.getElementById(`recipe_${userId}`), ["fa-check-circle", "text-success", "changed"], ["fa-times-circle", "text-danger"]);
+            }
+
+            // init management value
+            if (document.getElementById(`managementDefault_${userId}`).value == "true") {
+                changeButtonColor(document.getElementById(`management_${userId}`), ["fa-times-circle", "text-danger", "changed"], ["fa-check-circle", "text-success"]);
+            }
+
+            else {
+                changeButtonColor(document.getElementById(`management_${userId}`), ["fa-check-circle", "text-success", "changed"], ["fa-times-circle", "text-danger"]);
+            }
+
+            changeButtonColor(document.getElementById(`refreshButton_${userId}`), ["btn-primary"], ["btn-dark"]);
+        }
+
+        changeButtonColor(totalRefreshButton, ["btn-primary"], ["btn-dark"]);
+        changeButtonColor(totalSaveButton, ["btn-warning"], ["btn-dark"]);
+    }
+
+    function saveAll() {
+        let deleteJsonList = new Array();
+        let changedJsonList = new Array();
+        let userList = document.getElementsByClassName("userList");
+
+        for (let i = 0; i < userList.length; i++) {
+            let userId = userList[i].id;
+
+            // recovery temp deleted user data
+            if (userList[i].style.display == "none") {
+                let deletedJson = new Object();
+                deletedJson.userId = userList[i].id;
+                deletedJson.monitoringAuth = document.getElementById(`monitoring_${userList[i].id}`).classList.contains("text-success").toString();
+                deletedJson.recipeAuth = document.getElementById(`recipe_${userList[i].id}`).classList.contains("text-success").toString();
+                deletedJson.managementAuth = document.getElementById(`management_${userList[i].id}`).classList.contains("text-success").toString();
+
+                deleteJsonList.push(deletedJson);
+            }
+
+            else if (userList[i].classList.contains("changed")) {
+                let changedJson = new Object();
+
+                changedJson.userId = userList[i].id;
+                changedJson.monitoringAuth = document.getElementById(`monitoring_${userList[i].id}`).classList.contains("text-success").toString();
+                changedJson.recipeAuth = document.getElementById(`recipe_${userList[i].id}`).classList.contains("text-success").toString();
+                changedJson.managementAuth = document.getElementById(`management_${userList[i].id}`).classList.contains("text-success").toString();
+
+                changedJsonList.push(changedJson);
+            }
+        }
+
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("userManagement")",
+            data: { deletedString : JSON.stringify(deleteJsonList), updatedString : JSON.stringify(changedJsonList) },
+        success: (data) => {
+            window.location.href = data;
+        },
+        failure: (data) => {
+            window.location.href = data;
+        }
+    });
+    }
+
+    function changeAuth(userId, authType) {
+        let targetUser = document.getElementById(userId);
+        let targetAuthButton = document.getElementById(`${authType}_${userId}`);
+        let defaultValue = (document.getElementById(`${authType}Default_${userId}`).value == "true");
+
+        let totalRefreshButton = document.getElementById("totalRefreshButton");
+        let totalSaveButton = document.getElementById("totalSaveButton");
+        let targetRefreshButton = document.getElementById(`refreshButton_${userId}`);
+
+        // change button style
+        if (targetAuthButton.classList.contains("text-danger")) {
+            changeButtonColor(targetAuthButton, ["fa-times-circle", "text-danger"], ["fa-check-circle", "text-success"]);
+        }
+
+        else {
+            changeButtonColor(targetAuthButton, ["fa-check-circle", "text-success"], ["fa-times-circle", "text-danger"]);
+        }
+
+        // add changed flag class
+        if (targetAuthButton.classList.contains("text-success") == defaultValue) {
+            targetAuthButton.classList.remove("changed");
+        }
+
+        else {
+            targetAuthButton.classList.add("changed");
+        }
+
+        // check user refresh button & total refresh button
+        if (checkUserRightValueDefault(userId) == false) {
+            targetUser.classList.add("changed");
+            changeButtonColor(totalRefreshButton, ["btn-dark"], ["btn-primary"]);
+            changeButtonColor(targetRefreshButton, ["btn-dark"], ["btn-primary"]);
+            changeButtonColor(totalSaveButton, ["btn-dark"], ["btn-warning"]);
+        }
+
+        else {
+            targetUser.classList.remove("changed");
+            changeButtonColor(targetRefreshButton, ["btn-primary"], ["btn-dark"]);
+
+            if (checkAllRightValueDefault()) {
+                changeButtonColor(totalRefreshButton, ["btn-primary"] ,["btn-dark"]);
+                changeButtonColor(totalSaveButton, ["btn-warning"], ["btn-dark"]);
+            }
+        }
+    }
+
+    function checkUserRightValueDefault(userId) {
+        let targetUser = document.getElementById(userId);
+
+        let userAuthMonitoringDefault = document.getElementById(`monitoringDefault_${userId}`).value;
+        let userAuthMonitoringValue = document.getElementById(`monitoring_${userId}`).classList.contains("text-success");
+
+        let userAuthRecipeDefault = document.getElementById(`recipeDefault_${userId}`).value;
+        let userAuthRecipeValue = document.getElementById(`recipe_${userId}`).classList.contains("text-success");
+
+        let userAuthManagementDefault = document.getElementById(`managementDefault_${userId}`).value;
+        let userAuthManagementValue = document.getElementById(`management_${userId}`).classList.contains("text-success");
+
+        let userAuthMonitoringChecker = (userAuthMonitoringDefault == "true") == userAuthMonitoringValue;
+        let userAuthRecipeChecker = (userAuthRecipeDefault == "true") == userAuthRecipeValue;
+        let userAuthManagementChecker = (userAuthManagementDefault == "true") == userAuthManagementValue;
+
+        return userAuthMonitoringChecker && userAuthRecipeChecker && userAuthManagementChecker;
+    }
+
+    function checkAllRightValueDefault() {
+        let userList = document.getElementsByClassName("userList");
+
+        for (let i = 0; i < userList.length; i++) {
+            if (userList[i].style.display == "none") {
+                return false;
+            }
+
+            if (!checkUserRightValueDefault(userList[i].id)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+</script>
+
+<div class = "mt-container">
+    <div class= "mt-container-title">
+        사용자 관리 (User management)
+    </div>
+
+    <div class = "mt-container-body">
+        <table class="table mt-table">
+            <tr>
+                <td style ="text-align : right" colspan="6"> </td>
+
+                <td>
+                    <button id="totalRefreshButton" class="btn btn-dark" onclick="refreshAll()">
+                        <i class="fa fa-lg fa-refresh"></i>
+                    </button>
+                </td>
+
+                <td>
+                    <button id="totalSaveButton" class="btn btn-dark" onclick="saveAll()">
+                        <i class="fa fa-lg fa-save"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2" style="border-right : dashed #bbb 1px;"> 사용자 정보 </th>
+                <th colspan="4" style="border-right : dashed #bbb 1px;"> 권한 정보 </th>
+                <th colspan="2"> 변경정보 </th>
+            </tr>
+
+            <tr>
+                <th scope="col">사용자 아이디</th>
+                <th scope="col" style="border-right : dashed #bbb 1px;">사용자 이름</th>
+
+                <th scope="col">권한 등급</th>
+                <th scope="col">모니터링 권한</th>
+                <th scope="col">레시피 관리 권한</th>
+                <th scope="col" style="border-right : dashed #bbb 1px;">유저관리 권한</th>
+
+                <th scope="col" colspan="2">권한 변경 여부</th>
+
+            </tr>
+            @foreach (AuthInfo authInfo in Model)
+            {
+                int userGrade;
+
+                if (int.TryParse(authInfo.authGrade, out userGrade))
+                {
+                    userGrade = userGrade > 5 ? 4 : userGrade;
+                    string[] outlineColorSet = { "table-secondary", "table-success", "table-primary", "table-warning", "table-danger" };
+
+                    <tr id = "@authInfo.userId" class = "userList @outlineColorSet[userGrade]">
+                        <th class = "userIdList mt-table-cell" scope="row">
+                            <button class="btn mt-table-textButton">
+                                @authInfo.userId
+                            </button>
+                        </th>
+                        <td class = "userNameList mt-table-cell" style="border-right : dashed #bbb 1px;">
+                            <button class="btn mt-table-textButton">
+                                @authInfo.userName
+                            </button>
+                        </td>
+
+                        <td class = "userAuthList mt-table-cell">
+                            <button class="btn mt-table-textButton">
+                                @authInfo.authGrade
+                            </button>
+                        </td>
+                        
+                        <td>
+                            <input type="hidden" id = "monitoringDefault_@authInfo.userId" value="@authInfo.monitoring" />
+                            <button class="btn mt-table-button" onclick="changeAuth('@authInfo.userId', 'monitoring')">
+                            @if (authInfo.monitoring.Equals("true"))
+                            {
+                                <i id = "monitoring_@authInfo.userId" class="fa fa-lg fa-check-circle text-success userMonitoringList"></i>
+                            }
+
+                            else
+                            {
+                                <i id ="monitoring_@authInfo.userId" class="fa fa-lg fa-times-circle text-danger userMonitoringList"></i>
+                            }
+                            </button>
+                        </td>
+                        
+
+
+                        <td>
+                            <input type="hidden" id="recipeDefault_@authInfo.userId" value="@authInfo.recipe" />
+                            <button class="btn mt-table-button" onclick="changeAuth('@authInfo.userId', 'recipe')">
+                            @if (authInfo.recipe.Equals("true"))
+                            {
+                                <i id ="recipe_@authInfo.userId" class="fa fa-lg fa-check-circle text-success userRecipeList"></i>
+                            }
+
+                            else
+                            {
+                                <i id ="recipe_@authInfo.userId" class="fa fa-lg fa-times-circle text-danger userRecipeList"></i>
+                            }
+                            </button>
+                        </td>
+
+
+
+                        <td style="border-right : dashed #bbb 1px;">
+                            <input type="hidden" id="managementDefault_@authInfo.userId" value="@authInfo.management" />
+                            <button class="btn mt-table-button" onclick="changeAuth('@authInfo.userId', 'management')">
+                                @if (authInfo.management.Equals("true"))
+                                {
+                                    <i id ="management_@authInfo.userId" class="fa fa-lg fa-check-circle text-success userManagementList"></i>
+                                }
+
+                                else
+                                {
+                                    <i id ="management_@authInfo.userId" class="fa fa-lg fa-times-circle text-danger userManagementList"></i>
+                                }
+                            </button>
+                        </td>
+
+                        <td>
+                            <button id ="refreshButton_@authInfo.userId" class="btn btn-dark border-0 userRefreshList"
+                                    onclick="refreshUserAuth('@authInfo.userId')">
+                                <i class="fa fa-lg fa-refresh"></i>
+                            </button>
+                        </td>
+
+                        <td>
+                            <button id="removeButtonBackground_@authInfo.userId" class="btn btn-danger border-0"
+                                    onclick ="removeUser('@authInfo.userId')">
+                                <i id="removeButtonIcon_@authInfo.userId" class="fa fa-lg fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+                else
+                {
+                    <tr>
+                        <td rowspan="2">
+                            Error
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

@@ -14,10 +14,11 @@ namespace WebApplication.Controllers
 
             if (userId == null)
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "로그인 이후에 사용할 수 있습니다.";
                 Session["messageType"] = "info";
                 Session["redirect"] = Url.Content("~/Home");
-                return RedirectToAction("Messaging", "Shared");
+                return RedirectToAction("Index", "Home");
             }
 
             DataBaseModuleFactory dbFactory = DataBaseModuleFactory.getInstance();
@@ -42,12 +43,12 @@ namespace WebApplication.Controllers
 
                     if (Session["recipe"].Equals("true"))
                     {
-                        Session["message"] = null;
                         return View();
                     }
 
                     else
                     {
+                        Session["messageDisplay"] = "true";
                         Session["message"] = "권한이 없습니다.";
                         Session["messageType"] = "warning";
                         Session["redirect"] = Url.Content("~/Home");
@@ -57,7 +58,9 @@ namespace WebApplication.Controllers
 
                 else
                 {
+                    Session["messageDisplay"] = "true";
                     Session["message"] = "잘못된 권한 요청입니다.";
+                    Session["messageType"] = "danger";
                     Session["redirect"] = Url.Content("~/Home");
                     return RedirectToAction("Messaging", "Shared");
                 }
@@ -65,14 +68,16 @@ namespace WebApplication.Controllers
 
             catch
             {
+                Session["messageDisplay"] = "true";
                 Session["message"] = "에러가 발생하였습니다.";
+                Session["messageType"] = "danger";
                 Session["redirect"] = Url.Content("~/Home");
                 return RedirectToAction("Messaging", "Shared");
             }
         }
 
         [HttpPost]
-        public ActionResult Save(string jsonString)
+        public string Save(string jsonString)
         {
             try
             {
@@ -80,13 +85,31 @@ namespace WebApplication.Controllers
                 DrinkList drinkList = DrinkList.Parse(jsonString);
                 js.hardApplyInputData(drinkList);
 
-                return Json(jsonString);
+                Session["messageDisplay"] = "true";
+                Session["message"] = "레시피가 수정되었습니다.";
+                Session["messageType"] = "success";
+                Session["redirect"] = Url.Content("~/Recipe");
             }
 
             catch
             {
-                return null;
+                Session["messageDisplay"] = "true";
+                Session["message"] = "오류가 발생하였습니다.";
+                Session["messageType"] = "danger";
+                Session["redirect"] = Url.Content("~/Recipe");
             }
+
+            return Url.Content("~/Shared/Messaging");
+        }
+
+        public ActionResult noChanged()
+        {
+            Session["messageDisplay"] = "true";
+            Session["message"] = "변경된 사항이 없습니다.";
+            Session["messageType"] = "warning";
+            Session["redirect"] = Url.Content("~/Recipe");
+
+            return RedirectToAction("Messaging", "Shared");
         }
     }
 }

@@ -11,8 +11,8 @@ namespace WebApplication.Hubs
     {
         static IHubContext toClient = GlobalHost.ConnectionManager.GetHubContext<Monitoring>();
         static Socket toSimulator = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        static string userId;
-        static string messageTarget;
+        static string userId = null;
+        static string messageTarget = null;
 
         public void start()
         {

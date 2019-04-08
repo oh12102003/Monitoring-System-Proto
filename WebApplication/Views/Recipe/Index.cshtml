@@ -6,118 +6,9 @@
 @Styles.Render("~/Content/dataContainer.css")
 
 <script>
-    $(document).ready(() => {
+    jQuery(document).ready(() => {
         let totalResetButton = document.getElementById("totalResetButton");
         let totalSaveButton = document.getElementById("totalSaveButton");
-
-        // all reset button event
-        totalResetButton.addEventListener("click", function () {
-            let drinkList = document.getElementsByClassName("drinkList");
-            let removeDrinkList = new Array();
-
-            for (let drinkIndex = 0; drinkIndex < drinkList.length; drinkIndex++) {
-                if (drinkList[drinkIndex].classList.contains("added")) {
-                    removeDrinkList.push(drinkList[drinkIndex]);
-                }
-
-                else {
-                    let drinkName = drinkList[drinkIndex].id;
-
-                    drinkList[drinkIndex].style.display = "block";
-                    updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-primary", "btn-dark");
-
-                    let dataList = document.getElementById(`${drinkName}_dataList`);
-                    let recipeList = document.getElementsByClassName(`${drinkName}_recipeList`);
-                    let currentValueList = document.getElementsByClassName(`${drinkName}_valueList`);
-                    let defaultValueList = document.getElementsByClassName(`${drinkName}_defaultList`);
-                    let recipeResetButtonList = document.getElementsByClassName(`${drinkName}_recipeResetButtonList`);
-                    let removeRecipeList = new Array();
-
-                    for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
-                        if (recipeList[recipeIndex].classList.contains("added")) {
-                            removeRecipeList.push(recipeList[recipeIndex]);
-                        }
-
-                        else {
-                            recipeList[recipeIndex].style.display = "block";
-                            currentValueList[recipeIndex].value = defaultValueList[recipeIndex].value;
-
-                            updateButtonColor(recipeResetButtonList[recipeIndex], "btn-success", "btn-dark");
-                        }
-                    }
-
-                    for (let removeIndex = 0; removeIndex < removeRecipeList.length; removeIndex++) {
-                        dataList.removeChild(removeRecipeList[removeIndex]);
-                    }
-                }
-            }
-
-            let dataSet = document.getElementById("dataSet");
-
-            for (let i = 0; i < removeDrinkList.length; i++) {
-                dataSet.removeChild(removeDrinkList[i]);
-            }
-
-            updateButtonColor(this, "btn-primary", "btn-dark");
-            updateButtonColor(document.getElementById("totalSaveButton"), "btn-warning", "btn-dark");
-        });
-
-        // save button event
-        totalSaveButton.addEventListener("click", function () {
-            if (this.classList.contains("btn-dark"))
-            {
-                alert("변경 사항이 없습니다.");
-                return;
-            }
-
-            let jsonDrinkList = new Array();
-            let drinkList = document.getElementsByClassName("drinkList");
-
-            for (let drinkIndex = 0; drinkIndex < drinkList.length; drinkIndex++) {
-                if (drinkList[drinkIndex].style.display != "none") {
-                    let drinkName = drinkList[drinkIndex].id;
-
-                    let jsonDrink = new Object();
-                    jsonDrink.drinkName = drinkName;
-
-                    let jsonRecipeList = new Array();
-
-
-                    let recipeList = $(`.${drinkName}_recipeList`);
-                    let currentValueList = $(`.${drinkName}_valueList`);
-
-                    for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
-                        if (recipeList.eq(recipeIndex).css("display") != "none") {
-                            let jsonRecipe = new Object();
-                            jsonRecipe.ingredient = recipeList.eq(recipeIndex).data("value");
-                            jsonRecipe.amount = currentValueList.eq(recipeIndex).val();
-
-                            jsonRecipeList.push(jsonRecipe);
-                        }
-                    }
-
-                    jsonDrink.recipe = jsonRecipeList;
-                    jsonDrinkList.push(jsonDrink);
-                }
-            }
-
-            console.log(JSON.stringify(jsonDrinkList));
-
-            jQuery.ajax({
-                type: "POST",
-                url: "@Url.Action("Save")",
-                dataType: "json",
-                data: {jsonString : JSON.stringify(jsonDrinkList)},
-                traditional: "true",
-                success: function (data) {
-                    window.location.href = "@Url.Action("Index")";
-                },
-                failure: function (errMsg) {
-                    alert("잘못된 입력 값이 있습니다.");
-                }
-            });
-        });
-
 
         // setting initial view
         $.getJSON("@Url.Content("~/Sources/drink.json")", drinkList => {
@@ -198,6 +89,112 @@
             for (let i = 0; i < drinkList.length; i++) {
                 $(`#${drinkList[i].drinkName}_collapse`).collapse("hide");
             }
+        });
+
+        // all reset button event
+        totalResetButton.addEventListener("click", function () {
+            let drinkList = document.getElementsByClassName("drinkList");
+            let removeDrinkList = new Array();
+
+            for (let drinkIndex = 0; drinkIndex < drinkList.length; drinkIndex++) {
+                if (drinkList[drinkIndex].classList.contains("added")) {
+                    removeDrinkList.push(drinkList[drinkIndex]);
+                }
+
+                else {
+                    let drinkName = drinkList[drinkIndex].id;
+
+                    drinkList[drinkIndex].style.display = "block";
+                    updateButtonColor(document.getElementById(`${drinkName}_drinkResetButton`), "btn-primary", "btn-dark");
+
+                    let dataList = document.getElementById(`${drinkName}_dataList`);
+                    let recipeList = document.getElementsByClassName(`${drinkName}_recipeList`);
+                    let currentValueList = document.getElementsByClassName(`${drinkName}_valueList`);
+                    let defaultValueList = document.getElementsByClassName(`${drinkName}_defaultList`);
+                    let recipeResetButtonList = document.getElementsByClassName(`${drinkName}_recipeResetButtonList`);
+                    let removeRecipeList = new Array();
+
+                    for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
+                        if (recipeList[recipeIndex].classList.contains("added")) {
+                            removeRecipeList.push(recipeList[recipeIndex]);
+                        }
+
+                        else {
+                            recipeList[recipeIndex].style.display = "block";
+                            currentValueList[recipeIndex].value = defaultValueList[recipeIndex].value;
+
+                            updateButtonColor(recipeResetButtonList[recipeIndex], "btn-success", "btn-dark");
+                        }
+                    }
+
+                    for (let removeIndex = 0; removeIndex < removeRecipeList.length; removeIndex++) {
+                        dataList.removeChild(removeRecipeList[removeIndex]);
+                    }
+                }
+            }
+
+            let dataSet = document.getElementById("dataSet");
+
+            for (let i = 0; i < removeDrinkList.length; i++) {
+                dataSet.removeChild(removeDrinkList[i]);
+            }
+
+            updateButtonColor(this, "btn-primary", "btn-dark");
+            updateButtonColor(document.getElementById("totalSaveButton"), "btn-warning", "btn-dark");
+        });
+
+        // save button event
+        totalSaveButton.addEventListener("click", function () {
+            if (this.classList.contains("btn-dark"))
+            {
+                window.location.href = "@Url.Action("noChanged")";
+                return;
+            }
+
+            let jsonDrinkList = new Array();
+            let drinkList = document.getElementsByClassName("drinkList");
+
+            for (let drinkIndex = 0; drinkIndex < drinkList.length; drinkIndex++) {
+                if (drinkList[drinkIndex].style.display != "none") {
+                    let drinkName = drinkList[drinkIndex].id;
+
+                    let jsonDrink = new Object();
+                    jsonDrink.drinkName = drinkName;
+
+                    let jsonRecipeList = new Array();
+
+
+                    let recipeList = $(`.${drinkName}_recipeList`);
+                    let currentValueList = $(`.${drinkName}_valueList`);
+
+                    for (let recipeIndex = 0; recipeIndex < recipeList.length; recipeIndex++) {
+                        if (recipeList.eq(recipeIndex).css("display") != "none") {
+                            let jsonRecipe = new Object();
+                            jsonRecipe.ingredient = recipeList.eq(recipeIndex).data("value");
+                            jsonRecipe.amount = currentValueList.eq(recipeIndex).val();
+
+                            jsonRecipeList.push(jsonRecipe);
+                        }
+                    }
+
+                    jsonDrink.recipe = jsonRecipeList;
+                    jsonDrinkList.push(jsonDrink);
+                }
+            }
+
+            console.log(JSON.stringify(jsonDrinkList));
+
+            jQuery.ajax({
+                type: "POST",
+                url: "@Url.Action("Save")",
+                data: { jsonString : JSON.stringify(jsonDrinkList) },
+                success: (data) => {
+                    window.location.href = data;
+                },
+                failure: (data) => {
+                    window.location.href = data;
+                }
+            });
         });
     });
 
